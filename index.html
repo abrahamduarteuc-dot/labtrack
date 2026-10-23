@@ -374,6 +374,51 @@ tbody tr.adv td{background:var(--adv-bg);}
 .copiable{display:flex;gap:7px;align-items:center;background:var(--azul-50);border:1px solid var(--azul-100);border-radius:var(--rs);padding:9px 11px;margin-bottom:9px;}
 .copiable code{flex:1;min-width:0;font-size:11.5px;color:var(--azul-800);word-break:break-all;font-family:'Consolas','SF Mono',monospace;}
 @media (min-width:640px){.qr-grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));}}
+
+/* ───────── Trazabilidad: selector de vista y línea de tiempo ───────── */
+.vseg{display:flex;border:1.5px solid var(--linea2);border-radius:var(--r);overflow:hidden;background:var(--blanco);margin-bottom:14px;}
+.vseg button{flex:1;height:44px;border:0;background:transparent;color:var(--tinta2);font-weight:700;font-size:14px;cursor:pointer;}
+.vseg button[aria-pressed="true"]{background:var(--azul-600);color:#fff;}
+.tl-w{overflow-x:auto;border:1px solid var(--linea);border-radius:12px;background:var(--blanco);}
+.tl-plot{position:relative;min-width:640px;--lab:132px;}
+.tl-row{display:grid;grid-template-columns:var(--lab) 1fr;height:50px;align-items:center;}
+.tl-row.nuevo{border-top:1px solid var(--linea);}
+.tl-head{height:32px;background:var(--azul-50);border-bottom:1px solid var(--linea);}
+.tl-lab{position:sticky;left:0;z-index:3;background:var(--blanco);height:100%;padding:0 10px;display:flex;flex-direction:column;justify-content:center;min-width:0;}
+.tl-head .tl-lab{background:var(--azul-50);}
+.tl-lab b{font-family:'Consolas','SF Mono',monospace;font-size:13px;color:var(--azul-900);}
+.tl-lab span{font-size:10.5px;color:var(--tinta2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tl-lot{cursor:pointer;}
+.tl-lot.sel .tl-lab{box-shadow:inset 3px 0 0 var(--azul-600);}
+.tl-tr{position:relative;height:100%;}
+.tl-mes{position:absolute;top:8px;font-size:10.5px;font-weight:700;color:var(--tinta2);white-space:nowrap;transform:translateX(4px);}
+.tl-mes.a{color:var(--azul-600);}
+.tl-bar{position:absolute;top:20px;height:10px;border-radius:5px;background:var(--linea2);}
+.tl-lot.in .tl-bar{background:var(--azul-600);}
+.tl-ov{position:absolute;top:20px;height:10px;border-radius:0 5px 5px 0;background:repeating-linear-gradient(135deg,var(--mal) 0 3px,var(--mal-bg) 3px 6px);}
+.tl-vm{position:absolute;top:20px;width:10px;height:10px;margin-left:-5px;transform:rotate(45deg);background:var(--blanco);border:2px solid var(--mal);z-index:2;}
+.tl-fr{position:absolute;top:14px;height:22px;border:2px solid var(--azul-600);border-radius:9px;background:var(--azul-50);opacity:0;}
+.tl-lot.in .tl-fr{opacity:.7;}
+.tl-lot.rojo .tl-fr{border-color:var(--mal);background:var(--mal-bg);}
+.tl-lot.in .tl-bar,.tl-lot.in .tl-ov,.tl-lot.in .tl-vm{z-index:2;}
+.tl-ovl{position:absolute;top:0;bottom:0;left:var(--lab);right:0;pointer-events:none;z-index:4;}
+.tl-gl{position:absolute;top:32px;bottom:0;width:1px;background:var(--linea);opacity:.6;}
+.tl-tgt{position:absolute;top:0;bottom:0;width:2px;margin-left:-1px;background:var(--azul-600);}
+.tl-tgt i{position:absolute;bottom:3px;left:50%;transform:translateX(-50%);font-style:normal;font-size:10.5px;font-weight:800;color:#fff;background:var(--azul-600);padding:2px 7px;border-radius:6px;white-space:nowrap;}
+.tl-hoy.alto i{bottom:auto;top:-26px;right:auto;left:6px;}
+.tl-hoy{position:absolute;top:32px;bottom:0;margin-left:-1px;border-left:2px dashed var(--tinta3);}
+.tl-foot{height:30px;border-top:1px solid var(--linea);}
+.tl-hoy i{position:absolute;bottom:3px;right:6px;font-style:normal;font-size:10.5px;font-weight:700;color:var(--tinta3);}
+.tl-leg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--tinta2);margin-top:12px;}
+.tl-leg span{display:inline-flex;align-items:center;gap:7px;}
+.tl-leg i{display:inline-block;width:20px;height:9px;border-radius:5px;}
+.tl-leg .s1{background:var(--azul-600);}
+.tl-leg .s2{background:repeating-linear-gradient(135deg,var(--mal) 0 3px,var(--mal-bg) 3px 6px);}
+.tl-leg .s3{height:15px;border:2px solid var(--azul-600);background:var(--azul-50);border-radius:7px;}
+.tl-leg .s4{width:2px;height:15px;border-radius:0;background:var(--azul-600);}
+.tl-det{font-size:13px;color:var(--tinta2);margin-top:12px;min-height:40px;}
+.tl-det b{color:var(--tinta);}
+
 </style>
 </head>
 <body>
@@ -2795,7 +2840,7 @@ var __Html5QrcodeLibrary__;(()=>{var t={449:function(t,e,r){!function(t){"use st
 <!-- ══════════════ TRAZABILIDAD ══════════════ -->
 <section class="pg" id="pg-traza">
   <div class="titulo"><h2>Trazabilidad</h2></div>
-  <div class="sub">Qué lotes de una materia prima estaban disponibles en una fecha determinada.</div>
+  <div class="sub">Qué lotes de una materia prima estaban en un envase en una fecha determinada.</div>
 
   <div id="trazaForm">
     <div class="card">
@@ -3844,22 +3889,56 @@ function volverTraza(){
   window.scrollTo(0, 0);
 }
 
+/** Reclasifica con la regla vigente: un lote "estaba" si la fecha cae entre su ingreso y su cierre
+    (o hasta hoy si sigue en el envase). El vencimiento no lo saca: si ya había vencido se marca. */
+function reclasificarTraza(d){
+  if(d._rc) return;
+  const D = d.fecha;
+  const todos = (d.disponibles || []).concat(d.descartados || []);
+  const en = [], fuera = [];
+  todos.forEach(r => {
+    if(!r.ingreso){ r.clase = 'incompleto'; r.obs = 'Registro sin fecha de ingreso'; fuera.push(r); }
+    else if(D < r.ingreso){ r.clase = 'posterior'; r.obs = 'Ingresó después de esa fecha'; fuera.push(r); }
+    else if(r.cierre && D > r.cierre){ r.clase = 'cerrado'; r.obs = 'Ya se había vaciado o reemplazado'; fuera.push(r); }
+    else{
+      r.vencido = !!(r.vencimiento && D > r.vencimiento);
+      r.clase = 'en_envase';
+      r.obs = r.vencido ? 'Estaba vencido' : (r.vencimiento ? '' : 'Sin fecha de vencimiento registrada');
+      en.push(r);
+    }
+  });
+  const orden = (x, y) => x.codigo !== y.codigo ? (x.codigo < y.codigo ? -1 : 1) : (x.ingreso < y.ingreso ? -1 : (x.ingreso > y.ingreso ? 1 : 0));
+  en.sort(orden); fuera.sort(orden); todos.sort(orden);
+  d.todos = todos; d.disponibles = en; d.descartados = fuera; d._rc = true;
+}
+
 function pintarTraza(d){
+  reclasificarTraza(d);
   const n = d.disponibles.length;
+  const nv = d.disponibles.filter(r => r.vencido).length;
+  const vista = ST.tzVista === 'graf' ? 'graf' : 'tab';
+
   let h = '<div class="card"><div class="card-t">Resultado</div>'
     + '<dl class="dl"><dt>Fecha consultada</dt><dd>' + fmtFecha(d.fecha) + '</dd>'
     + '<dt>Códigos</dt><dd>' + esc(d.codigos.join(', ')) + '</dd>'
     + '<dt>Generado</dt><dd>' + esc(fmtCuando(d.generado)) + '</dd></dl></div>';
 
-  h += '<div class="card"><div class="card-t">Lotes disponibles · ' + n + '</div>';
+  h += '<div class="vseg" role="group" aria-label="Vista del resultado">'
+    + '<button type="button" id="tzVT" aria-pressed="' + (vista === 'tab') + '" onclick="cambiarVistaTz(\'tab\')">Tabla</button>'
+    + '<button type="button" id="tzVG" aria-pressed="' + (vista === 'graf') + '" onclick="cambiarVistaTz(\'graf\')">Gráfica</button></div>';
+
+  /* ── Vista tabla ── */
+  h += '<div id="tzVistaTab"' + (vista === 'tab' ? '' : ' hidden') + '>';
+  h += '<div class="card"><div class="card-t">Lotes en envases ese día · ' + n
+    + (nv ? ' <span class="pill p-mal" style="margin-left:auto;">' + nv + ' vencido(s)</span>' : '') + '</div>';
   if(!n){
-    h += vacio('Ningún lote de esos códigos estaba disponible el ' + fmtFecha(d.fecha) + '.');
+    h += vacio('Ningún lote de esos códigos estaba en un envase el ' + fmtFecha(d.fecha) + '.');
   }else{
     h += '<div class="hint-scroll">Desliza la tabla para ver más columnas →</div><div class="tabla-w"><table><thead><tr><th>Código</th><th>Lote</th><th>Cantidad</th><th>Vence</th><th>Envase</th><th>Ingreso</th><th>Proveedor</th><th>Fabricante</th></tr></thead><tbody>';
     d.disponibles.forEach(r => {
-      h += '<tr><td class="mono">' + esc(r.codigo) + '</td><td>' + esc(r.lote) + '</td>'
+      h += '<tr' + (r.vencido ? ' class="mal"' : '') + '><td class="mono">' + esc(r.codigo) + '</td><td>' + esc(r.lote) + '</td>'
         + '<td>' + fmtNum(r.cantidad) + ' ' + esc(r.unidad) + '</td>'
-        + '<td>' + fmtFecha(r.vencimiento) + '</td><td>' + esc(r.envase) + '</td><td>' + fmtFecha(r.ingreso) + '</td>'
+        + '<td>' + fmtFecha(r.vencimiento) + (r.vencido ? ' <span class="pill p-mal">Vencido</span>' : '') + '</td><td>' + esc(r.envase) + '</td><td>' + fmtFecha(r.ingreso) + '</td>'
         + '<td>' + esc(r.proveedor || '—') + '</td><td>' + esc(r.fabricante || '—') + '</td></tr>';
     });
     h += '</tbody></table></div>';
@@ -3867,7 +3946,7 @@ function pintarTraza(d){
   h += '</div>';
 
   if(d.descartados.length){
-    h += '<div class="card"><button class="btn btn-w btn-sm" onclick="document.getElementById(\'tzDesc\').hidden=!document.getElementById(\'tzDesc\').hidden">Mostrar u ocultar los ' + d.descartados.length + ' registros descartados</button>'
+    h += '<div class="card"><button class="btn btn-w btn-sm" onclick="document.getElementById(\'tzDesc\').hidden=!document.getElementById(\'tzDesc\').hidden">Mostrar u ocultar los ' + d.descartados.length + ' lotes que no estaban en un envase</button>'
       + '<div id="tzDesc" hidden style="margin-top:12px;"><div class="hint-scroll">Desliza la tabla para ver más columnas →</div><div class="tabla-w"><table><thead><tr><th>Motivo</th><th>Código</th><th>Lote</th><th>Envase</th><th>Ingreso</th><th>Vence</th><th>Cierre</th></tr></thead><tbody>';
     d.descartados.forEach(r => {
       h += '<tr><td><span class="pill p-n">' + esc(r.obs) + '</span></td><td class="mono">' + esc(r.codigo) + '</td><td>' + esc(r.lote) + '</td>'
@@ -3875,14 +3954,111 @@ function pintarTraza(d){
     });
     h += '</tbody></table></div></div></div>';
   }
+  h += '</div>';
 
-  h += '<div class="card"><div class="nota">Un lote aparece como disponible cuando la fecha consultada está entre su ingreso y el menor valor entre su vencimiento y su cierre. Los límites cuentan: el día de ingreso y el día de vencimiento son válidos.</div></div>'
+  /* ── Vista gráfica ── */
+  h += '<div id="tzVistaGraf"' + (vista === 'graf' ? '' : ' hidden') + '><div class="card"><div class="card-t">Vida de cada lote en su envase</div>'
+    + '<div class="hint-scroll">Desliza el gráfico para ver todo →</div>'
+    + '<div class="tl-w"><div class="tl-plot" id="tlPlot"></div></div>'
+    + '<div class="tl-leg"><span><i class="s1"></i>Lote en el envase</span><span><i class="s2"></i>Después de vencer</span>'
+    + '<span><i class="s3"></i>Marco: estaba ese día</span><span><i class="s4"></i>Fecha consultada</span></div>'
+    + '<div class="tl-det" id="tlDet">Toca un lote para ver su detalle.</div></div></div>';
+
+  h += '<div class="card"><div class="nota">Un lote aparece cuando la fecha consultada está entre su ingreso y su cierre (o hasta hoy, si sigue en el envase). El día de ingreso y el de cierre cuentan. Si el lote ya había vencido pero seguía en el envase, se muestra marcado como vencido.</div></div>'
     + '<div class="row"><button class="btn btn-w" onclick="volverTraza()">Nueva consulta</button>'
     + '<button class="btn btn-p" onclick="imprimirTraza()">Imprimir o PDF</button></div>';
 
   $('trazaRes').innerHTML = h;
   window.scrollTo(0, 0);
   ST.ultimaTraza = d;
+  ST.tlSel = null;
+  if(vista === 'graf') pintarGraficaTz();
+}
+
+function cambiarVistaTz(v){
+  ST.tzVista = v;
+  $('tzVT').setAttribute('aria-pressed', v === 'tab');
+  $('tzVG').setAttribute('aria-pressed', v === 'graf');
+  $('tzVistaTab').hidden = v !== 'tab';
+  $('tzVistaGraf').hidden = v !== 'graf';
+  if(v === 'graf') pintarGraficaTz();
+}
+
+/** Línea de tiempo: una barra delgada por lote, con la fecha consultada como línea vertical. */
+function pintarGraficaTz(){
+  const d = ST.ultimaTraza;
+  if(!d || !$('tlPlot')) return;
+  const D = d.fecha, HOY = ST.hoy || hoyISO();
+  const U = s => Date.parse(s + 'T00:00:00Z');
+  const DIA = 864e5;
+  const lotes = (d.todos || []).filter(r => r.ingreso);
+  if(!lotes.length){ $('tlPlot').innerHTML = '<div style="padding:18px;font-size:13.5px;color:var(--tinta2);">No hay lotes registrados para esos códigos.</div>'; return; }
+
+  let t0 = Math.min(U(D), U(HOY), ...lotes.map(r => U(r.ingreso)));
+  let t1 = Math.max(U(D), U(HOY), ...lotes.map(r => U(r.cierre || r.ingreso)));
+  const pad = Math.max(8 * DIA, (t1 - t0) * 0.04);
+  t0 -= pad; t1 += pad;
+  if(t1 - t0 < 60 * DIA){ const c = (t0 + t1) / 2; t0 = c - 30 * DIA; t1 = c + 30 * DIA; }
+  const span = t1 - t0;
+  const pc = s => Math.max(0, Math.min(100, (U(s) - t0) / span * 100));
+  const MES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+
+  // marcas de mes (cada 1, 2, 3 o 6 meses según el ancho del rango)
+  const meses = Math.round(span / (30.4 * DIA));
+  const paso = meses > 30 ? 6 : meses > 16 ? 3 : meses > 9 ? 2 : 1;
+  const ini = new Date(t0), marcas = [];
+  let y = ini.getUTCFullYear(), m = ini.getUTCMonth() + 1;
+  if(m > 11){ m = 0; y++; }
+  for(; ; ){
+    const t = Date.UTC(y, m, 1);
+    if(t > t1) break;
+    if(m % paso === 0) if((t - t0) / span * 100 < 93) marcas.push({ p: (t - t0) / span * 100, txt: MES[m] + (m === 0 ? ' ' + y : ''), anio: m === 0 });
+    m++; if(m > 11){ m = 0; y++; }
+  }
+
+  let h = '<div class="tl-row tl-head"><div class="tl-lab"></div><div class="tl-tr">'
+    + marcas.map(k => '<span class="tl-mes' + (k.anio ? ' a' : '') + '" style="left:' + k.p + '%">' + k.txt + '</span>').join('') + '</div></div>';
+
+  let prev = '';
+  lotes.forEach((r, i) => {
+    const en = r.clase === 'en_envase';
+    const fin = r.cierre || HOY;
+    const a = pc(r.ingreso), b = pc(fin);
+    const venEn = r.vencimiento && r.vencimiento >= r.ingreso && r.vencimiento <= fin;
+    const nuevo = r.codigo !== prev; prev = r.codigo;
+    h += '<div class="tl-row tl-lot' + (en ? ' in' : '') + (en && r.vencido ? ' rojo' : '') + (nuevo ? ' nuevo' : '') + '" data-i="' + i + '" tabindex="0">'
+      + '<div class="tl-lab"><b>' + esc(r.codigo) + '</b><span>' + esc(r.lote) + ' · ' + esc(r.envase) + '</span></div>'
+      + '<div class="tl-tr"><div class="tl-fr" style="left:calc(' + a + '% - 5px);width:calc(' + Math.max(0.5, b - a) + '% + 10px)"></div>'
+      + '<div class="tl-bar" style="left:' + a + '%;width:' + Math.max(0.5, b - a) + '%"></div>'
+      + (venEn ? '<div class="tl-ov" style="left:' + pc(r.vencimiento) + '%;width:' + Math.max(0, b - pc(r.vencimiento)) + '%"></div><div class="tl-vm" style="left:' + pc(r.vencimiento) + '%"></div>' : '')
+      + '</div></div>';
+  });
+
+  h += '<div class="tl-row tl-foot"><div class="tl-lab"></div><div class="tl-tr"></div></div>';
+  const cerca = Math.abs(pc(HOY) - pc(D)) < 9;
+  const grid = marcas.map(k => '<span class="tl-gl" style="left:' + k.p + '%"></span>').join('');
+  h += '<div class="tl-ovl">' + grid
+    + (HOY !== D ? '<div class="tl-hoy' + (cerca ? ' alto' : '') + '" style="left:' + pc(HOY) + '%"><i>hoy</i></div>' : '')
+    + '<div class="tl-tgt" style="left:' + pc(D) + '%"><i>' + fmtFecha(D) + '</i></div></div>';
+
+  $('tlPlot').innerHTML = h;
+  // en pantallas angostas, centrar el gráfico en la fecha consultada
+  const plot = $('tlPlot'), wrap = plot.parentElement;
+  const lab = parseFloat(getComputedStyle(plot).getPropertyValue('--lab')) || 132;
+  wrap.scrollLeft = Math.max(0, lab + pc(D) / 100 * (plot.scrollWidth - lab) - wrap.clientWidth / 2 - lab / 2);
+  $('tlPlot').querySelectorAll('.tl-lot').forEach(el => {
+    const go = () => {
+      const r = lotes[+el.dataset.i];
+      $('tlPlot').querySelectorAll('.tl-lot').forEach(x => x.classList.remove('sel'));
+      el.classList.add('sel');
+      $('tlDet').innerHTML = '<b>' + esc(r.codigo) + ' · lote ' + esc(r.lote) + '</b> en ' + esc(r.envase) + ' · ' + fmtNum(r.cantidad) + ' ' + esc(r.unidad)
+        + '<br>Ingresó el ' + fmtFecha(r.ingreso) + (r.vencimiento ? ', vence el ' + fmtFecha(r.vencimiento) : ', sin vencimiento registrado')
+        + (r.cierre ? ', se cerró el ' + fmtFecha(r.cierre) : ', sigue en el envase')
+        + '.<br>El ' + fmtFecha(D) + ': <b>' + (r.clase === 'en_envase' ? (r.vencido ? 'estaba en el envase, ya vencido' : 'estaba en el envase') : esc(r.obs.toLowerCase())) + '</b>.';
+    };
+    el.onclick = go;
+    el.onkeydown = e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); go(); } };
+  });
 }
 
 function imprimirTraza(){
@@ -3891,9 +4067,9 @@ function imprimirTraza(){
   let filas = d.disponibles.map(r =>
     '<tr><td>' + esc(r.codigo) + '</td><td>' + esc(r.nombre || '') + '</td><td>' + esc(r.lote) + '</td><td>'
     + fmtNum(r.cantidad) + ' ' + esc(r.unidad) + '</td><td>' + esc(r.envase) + '</td><td>' + fmtFecha(r.ingreso)
-    + '</td><td>' + fmtFecha(r.vencimiento) + '</td><td>' + esc(r.proveedor || '') + '</td><td>' + esc(r.fabricante || '') + '</td></tr>'
+    + '</td><td' + (r.vencido ? ' style="color:#C02626;font-weight:700;"' : '') + '>' + fmtFecha(r.vencimiento) + (r.vencido ? ' (vencido)' : '') + '</td><td>' + esc(r.proveedor || '') + '</td><td>' + esc(r.fabricante || '') + '</td></tr>'
   ).join('');
-  if(!filas) filas = '<tr><td colspan="9" style="text-align:center;padding:14px;">Sin lotes disponibles en la fecha consultada.</td></tr>';
+  if(!filas) filas = '<tr><td colspan="9" style="text-align:center;padding:14px;">Ningún lote estaba en un envase en la fecha consultada.</td></tr>';
 
   const html = '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Trazabilidad ' + esc(d.fecha) + '</title><style>'
     + '@page{size:A4;margin:14mm;}'
@@ -3910,7 +4086,7 @@ function imprimirTraza(){
     + ' &middot; Generado: ' + esc(fmtCuando(d.generado)) + '</div>'
     + '<table><thead><tr><th>Código</th><th>Producto</th><th>Lote</th><th>Cantidad</th><th>Envase</th><th>Ingreso</th><th>Vence</th><th>Proveedor</th><th>Fabricante</th></tr></thead><tbody>'
     + filas + '</tbody></table>'
-    + '<div class="pie">Un lote figura como disponible cuando la fecha consultada está entre su ingreso y el menor valor entre su vencimiento y su cierre. Documento generado por LabTrack.</div>'
+    + '<div class="pie">Un lote figura cuando la fecha consultada está entre su ingreso y su cierre (o hasta hoy, si seguía en el envase). Los lotes ya vencidos que estaban en el envase se indican como vencidos. Documento generado por LabTrack.</div>'
     + '<scr' + 'ipt>window.onload=function(){window.print();}</scr' + 'ipt></body></html>';
 
   const w = window.open('', '_blank');
