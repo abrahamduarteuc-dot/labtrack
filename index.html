@@ -422,7 +422,6 @@ tbody tr.adv td{background:var(--adv-bg);}
 </style>
 </head>
 <body>
-
 <script>
 /* qrcode-generator v1.4.4 (MIT, Kazuhiko Arase) — embebido: la red corporativa bloquea CDNs */
 //---------------------------------------------------------------------
@@ -2987,9 +2986,7 @@ var __Html5QrcodeLibrary__;(()=>{var t={449:function(t,e,r){!function(t){"use st
 <!-- ══════════════ AVISO ══════════════ -->
 <div class="al-ov" id="ovAl"><div class="al" id="alBox"></div></div>
 <div class="toast" id="toast"></div>
-
-<script>
-// ═══════════════════════════════════════════════════════════
+<script>// ═══════════════════════════════════════════════════════════
 // ⚙️ CONFIGURACIÓN — lo único que se edita al instalar
 // ═══════════════════════════════════════════════════════════
 const CFG = {
@@ -4482,6 +4479,7 @@ function menuConfig(){
     + opcionConfig('cfgCrear', 'Crear código de materia prima', 'Lo agrega al catálogo y queda disponible de inmediato.')
     + opcionConfig('cfgStock', 'Ajustar cantidad de un envase', 'Corrige el stock declarado sin perder la cantidad original.')
     + opcionConfig('cfgBaja', 'Descontinuar o reactivar un código', 'Un código descontinuado deja de ofrecerse y avisa si aparece en un envase.')
+    + opcionConfig('cfgCeder', 'Ceder control', 'Respaldo completo de los datos, guía de traspaso y cambio de clave de administrador.')
     + opcionConfig('cfgDias', 'Aviso de vencimiento', 'Cuántos días antes se marca un lote como próximo a vencer. Hoy: ' + ST.diasAlerta + ' días.')
     + '</div>'
     + '<div style="margin-top:14px;"><button class="btn btn-w" onclick="cerrarSheet()">Cerrar</button></div>'
@@ -4490,11 +4488,190 @@ function menuConfig(){
   $('cfgStock').onclick = cfgAjustarStock;
   $('cfgBaja').onclick  = cfgDescontinuar;
   $('cfgDias').onclick  = cfgDiasAlerta;
+  $('cfgCeder').onclick = cfgCeder;
 }
 
 function opcionConfig(id, titulo, desc){
   return '<div class="item" id="' + id + '"><div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>'
     + '<div class="cu"><div class="l1"><b>' + esc(titulo) + '</b></div><div class="l2">' + esc(desc) + '</div></div></div>';
+}
+
+
+/* ── Ceder control: respaldo, guía de traspaso, cambio de clave ── */
+function crc32Tabla(){
+  if(crc32Tabla.t) return crc32Tabla.t;
+  const t = new Uint32Array(256);
+  for(let n = 0; n < 256; n++){ let c = n; for(let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1); t[n] = c >>> 0; }
+  return (crc32Tabla.t = t);
+}
+function crc32(b){ const t = crc32Tabla(); let c = 0xFFFFFFFF; for(let i = 0; i < b.length; i++) c = t[(c ^ b[i]) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; }
+function zipSinComprimir(archivos){
+  const enc = new TextEncoder(), partes = [], central = [];
+  let pos = 0;
+  const u16 = n => [n & 255, (n >>> 8) & 255], u32 = n => [n & 255, (n >>> 8) & 255, (n >>> 16) & 255, (n >>> 24) & 255];
+  archivos.forEach(f => {
+    const nom = enc.encode(f.nombre), dat = enc.encode(f.datos), crc = crc32(dat);
+    const cab = [0x50,0x4B,3,4, ...u16(20), ...u16(0x0800), ...u16(0), ...u16(0), ...u16(0x21), ...u32(crc), ...u32(dat.length), ...u32(dat.length), ...u16(nom.length), ...u16(0)];
+    partes.push(new Uint8Array(cab), nom, dat);
+    central.push({ nom, crc, len: dat.length, pos });
+    pos += cab.length + nom.length + dat.length;
+  });
+  const iniC = pos;
+  central.forEach(c => {
+    const cab = [0x50,0x4B,1,2, ...u16(20), ...u16(20), ...u16(0x0800), ...u16(0), ...u16(0), ...u16(0x21), ...u32(c.crc), ...u32(c.len), ...u32(c.len), ...u16(c.nom.length), ...u16(0), ...u16(0), ...u16(0), ...u16(0), ...u32(0), ...u32(c.pos)];
+    partes.push(new Uint8Array(cab), c.nom);
+    pos += cab.length + c.nom.length;
+  });
+  partes.push(new Uint8Array([0x50,0x4B,5,6, 0,0,0,0, ...u16(central.length), ...u16(central.length), ...u32(pos - iniC), ...u32(iniC), 0,0]));
+  return new Blob(partes, { type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+}
+function xmlEsc(v){ return String(v).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function colXlsx(i){ let s = ''; i++; while(i > 0){ const m = (i - 1) % 26; s = String.fromCharCode(65 + m) + s; i = Math.floor((i - 1) / 26); } return s; }
+function construirXlsx(tablas){
+  const nombres = Object.keys(tablas);
+  const hojas = nombres.map(nom => {
+    const filas = tablas[nom].map((fila, r) => '<row r="' + (r + 1) + '">' + fila.map((v, c) => {
+      if(v === '' || v === null || v === undefined) return '';
+      const ref = colXlsx(c) + (r + 1);
+      if(typeof v === 'number' && isFinite(v)) return '<c r="' + ref + '"><v>' + v + '</v></c>';
+      return '<c r="' + ref + '" t="inlineStr"><is><t xml:space="preserve">' + xmlEsc(v) + '</t></is></c>';
+    }).join('') + '</row>').join('');
+    return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><sheetData>' + filas + '</sheetData></worksheet>';
+  });
+  const arch = [
+    { nombre:'[Content_Types].xml', datos:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>' + nombres.map((n, i) => '<Override PartName="/xl/worksheets/sheet' + (i + 1) + '.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>').join('') + '</Types>' },
+    { nombre:'_rels/.rels', datos:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>' },
+    { nombre:'xl/workbook.xml', datos:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>' + nombres.map((n, i) => '<sheet name="' + xmlEsc(n) + '" sheetId="' + (i + 1) + '" r:id="rId' + (i + 1) + '"/>').join('') + '</sheets></workbook>' },
+    { nombre:'xl/_rels/workbook.xml.rels', datos:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' + nombres.map((n, i) => '<Relationship Id="rId' + (i + 1) + '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet' + (i + 1) + '.xml"/>').join('') + '</Relationships>' }
+  ];
+  hojas.forEach((h, i) => arch.push({ nombre:'xl/worksheets/sheet' + (i + 1) + '.xml', datos:h }));
+  return zipSinComprimir(arch);
+}
+function descargarArchivo(blob, nombre){
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = nombre;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+function textoGuiaTraspaso(){
+  return [
+    '# LabTrack — Guía de traspaso',
+    '',
+    'Generada: ' + new Date().toLocaleString('es-CL'),
+    '',
+    '## Qué es',
+    'Sistema para controlar y trazar los envases de materia prima del laboratorio con códigos QR.',
+    'Son tres piezas: la aplicación (una página web), el programa (Google Apps Script) y la base de datos (una Google Sheet).',
+    '',
+    '## Direcciones',
+    '- Aplicación: ' + CFG.URL_APP,
+    '- Programa (se conecta a la hoja): ' + CFG.API_URL,
+    '',
+    '## La clave de administrador ("la llave")',
+    'Protege Configuración (crear códigos, ajustar cantidades, descontinuar, ceder control).',
+    'No va escrita en este archivo. Se entrega en persona o por un medio seguro.',
+    'El nuevo responsable puede cambiarla en: menú ☰ → Configuración → Ceder control → Cambiar clave.',
+    '',
+    '## Qué contiene la base de datos (Google Sheet, 5 pestañas)',
+    '- CATALOGO_MP: códigos de materia prima permitidos.',
+    '- ENVASES: cada envase (ENV-001…ENV-999, nunca se reutilizan) y su contenido actual.',
+    '- REGISTROS_MP: historial completo de lo cargado en cada envase. Solo se agrega, nunca se borra.',
+    '- USUARIOS: quién registró.',
+    '- CONFIG: contadores y ajustes.',
+    '',
+    '## Reglas importantes',
+    '- Un envase vacío se reutiliza con el mismo QR; cada carga queda como un registro nuevo.',
+    '- Trazabilidad: muestra lo que estaba físicamente en el envase en la fecha consultada. Un lote vencido que seguía en el envase aparece marcado en rojo.',
+    '- Se usan solo códigos de materia prima, nunca nombres.',
+    '- Máximo 999 envases en total y 200 etiquetas por tanda.',
+    '',
+    '## Opción 1 — Entregar todo tal cual (la más simple)',
+    '1. Abre la Google Sheet "LabTrack" → botón Compartir.',
+    '2. Agrega la cuenta del nuevo responsable como Editor.',
+    '3. Pasa a esa persona como Propietario (Compartir → junto a su nombre → Transferir propiedad).',
+    '4. Entrega la clave de administrador.',
+    '5. La aplicación y las etiquetas ya impresas siguen funcionando sin cambios.',
+    '',
+    '## Opción 2 — Instalar en otra cuenta o en otro sistema',
+    '1. Crea una Google Sheet nueva en la cuenta de destino.',
+    '2. Extensiones → Apps Script → pega el programa (archivo AppsScript_LabTrack.txt) → guardar.',
+    '3. Recarga la hoja → menú LabTrack → Verificar / crear hojas.',
+    '4. Importa a cada pestaña los datos del respaldo (.xlsx adjunto), pestaña por pestaña, con "Reemplazar hoja actual".',
+    '5. Implementar → Nueva implementación → Aplicación web (Ejecutar como: Yo, Acceso: Cualquier usuario) → copiar la URL /exec.',
+    '6. En index.html reemplaza el valor de API_URL por la URL nueva y súbelo al repositorio.',
+    '7. Las etiquetas QR ya impresas apuntan a la dirección de la aplicación: si cambia esa dirección, hay que reimprimirlas.',
+    '',
+    '## Opción 3 — Llevar los datos a otro sistema',
+    'El archivo de respaldo (.xlsx) tiene una hoja por tabla. Las fechas están en formato AAAA-MM-DD.',
+    'Clave de unión: envase_id (ENV-###) entre ENVASES y REGISTROS_MP.',
+    '',
+    '## Respaldo',
+    'Google guarda el historial de versiones de la hoja (Archivo → Historial de versiones).',
+    'Además, en la hoja: menú LabTrack → Activar respaldo semanal deja una copia cada domingo en Drive.',
+    ''
+  ].join('\n');
+}
+function cfgCeder(){
+  abrirSheet(
+    '<h3>Ceder control</h3>'
+    + '<div class="sd">Para entregar el sistema a otra persona sin perder nada. Se descarga en este dispositivo.</div>'
+    + '<div class="lista">'
+    + opcionConfig('cdResp', '1. Descargar respaldo de datos', 'Un archivo Excel con todas las tablas (catálogo, envases, registros, usuarios).')
+    + opcionConfig('cdGuia', '2. Descargar guía de traspaso', 'Direcciones, estructura, reglas y pasos para entregar o reinstalar.')
+    + opcionConfig('cdPin', '3. Cambiar clave de administrador', 'La clave ("la llave") se entrega en persona; no va en los archivos.')
+    + '</div>'
+    + '<div class="errm" id="cdErr"></div>'
+    + '<div style="margin-top:14px;"><button class="btn btn-w" onclick="menuConfig()">Volver</button></div>'
+  );
+  $('cdGuia').onclick = () => {
+    descargarArchivo(new Blob([textoGuiaTraspaso()], { type:'text/markdown;charset=utf-8' }), 'LabTrack_guia_traspaso.md');
+    toast('Guía descargada');
+  };
+  $('cdPin').onclick = cfgCambiarPin;
+  $('cdResp').onclick = async () => {
+    const err = $('cdErr'), t = $('cdResp').querySelector('.l2');
+    err.classList.remove('on');
+    t.textContent = 'Preparando respaldo… un momento';
+    try{
+      const d = await apiPost({ accion:'respaldo', pin: ST.pin }, 60000);
+      const hoy = (d.generado || '').slice(0, 10) || 'respaldo';
+      descargarArchivo(construirXlsx(d.tablas), 'LabTrack_respaldo_' + hoy + '.xlsx');
+      t.textContent = 'Listo. Revisa tus descargas.';
+      toast('Respaldo descargado');
+    }catch(e){
+      if(/clave/i.test(e.message)){ ST.pin = null; cerrarSheet(); toast('Clave incorrecta'); return; }
+      t.textContent = 'Un archivo Excel con todas las tablas (catálogo, envases, registros, usuarios).';
+      err.textContent = e.message; err.classList.add('on');
+    }
+  };
+}
+function cfgCambiarPin(){
+  abrirSheet(
+    '<h3>Cambiar clave</h3>'
+    + '<div class="sd">Entre 4 y 12 números. La clave anterior deja de servir de inmediato.</div>'
+    + '<div class="fld"><label for="cpNueva">Clave nueva</label><input type="password" id="cpNueva" inputmode="numeric" autocomplete="off"></div>'
+    + '<div class="fld"><label for="cpRep">Repite la clave nueva</label><input type="password" id="cpRep" inputmode="numeric" autocomplete="off"></div>'
+    + '<div class="errm" id="cpErr"></div>'
+    + '<button class="btn btn-p" id="cpGuardar">Cambiar clave</button>'
+    + '<div style="margin-top:9px;"><button class="btn btn-w" onclick="cfgCeder()">Volver</button></div>'
+  );
+  $('cpGuardar').onclick = async () => {
+    const err = $('cpErr'), btn = $('cpGuardar');
+    err.classList.remove('on');
+    const n = $('cpNueva').value.trim();
+    if(!/^[0-9]{4,12}$/.test(n)){ err.textContent = 'Usa solo números, entre 4 y 12.'; err.classList.add('on'); return; }
+    if(n !== $('cpRep').value.trim()){ err.textContent = 'Las dos claves no coinciden.'; err.classList.add('on'); return; }
+    btn.disabled = true; btn.textContent = 'Guardando… un momento';
+    try{
+      await apiPost({ accion:'cambiarPin', pin: ST.pin, nuevoPin: n });
+      ST.pin = n;
+      cerrarSheet();
+      toast('Clave cambiada');
+    }catch(e){
+      err.textContent = e.message; err.classList.add('on');
+      btn.disabled = false; btn.textContent = 'Cambiar clave';
+    }
+  };
 }
 
 /* ── Crear código ── */
@@ -4868,7 +5045,5 @@ async function recuperarUsuario(){
 
   setInterval(() => { if(!ST.escaneando && document.visibilityState === 'visible') sincronizar(true); }, CFG.SYNC_MS);
 })();
-
 </script>
-</body>
-</html>
+</body></html>
