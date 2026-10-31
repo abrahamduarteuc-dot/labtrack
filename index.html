@@ -609,7 +609,7 @@ body.dis-drag .dis-sel{touch-action:none;cursor:grab;user-select:none;-webkit-us
 .env-big{display:flex;align-items:center;gap:11px;}
 .env-big .eb{font-weight:800;font-size:17px;letter-spacing:-.2px;color:var(--azul-800);background:var(--azul-50);border:1.5px solid var(--azul-100);border-radius:10px;padding:7px 10px;white-space:nowrap;}
 /* logo grande de fondo en el inicio */
-#bgLogo{position:fixed;left:50%;top:calc(250px + (100vh - 250px - var(--nav,92px)) / 2);transform:translate(-50%,-50%);width:min(520px,130vw);pointer-events:none;z-index:0;opacity:.30;}
+#bgLogo{position:fixed;left:50%;top:calc(330px + (100vh - 330px - var(--nav,92px)) / 2);transform:translate(-50%,-50%);width:min(600px,148vw);pointer-events:none;z-index:0;opacity:.42;}
 #bgLogo canvas{width:100%;height:auto;display:block;}
 #pg-inicio .hero,#pg-inicio #avisosInicio,#pg-inicio #resFast{position:relative;z-index:1;}
 
@@ -5194,7 +5194,7 @@ function buscarMpInicio(){
 /** Logo grande, translúcido y "desintegrado" (como arena que se lleva el viento) para el fondo del inicio. */
 function logoFondo(){
   const cont = $('bgLogo'); if(!cont) return;
-  const W = 760, H = 640, L = 380, X0 = (W - L) / 2 - 40, Y0 = (H - L) / 2;
+  const W = 760, H = 640, L = 380, X0 = (W - L) / 2, Y0 = (H - L) / 2;
   const base = document.createElement('canvas'); base.width = W; base.height = H;
   const g = base.getContext('2d');
   const gr = g.createLinearGradient(X0, Y0, X0 + L, Y0 + L);
