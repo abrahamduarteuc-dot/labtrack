@@ -25,7 +25,7 @@
   --sh2:0 4px 16px rgba(10,37,64,.10);
   --sh3:0 10px 34px rgba(10,37,64,.18);
   --f:'Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
-  --nav:78px;
+  --nav:92px;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{margin:0;padding:0;}
@@ -562,18 +562,21 @@ body.dis-drag .dis-sel{touch-action:none;cursor:grab;user-select:none;-webkit-us
 .dl-r button.p{background:#1565C0;color:#fff;border-color:#1565C0;flex-basis:100%;}
 .dl-b small{font-size:11px;color:#8BA3BC;}
 
+/* ───────── Barra de abajo: botones grandes y alineados ───────── */
+.nav{align-items:stretch;padding-top:8px;padding-bottom:calc(6px + env(safe-area-inset-bottom,0px));}
+.nb{justify-content:flex-start;align-items:center;gap:5px;padding:0 2px;height:auto;}
+.nb .bx{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;}
+.nb .bx svg{width:30px;height:30px;}
+.nb .lb{font-size:11.5px;letter-spacing:.01em;line-height:1;}
+.nb.min .lb{font-size:11px;}
+.nb.main{flex:1.45;}
+.nb.main .bx{width:72px;height:54px;border-radius:17px;}
+.nb.main .bx svg{width:34px;height:34px;}
+.nb.main .lb{font-size:13px;}
+
 /* ───────── Ajustes de diseño (modo diseño, 31-oct) ───────── */
 #scanBox1{max-height:502px;}
 /* barra de abajo */
-.nb:nth-child(1){height:60px;}
-.nb:nth-child(2){height:77px;padding-left:10px;padding-right:10px;}
-.nb:nth-child(2) .bx{height:46px;position:relative;top:1px;}
-.nb:nth-child(2) .bx svg{width:29px;height:29px;}
-.nb:nth-child(3) .bx svg{width:35px;height:35px;}
-.nb:nth-child(4){height:62px;}
-.nb:nth-child(4) .lb{font-size:12px;position:relative;top:4px;}
-.nb:nth-child(5) .bx svg{width:30px;height:30px;}
-.nb:nth-child(5) .lb{font-size:11.5px;}
 /* menú Fabricar */
 #tileVer .ti svg{width:56px;height:56px;}
 #tileFab .ti svg{width:46px;height:46px;}
@@ -606,8 +609,8 @@ body.dis-drag .dis-sel{touch-action:none;cursor:grab;user-select:none;-webkit-us
 .env-big{display:flex;align-items:center;gap:11px;}
 .env-big .eb{font-weight:800;font-size:17px;letter-spacing:-.2px;color:var(--azul-800);background:var(--azul-50);border:1.5px solid var(--azul-100);border-radius:10px;padding:7px 10px;white-space:nowrap;}
 /* logo grande de fondo en el inicio */
-#bgLogo{position:fixed;right:-70px;bottom:calc(var(--nav,78px) + 10px);width:390px;max-width:105vw;pointer-events:none;z-index:0;opacity:.17;}
-#bgLogo svg{width:100%;height:auto;display:block;}
+#bgLogo{position:fixed;left:50%;top:calc(250px + (100vh - 250px - var(--nav,92px)) / 2);transform:translate(-50%,-50%);width:min(520px,130vw);pointer-events:none;z-index:0;opacity:.30;}
+#bgLogo canvas{width:100%;height:auto;display:block;}
 #pg-inicio .hero,#pg-inicio #avisosInicio,#pg-inicio #resFast{position:relative;z-index:1;}
 
 </style>
@@ -5188,28 +5191,59 @@ function buscarMpInicio(){
 }
 
 
-/** Logo grande, translúcido y "desintegrado" para el fondo del inicio. */
+/** Logo grande, translúcido y "desintegrado" (como arena que se lleva el viento) para el fondo del inicio. */
 function logoFondo(){
   const cont = $('bgLogo'); if(!cont) return;
-  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-  let huecos = '', particulas = '';
-  // huecos: aumentan hacia abajo-derecha, como si el logo se deshiciera
-  for(let i = 0; i < 520; i++){
-    const x = rnd() * 240, y = rnd() * 240, t = (x + y) / 480;
-    if(rnd() < Math.pow(t, 1.7) * 1.15) huecos += '<rect x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + (3 + rnd() * 9).toFixed(1) + '" height="' + (3 + rnd() * 9).toFixed(1) + '" fill="#000"/>';
+  const W = 760, H = 640, L = 380, X0 = (W - L) / 2 - 40, Y0 = (H - L) / 2;
+  const base = document.createElement('canvas'); base.width = W; base.height = H;
+  const g = base.getContext('2d');
+  const gr = g.createLinearGradient(X0, Y0, X0 + L, Y0 + L);
+  gr.addColorStop(0, '#4FA3F0'); gr.addColorStop(.55, '#1E6FC8'); gr.addColorStop(1, '#0F3F7A');
+  g.fillStyle = gr;
+  g.beginPath(); if(g.roundRect) g.roundRect(X0, Y0, L, L, 92); else g.rect(X0, Y0, L, L); g.fill();
+  g.save(); g.translate(X0 + L * .2, Y0 + L * .2); g.scale(L * .6 / 24, L * .6 / 24);
+  g.strokeStyle = '#fff'; g.lineWidth = 1.9; g.lineCap = 'round'; g.lineJoin = 'round';
+  g.stroke(new Path2D('M9 3v6.5L4.5 17A2.5 2.5 0 0 0 6.7 21h10.6a2.5 2.5 0 0 0 2.2-4L15 9.5V3'));
+  g.stroke(new Path2D('M7.5 3h9M7 14h10'));
+  g.restore();
+  const src = g.getImageData(0, 0, W, H), out = g.createImageData(W, H);
+  let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  // ruido suave en dos escalas: da grumos naturales en vez de cuadros
+  const gw = Math.ceil(W / 14) + 2, gh = Math.ceil(H / 14) + 2, cuad = [];
+  for(let i = 0; i < gw * gh; i++) cuad.push(rnd());
+  const suave = (x, y) => {
+    const fx = x / 14, fy = y / 14, ix = Math.floor(fx), iy = Math.floor(fy), tx = fx - ix, ty = fy - iy;
+    const a = cuad[iy * gw + ix], b = cuad[iy * gw + ix + 1], c = cuad[(iy + 1) * gw + ix], d = cuad[(iy + 1) * gw + ix + 1];
+    const sx = tx * tx * (3 - 2 * tx), sy = ty * ty * (3 - 2 * ty);
+    return (a + (b - a) * sx) * (1 - sy) + (c + (d - c) * sx) * sy;
+  };
+  const poner = (x, y, r, gg, b, al) => {
+    x |= 0; y |= 0; if(x < 0 || y < 0 || x >= W || y >= H) return;
+    const i = (y * W + x) * 4; if(out.data[i + 3] >= al) return;
+    out.data[i] = r; out.data[i + 1] = gg; out.data[i + 2] = b; out.data[i + 3] = al;
+  };
+  for(let y = 0; y < H; y++) for(let x = 0; x < W; x++){
+    const i = (y * W + x) * 4, a = src.data[i + 3]; if(!a) continue;
+    // t: 0 arriba-izquierda (entero) → 1 abajo-derecha (disuelto)
+    const t = Math.max(0, Math.min(1, ((x - X0) / L * .55 + (y - Y0) / L * .75 - .22) / .9));
+    const ruido = suave(x, y) * .6 + rnd() * .4;
+    const queda = ruido > Math.pow(t, 1.25) * 1.02;
+    const borde = Math.min(1, Math.max(0, (ruido - Math.pow(t, 1.25) * 1.02) * 7 + .15));
+    if(queda){
+      const al = a * (1 - t * .35) * (borde > .99 ? 1 : .55 + borde * .45);
+      poner(x, y, src.data[i], src.data[i + 1], src.data[i + 2], al);
+    }else if(t > .12 && rnd() < .055 * t){
+      // el grano suelto se va hacia la derecha y un poco hacia arriba
+      const d = rnd() * rnd() * 230 * t + 6;
+      poner(x + d, y - d * .35 + (rnd() - .5) * 26, src.data[i], src.data[i + 1], src.data[i + 2], Math.round(a * (.8 - rnd() * .55) * (1 - d / 280)));
+    }
   }
-  // partículas que se escapan hacia la esquina
-  for(let i = 0; i < 90; i++){
-    const t = rnd(), x = 140 + t * 105 + rnd() * 40, y = 140 + t * 105 + rnd() * 40 - 25;
-    const z = 2 + rnd() * 7;
-    particulas += '<rect x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + z.toFixed(1) + '" height="' + z.toFixed(1) + '" rx="1" fill="#1565C0" opacity="' + (0.85 - t * 0.7).toFixed(2) + '"/>';
-  }
-  cont.innerHTML = '<svg viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg"><defs>'
-    + '<linearGradient id="bgG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2E8BE6"/><stop offset="1" stop-color="#0A2540"/></linearGradient>'
-    + '<mask id="bgM" maskUnits="userSpaceOnUse" x="0" y="0" width="240" height="240"><rect width="240" height="240" fill="#fff"/>' + huecos + '</mask></defs>'
-    + '<g mask="url(#bgM)"><rect x="0" y="0" width="240" height="240" rx="58" fill="url(#bgG)"/>'
-    + '<g transform="translate(48 48) scale(6)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v6.5L4.5 17A2.5 2.5 0 0 0 6.7 21h10.6a2.5 2.5 0 0 0 2.2-4L15 9.5V3"/><path d="M7.5 3h9M7 14h10"/></g></g>'
-    + particulas + '</svg>';
+  const fin = document.createElement('canvas'); fin.width = W; fin.height = H;
+  fin.getContext('2d').putImageData(out, 0, 0);
+  // un poco de suavizado para que no se vea pixelado
+  const c2 = document.createElement('canvas'); c2.width = W; c2.height = H;
+  const g2 = c2.getContext('2d'); g2.filter = 'blur(.7px)'; g2.drawImage(fin, 0, 0);
+  cont.innerHTML = ''; cont.appendChild(c2);
 }
 
 // ═══════════════════════════════════════════════════════════
