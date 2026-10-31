@@ -549,6 +549,11 @@ body.dis .hdr{top:42px;}
 .dp-r{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:7px;}.dp-r button{flex:1;}
 .dp-i{width:100%;margin-bottom:6px;padding:7px 9px;border:1.3px solid #C3D9EE;border-radius:8px;font:inherit;font-size:16px;}
 .dis-sel{outline:2.5px dashed #E8A01E!important;outline-offset:2px;}
+body.dis-drag .dis-sel{touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none;}
+.dp-mv{display:flex;gap:5px;align-items:center;margin-bottom:7px;}
+.dp-mv span{font-size:11px;font-weight:700;color:#55718F;line-height:1.2;min-width:64px;}.dp-mv small{font-weight:600;color:#8BA3BC;font-size:10px;}
+.dp-mv button{flex:1;border:1px solid #C3D9EE;background:#EFF6FD;color:#12457A;font:inherit;font-size:14px;font-weight:800;border-radius:8px;padding:6px 0;cursor:pointer;}
+.dp-mv button.dp-dr{flex:2.2;font-size:11.5px;}.dp-mv button.dp-dr.on{background:#E8A01E;border-color:#E8A01E;color:#07213B;}
 .dl-ov{position:fixed;inset:0;z-index:950;background:rgba(7,33,59,.6);display:grid;place-items:center;padding:14px;}
 .dl-b{background:#fff;border-radius:14px;padding:14px;width:100%;max-width:560px;max-height:88vh;overflow:auto;}
 .dl-b b{font-size:15px;color:#07213B;}.dl-b p{font-size:13px;color:#55718F;}
@@ -5575,7 +5580,7 @@ async function recuperarUsuario(){
 // MODO DISEÑO — solo se activa con ?diseno=1. No guarda nada en la hoja.
 // Sirve para ajustar a mano tamaños, posiciones y textos, y mandarme la lista.
 // ═══════════════════════════════════════════════════════════
-const DIS = { sel:null, modo:'editar', cambios:{}, ejemplo:false };
+const DIS = { sel:null, modo:'editar', cambios:{}, ejemplo:false, arrastre:false, drag:null, tDrag:0 };
 
 function disGuardar(){}
 function disLeer(){ DIS.cambios = {}; }
@@ -5611,7 +5616,7 @@ function disRegistro(el){
     DIS.cambios[s] = { nombre: disNombre(el), pantalla: disPantalla(), orig: {
       letra: parseFloat(cs.fontSize), ancho: el.parentElement ? r1(el.getBoundingClientRect().width / el.parentElement.getBoundingClientRect().width * 100) : 100, alto: Math.round(el.getBoundingClientRect().height),
       pv: parseFloat(cs.paddingTop), ph: parseFloat(cs.paddingLeft), mt: parseFloat(cs.marginTop), mb: parseFloat(cs.marginBottom), radio: parseFloat(cs.borderTopLeftRadius)
-    }, nuevo:{}, mover:0, oculto:false, texto:null, alinear:null, nota:'' };
+    }, nuevo:{}, mover:0, dx:0, dy:0, oculto:false, texto:null, alinear:null, nota:'' };
   }
   return DIS.cambios[s];
 }
@@ -5645,6 +5650,29 @@ function disCambiar(k, dir){
   const v = r1(actual + dir * ctl.paso);
   ctl.set(el, v); c.nuevo[k] = v;
   disGuardar(); disPanel(); disMarcar();
+}
+function disAplicarDesp(el, c){
+  el.style.transform = (c.dx || c.dy) ? 'translate(' + c.dx + 'px,' + c.dy + 'px)' : '';
+  el.style.position = el.style.position || '';
+  if(c.dx || c.dy){ el.style.zIndex = el.style.zIndex || '5'; }
+}
+function disDesplazar(dx, dy){
+  const el = DIS.sel; if(!el) return;
+  const c = disRegistro(el);
+  c.dx = Math.round(c.dx + dx); c.dy = Math.round(c.dy + dy);
+  disAplicarDesp(el, c); disPanel();
+}
+function disArrastre(){
+  DIS.arrastre = !DIS.arrastre;
+  document.body.classList.toggle('dis-drag', DIS.arrastre);
+  disPanel();
+  toast(DIS.arrastre ? 'Arrastra el elemento marcado con el dedo' : 'Arrastre apagado', 1800);
+}
+/** Elige directo el cuadro grande (tarjeta, recuadro o fila) que contiene lo tocado. */
+function disCuadro(){
+  const el = DIS.sel; if(!el) return;
+  const c = el.parentElement && el.parentElement.closest('.card, .tile, .kpi, .item, .inv, .venc, .scan-box, .scan-ph, .fab-w, .tabla-w, .seg3, .row, .inline, .hero, .kpis');
+  if(c) disSeleccionar(c); else toast('Ya es el cuadro más grande');
 }
 function disAlinear(a){
   const el = DIS.sel; if(!el) return;
@@ -5693,13 +5721,16 @@ function disPanel(){
   const c = DIS.cambios[disSelector(el)] || { nuevo:{}, mover:0, oculto:false, nota:'', texto:null };
   const val = ctl => { const v = c.nuevo && c.nuevo[ctl.k] !== undefined ? c.nuevo[ctl.k] : ctl.get(el); return r1(v); };
   let h = '<div class="dp-top"><div class="dp-n"><b>' + esc(disNombre(el)) + '</b><span>' + esc(disSelector(el).slice(-46)) + '</span></div>'
-    + '<button onclick="disSubir()" title="Elegir el cuadro que lo contiene">⬆ Contenedor</button><button onclick="disSeleccionar(null)">✕</button></div>';
+    + '<button onclick="disCuadro()" title="Elegir el cuadro completo">▣ Cuadro</button><button onclick="disSubir()" title="Elegir el grupo que lo contiene">⬆ Grupo</button><button onclick="disSeleccionar(null)">✕</button></div>';
+  h += '<div class="dp-mv"><span>Desplazar<br><small>' + (c.dx || 0) + ' → · ' + (c.dy || 0) + ' ↓</small></span>'
+    + '<button onclick="disDesplazar(-4,0)">◀</button><button onclick="disDesplazar(0,-4)">▲</button><button onclick="disDesplazar(0,4)">▼</button><button onclick="disDesplazar(4,0)">▶</button>'
+    + '<button class="dp-dr' + (DIS.arrastre ? ' on' : '') + '" onclick="disArrastre()">✋ Arrastrar</button></div>';
   h += '<div class="dp-g">';
   CONTROLES.forEach(ctl => {
     h += '<div class="dp-s"><label>' + ctl.t + '</label><div><button onclick="disCambiar(\'' + ctl.k + '\',-1)">−</button><span>' + val(ctl) + ctl.u + '</span><button onclick="disCambiar(\'' + ctl.k + '\',1)">+</button></div></div>';
   });
   h += '</div><div class="dp-r">'
-    + '<button onclick="disMover(-1)">▲ Subir</button><button onclick="disMover(1)">▼ Bajar</button>'
+    + '<button onclick="disMover(-1)" title="Cambia de lugar con el de arriba">▲ Orden</button><button onclick="disMover(1)" title="Cambia de lugar con el de abajo">▼ Orden</button>'
     + '<button onclick="disAlinear(\'left\')">⇤</button><button onclick="disAlinear(\'center\')">⇔</button><button onclick="disAlinear(\'right\')">⇥</button>'
     + '<button onclick="disOcultar()">' + (c.oculto ? 'Mostrar' : 'Quitar') + '</button><button onclick="disRestablecer()">Deshacer</button></div>';
   const nt = el.tagName !== 'INPUT' && el.tagName !== 'SELECT' ? disNodoTexto(el) : null;
@@ -5715,7 +5746,7 @@ function disSubir(){ if(DIS.sel && DIS.sel.parentElement && DIS.sel.parentElemen
 /** Texto completo de los ajustes, listo para pegar en el chat. */
 function disTextoAjustes(){
   const claves = Object.keys(DIS.cambios).filter(k => {
-    const c = DIS.cambios[k]; return Object.keys(c.nuevo).length || c.mover || c.oculto || c.texto || c.alinear || c.nota;
+    const c = DIS.cambios[k]; return Object.keys(c.nuevo).length || c.mover || c.dx || c.dy || c.oculto || c.texto || c.alinear || c.nota;
   });
   if(!claves.length) return '';
   const nombres = { letra:'letra', ancho:'ancho', alto:'alto', pv:'aire arriba/abajo dentro', ph:'aire izq/der dentro', mt:'espacio arriba', mb:'espacio abajo', radio:'redondeo' };
@@ -5728,6 +5759,10 @@ function disTextoAjustes(){
       const o = c.orig[p] !== undefined ? r1(c.orig[p]) + unid[p] : '?';
       t += '   - ' + nombres[p] + ': ' + o + ' → ' + c.nuevo[p] + unid[p] + '\n';
     });
+    if(c.dx || c.dy){
+      const h = c.dx ? Math.abs(c.dx) + 'px a la ' + (c.dx > 0 ? 'derecha' : 'izquierda') : '', v = c.dy ? Math.abs(c.dy) + 'px hacia ' + (c.dy > 0 ? 'abajo' : 'arriba') : '';
+      t += '   - desplazar el cuadro: ' + [h, v].filter(Boolean).join(' y ') + ' desde su lugar original\n';
+    }
     if(c.mover) t += '   - posición: ' + (c.mover < 0 ? 'subir ' + Math.abs(c.mover) : 'bajar ' + c.mover) + ' lugar(es) dentro de su grupo\n';
     if(c.alinear) t += '   - alineación: ' + ({ left:'izquierda', center:'centro', right:'derecha' })[c.alinear] + '\n';
     if(c.oculto) t += '   - quitar de la pantalla\n';
@@ -5816,10 +5851,32 @@ function iniciarDiseno(){
     const t = ev.target;
     if(t.closest('#disBar, #disPanel, #disLista, #alBox')) return;
     ev.preventDefault(); ev.stopPropagation();
+    if(Date.now() - DIS.tDrag < 400) return;        // el toque que cierra un arrastre no cambia la selección
     if(t === document.documentElement || t === document.body) return;
     disSeleccionar(t);
   }, true);
   document.addEventListener('submit', ev => { if(DIS.modo === 'editar') ev.preventDefault(); }, true);
+
+  // Arrastrar con el dedo el elemento marcado (si "✋ Arrastrar" está encendido)
+  document.addEventListener('pointerdown', ev => {
+    if(DIS.modo !== 'editar' || !DIS.arrastre || !DIS.sel || !DIS.sel.contains(ev.target)) return;
+    if(ev.target.closest('#disBar, #disPanel, #disLista')) return;
+    const c = disRegistro(DIS.sel);
+    DIS.drag = { x: ev.clientX, y: ev.clientY, dx: c.dx, dy: c.dy, el: DIS.sel, mov: false };
+    try{ DIS.sel.setPointerCapture(ev.pointerId); }catch(e){}
+    ev.preventDefault();
+  }, true);
+  document.addEventListener('pointermove', ev => {
+    const d = DIS.drag; if(!d) return;
+    const c = disRegistro(d.el);
+    const nx = Math.round(d.dx + ev.clientX - d.x), ny = Math.round(d.dy + ev.clientY - d.y);
+    if(Math.abs(nx - c.dx) + Math.abs(ny - c.dy) > 0) d.mov = true;
+    c.dx = nx; c.dy = ny; disAplicarDesp(d.el, c);
+    ev.preventDefault();
+  }, { capture:true, passive:false });
+  const finDrag = () => { const d = DIS.drag; if(!d) return; DIS.drag = null; if(d.mov) DIS.tDrag = Date.now(); disPanel(); };
+  document.addEventListener('pointerup', finDrag, true);
+  document.addEventListener('pointercancel', finDrag, true);
 }
 
 
