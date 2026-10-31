@@ -71,6 +71,7 @@ input,select,textarea{font-family:inherit;}
 
 /* ───────── Contenedor ───────── */
 .wrap{max-width:720px;margin:0 auto;padding:16px 16px 28px;}
+[hidden]{display:none!important;}
 .pg{display:none;}
 .pg.on{display:block;animation:fade .18s ease;}
 @keyframes fade{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
@@ -532,6 +533,7 @@ body.modo-visor{padding-bottom:0;}
 /* ═════════ Modo diseño (solo con ?diseno=1) ═════════ */
 body.dis{padding-top:42px;}
 body.dis .hdr{top:42px;}
+body.lectura #verZona .volver{display:none;}
 #disBar{position:fixed;top:0;left:0;right:0;z-index:900;height:42px;background:#07213B;display:flex;gap:5px;align-items:center;padding:0 8px;}
 #disBar button{flex:1;border:1px solid #2E8BE6;background:#0C3157;color:#fff;font:inherit;font-size:11.5px;font-weight:700;border-radius:8px;padding:6px 4px;cursor:pointer;}
 #disBar button.on{background:#E8A01E;border-color:#E8A01E;color:#07213B;}
@@ -609,9 +611,43 @@ body.dis-drag .dis-sel{touch-action:none;cursor:grab;user-select:none;-webkit-us
 .env-big{display:flex;align-items:center;gap:11px;}
 .env-big .eb{font-weight:800;font-size:17px;letter-spacing:-.2px;color:var(--azul-800);background:var(--azul-50);border:1.5px solid var(--azul-100);border-radius:10px;padding:7px 10px;white-space:nowrap;}
 /* logo grande de fondo en el inicio */
-#bgLogo{position:fixed;left:50%;top:calc(330px + (100vh - 330px - var(--nav,92px)) / 2);transform:translate(-50%,-50%);width:min(600px,148vw);pointer-events:none;z-index:0;opacity:.42;}
+#bgLogo{position:fixed;left:50%;top:calc(290px + (100vh - 290px - var(--nav,92px)) / 2);transform:translate(-50%,-50%);width:min(600px,148vw);pointer-events:none;z-index:0;opacity:.55;}
 #bgLogo canvas{width:100%;height:auto;display:block;}
 #pg-inicio .hero,#pg-inicio #avisosInicio,#pg-inicio #resFast{position:relative;z-index:1;}
+
+/* ───────── Etiquetas: estado rápido, tamaños, vista de impresión ───────── */
+.est-mini{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:0 0 10px;}
+.est-mini button{border:1.3px solid var(--linea);background:var(--blanco);border-radius:11px;padding:7px 2px 6px;cursor:pointer;font:inherit;color:var(--tinta2);box-shadow:var(--sh);display:flex;flex-direction:column;align-items:center;gap:1px;min-width:0;}
+.est-mini b{font-size:18px;font-weight:800;color:var(--azul-700);line-height:1.1;font-variant-numeric:tabular-nums;}
+.est-mini span{font-size:9px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;line-height:1.1;text-align:center;min-height:2.2em;display:flex;align-items:center;}
+.est-mini .v b{color:var(--azul-500);} .est-mini .o b{color:var(--ok);} .est-mini .x b{color:var(--mal);} .est-mini .w b{color:#B7791F;}
+.est-mini button[aria-selected=true]{background:var(--azul-600);border-color:var(--azul-600);color:#fff;}
+.est-mini button[aria-selected=true] b{color:#fff;}
+#estMiniRes .lista{margin-bottom:6px;}
+#estMiniRes .mas{display:block;width:100%;text-align:center;font-size:12.5px;font-weight:700;color:var(--azul-600);background:none;border:0;padding:6px;cursor:pointer;margin-bottom:10px;}
+.qr-grid{grid-template-columns:repeat(3,1fr)!important;gap:8px;}
+.qr-it{padding:5px 5px 7px;}
+.qr-it span{font-size:13.5px;margin-top:4px;letter-spacing:.03em;}
+.tam{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:11px;}
+.tam button{border:1.5px solid var(--linea2);background:var(--blanco);border-radius:11px;padding:8px 4px;cursor:pointer;font:inherit;color:var(--tinta);display:flex;flex-direction:column;align-items:center;gap:1px;}
+.tam b{font-size:13.5px;font-weight:800;} .tam small{font-size:11px;color:var(--tinta3);}
+.tam button[aria-selected=true]{border-color:var(--azul-600);background:var(--azul-50);box-shadow:0 0 0 3px rgba(46,139,230,.15);}
+.tam button[aria-selected=true] b{color:var(--azul-700);}
+
+#impZona{position:fixed;inset:0;z-index:5000;background:#DCE6F0;overflow:auto;-webkit-overflow-scrolling:touch;}
+#impBar{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:8px;background:var(--azul-900);color:#fff;padding:10px 12px;padding-top:calc(10px + env(safe-area-inset-top,0px));box-shadow:0 2px 10px rgba(0,0,0,.2);}
+#impBar .t{flex:1;min-width:0;font-weight:800;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#impBar button{border:0;border-radius:10px;font:inherit;font-weight:800;font-size:14px;padding:10px 14px;cursor:pointer;}
+#impBar .vol{background:rgba(255,255,255,.14);color:#fff;}
+#impBar .imp{background:#fff;color:var(--azul-700);}
+#impHoja{background:#fff;margin:12px auto 40px;padding:8mm;width:210mm;box-shadow:0 4px 18px rgba(10,37,64,.18);color:#10273F;font-family:Arial,Helvetica,sans-serif;}
+@media print{
+  body.imp-on{padding:0!important;background:#fff!important;}
+  body.imp-on > *:not(#impZona){display:none!important;}
+  body.imp-on #impZona{position:static;overflow:visible;background:#fff;}
+  body.imp-on #impBar{display:none!important;}
+  body.imp-on #impHoja{margin:0;padding:0;width:auto;max-width:none;box-shadow:none;zoom:1!important;}
+}
 
 </style>
 </head>
@@ -2967,6 +3003,9 @@ var __Html5QrcodeLibrary__;(()=>{var t={449:function(t,e,r){!function(t){"use st
   <div class="titulo"><h2>Etiquetas QR</h2></div>
   <div class="sub">Genera etiquetas vacías e imprímelas. Cada una identifica un envase físico.</div>
 
+  <div class="est-mini" id="estMini" role="tablist" aria-label="Estado de las etiquetas"></div>
+  <div id="estMiniRes"></div>
+
   <div class="card">
     <div class="card-t">Generar</div>
     <div class="card-d">Los números son correlativos y no se repiten, aunque varias personas generen al mismo tiempo.</div>
@@ -2982,6 +3021,12 @@ var __Html5QrcodeLibrary__;(()=>{var t={449:function(t,e,r){!function(t){"use st
     <div class="card-d" id="ultTx"></div>
     <div class="qr-grid" id="ultGrid"></div>
     <div class="sep"></div>
+    <label class="lbl">Tamaño de la etiqueta</label>
+    <div class="tam" id="tamSel">
+      <button type="button" data-tam="p"><b>Pequeña</b><small>envase 1 L</small></button>
+      <button type="button" data-tam="m"><b>Mediana</b><small>1 galón</small></button>
+      <button type="button" data-tam="g"><b>Grande</b><small>tineta 4 gl</small></button>
+    </div>
     <button class="btn btn-w" id="btnImp"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Imprimir etiquetas</button>
     <div class="hint" style="margin-top:8px;">En el cuadro de impresión de Chrome, desactiva «Encabezados y pies de página».</div>
   </div>
@@ -3004,7 +3049,7 @@ var __Html5QrcodeLibrary__;(()=>{var t={449:function(t,e,r){!function(t){"use st
     <label class="lbl" for="manual1">¿La cámara no lee? Escribe el código</label>
     <div class="inline">
       <div class="fld"><input type="text" id="manual1" placeholder="ENV-001" autocomplete="off" autocapitalize="characters"></div>
-      <button class="btn btn-w btn-sm" id="btnMan1">Buscar</button>
+      <button class="btn btn-p btn-sm" id="btnMan1">Registrar</button>
     </div>
   </div>
 
@@ -3019,7 +3064,7 @@ var __Html5QrcodeLibrary__;(()=>{var t={449:function(t,e,r){!function(t){"use st
     <div class="tiles">
       <button class="tile" id="tileVer">
         <span class="ti"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8V5.5A2.5 2.5 0 0 1 5.5 3H8M16 3h2.5A2.5 2.5 0 0 1 21 5.5V8M21 16v2.5a2.5 2.5 0 0 1-2.5 2.5H16M8 21H5.5A2.5 2.5 0 0 1 3 18.5V16"/><path d="M3.5 12h17"/></svg></span>
-        <b>Ver envase</b><small>Escanea y mira qué contiene</small>
+        <b>Ver y editar envase</b><small>Escanea, mira su contenido y modifícalo</small>
       </button>
       <button class="tile verde" id="tileFab">
         <span class="ti"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v6.5L4.5 17A2.5 2.5 0 0 0 6.7 21h10.6a2.5 2.5 0 0 0 2.2-4L15 9.5V3"/><path d="M7.5 3h9M7 14h10"/></svg></span>
@@ -3030,8 +3075,8 @@ var __Html5QrcodeLibrary__;(()=>{var t={449:function(t,e,r){!function(t){"use st
 
   <div id="verZona" hidden>
     <button class="volver" onclick="mostrarMenuFab()">‹ Volver</button>
-    <div class="titulo"><h2>Ver envase</h2></div>
-    <div class="sub">Escanea un envase y mira qué contiene, su vencimiento y su historial.</div>
+    <div class="titulo"><h2 id="verTit">Ver y editar envase</h2></div>
+    <div class="sub" id="verSub">Escanea un envase: mira qué contiene y, si hace falta, reemplázalo o déjalo vacío.</div>
 
     <div id="verPaso1">
       <div class="scan-box" id="scanBox2"><div id="reader2"></div><div class="marco"><i></i></div></div>
@@ -3044,7 +3089,7 @@ var __Html5QrcodeLibrary__;(()=>{var t={449:function(t,e,r){!function(t){"use st
       <label class="lbl" for="manual2">¿La cámara no lee? Escribe el código</label>
       <div class="inline">
         <div class="fld"><input type="text" id="manual2" placeholder="ENV-001" autocomplete="off" autocapitalize="characters"></div>
-        <button class="btn btn-w btn-sm" id="btnMan2">Buscar</button>
+        <button class="btn btn-p btn-sm" id="btnMan2">Ver</button>
       </div>
     </div>
 
@@ -3550,6 +3595,7 @@ function ir(v, silencio, sinCamara){
   if(v === 'hist') cargarHistorial();
   if(v === 'estado') pintarEstado();
   if(v === 'inicio') pintarInicio();
+  if(v === 'qr') pintarEstMini();
 }
 
 function abrirDrawer(){ $('ovDrawer').classList.add('on'); $('drawer').classList.add('on'); }
@@ -3751,6 +3797,10 @@ function resetVer(){
   $('verPaso2').style.display = 'none';
   $('verPaso2').innerHTML = '';
   $('manual2').value = '';
+  ST.soloLectura = false;
+  document.body.classList.remove('lectura');
+  $('verTit').textContent = 'Ver y editar envase';
+  $('verSub').textContent = 'Escanea un envase: mira qué contiene y, si hace falta, reemplázalo o déjalo vacío.';
 }
 
 /** Punto único de entrada tras leer un QR o escribir el código. */
@@ -4065,7 +4115,7 @@ function pintarVerEnvase(d){
   let h = '<div class="card"><div class="card-t">Envase ' + esc(e.id) + '</div>';
 
   if(!d.actual){
-    h += '<div class="venc n"><div class="vi">○</div><div><b>Envase vacío</b><span>No tiene material cargado. Puedes registrarlo desde el botón Registro.</span></div></div>';
+    h += '<div class="venc n"><div class="vi">○</div><div><b>Envase vacío</b><span>No tiene material cargado.</span></div></div>';
   }else{
     const a = d.actual;
     const v = vigenciaDe(a.vencimiento);
@@ -4086,7 +4136,18 @@ function pintarVerEnvase(d){
     if(a.ajuste) h += '<div class="nota" style="margin-top:9px;">Ajuste de cantidad: ' + esc(a.ajuste) + '</div>';
   }
 
-  h += '<div class="sep"></div><button class="btn btn-p" onclick="resetVer();iniciarScanner(\'reader2\')">Escanear otro envase</button></div>';
+  const lectura = ST.soloLectura; ST.soloLectura = false;
+  document.body.classList.toggle('lectura', !!lectura);
+  $('verTit').textContent = lectura ? 'Envase ' + e.id : 'Ver y editar envase';
+  $('verSub').textContent = lectura ? 'Solo lectura. Para modificarlo usa el botón Registro.' : 'Escanea un envase: mira qué contiene y, si hace falta, reemplázalo o déjalo vacío.';
+  h += '<div class="sep"></div>';
+  if(!lectura){
+    if(d.actual) h += '<button class="btn btn-o" onclick="editarEnvase(\'' + esc(e.id) + '\')">Editar: reemplazar o dejar vacío</button><div style="height:8px;"></div>';
+    else h += '<button class="btn btn-ok" onclick="editarEnvase(\'' + esc(e.id) + '\')">Registrar material en este envase</button><div style="height:8px;"></div>';
+    h += '<button class="btn btn-w" onclick="resetVer();iniciarScanner(\'reader2\')">Escanear otro envase</button></div>';
+  }else{
+    h += '<button class="btn btn-w" onclick="ir(\'inicio\')">Ir al inicio de LabTrack</button></div>';
+  }
 
   const hist = d.historial.filter(x => x.estado === 'cerrado');
   if(hist.length){
@@ -4363,9 +4424,7 @@ function imprimirTraza(){
     + '<div class="pie">Un lote figura cuando la fecha consultada está entre su ingreso y su cierre (o hasta hoy, si seguía en el envase). Los lotes ya vencidos que estaban en el envase se indican como vencidos. Documento generado por LabTrack.</div>'
     + '<scr' + 'ipt>window.onload=function(){window.print();}</scr' + 'ipt></body></html>';
 
-  const w = window.open('', '_blank');
-  if(w){ w.document.write(html); w.document.close(); }
-  else toast('Permite las ventanas emergentes para imprimir');
+  imprimirDoc(html, 'Trazabilidad ' + fmtFecha(d.fecha));
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -4690,12 +4749,10 @@ async function copiarUrlFab(){
 }
 async function imprimirFab(dd){
   const d = dd || ST.fab.verQR;
-  const w = window.open('', '_blank');
-  if(!w){ toast('Permite las ventanas emergentes para imprimir'); return; }
   const c = await lienzoFab(d);
   const filas = (d.items || []).map(x => '<tr' + (x.estado === 'vencido' ? ' class="v"' : '') + '><td><b>' + esc(x.codigo) + '</b></td><td>' + esc(x.envase) + '</td><td>' + esc(x.lote)
     + '</td><td>' + fmtFecha(x.vence) + '</td><td>' + esc(x.proveedor || '') + '</td><td>' + esc(ESTADO_CORTO[x.estado] || x.estado) + '</td></tr>').join('');
-  w.document.write('<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Registro ' + esc(d.lmat) + '</title><style>'
+  imprimirDoc('<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Registro ' + esc(d.lmat) + '</title><style>'
     + '@page{size:A4;margin:14mm;}body{font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#10273F;}'
     + '.top{display:flex;gap:8mm;align-items:flex-start;margin-bottom:6mm;}.top img{width:52mm;}'
     + 'h1{font-size:16px;color:#13784A;margin:0 0 3mm;}dl{display:grid;grid-template-columns:auto 1fr;gap:1.5mm 5mm;margin:0;font-size:11px;}dt{color:#55718F;}dd{margin:0;font-weight:700;}'
@@ -4708,8 +4765,7 @@ async function imprimirFab(dd){
     + '<dt>Registro</dt><dd>' + esc(d.fab_id) + '</dd><dt>Materias primas</dt><dd>' + (d.items || []).length + '</dd></dl></div></div>'
     + '<table><thead><tr><th>Código</th><th>Envase</th><th>Lote</th><th>Vence</th><th>Proveedor</th><th>Estado</th></tr></thead><tbody>' + filas + '</tbody></table>'
     + '<div class="pie">Estado calculado a la fecha de fabricación. Documento generado por LabTrack.</div>'
-    + '<scr' + 'ipt>window.onload=function(){window.print();}</scr' + 'ipt></body></html>');
-  w.document.close();
+    + '</body></html>', 'Registro ' + d.lmat);
 }
 
 /** QR de fabricación leído desde dentro de la app (botón Ver envase). */
@@ -4851,6 +4907,53 @@ async function buscarLmatTz(){
   }catch(e){ errorTz(e); }
 }
 
+
+// ═══════════════════════════════════════════════════════════
+// VISTA DE IMPRESIÓN (dentro de la app, con botón Volver)
+// ═══════════════════════════════════════════════════════════
+/** Pone cada regla de estilo del documento a imprimir bajo #impHoja, para no tocar la app. */
+function cssAcotado(css){
+  return css.replace(/([^{}]+)\{([^{}]*)\}/g, (m, sel, dec) => {
+    sel = sel.trim();
+    if(sel.charAt(0) === '@') return m;
+    return sel.split(',').map(x => {
+      x = x.trim();
+      if(x === 'body' || x === 'html') return '#impHoja';
+      return '#impHoja ' + x;
+    }).join(',') + '{' + dec + '}';
+  });
+}
+function imprimirDoc(html, titulo){
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const css = Array.from(doc.querySelectorAll('style')).map(x => x.textContent).join('\n');
+  doc.querySelectorAll('script').forEach(x => x.remove());
+  vistaImpresion(titulo || doc.title || 'Imprimir', doc.body.innerHTML, css);
+}
+function vistaImpresion(titulo, cuerpo, css){
+  cerrarImpresion();
+  const st = document.createElement('style'); st.id = 'impCss'; st.textContent = cssAcotado(css || '');
+  document.head.appendChild(st);
+  const z = document.createElement('div'); z.id = 'impZona';
+  z.innerHTML = '<div id="impBar"><button type="button" class="vol" onclick="cerrarImpresion()">‹ Volver</button>'
+    + '<div class="t">' + esc(titulo) + '</div>'
+    + '<button type="button" class="imp" onclick="window.print()">Imprimir / PDF</button></div>'
+    + '<div id="impHoja">' + cuerpo + '</div>';
+  ST.yAntesImp = window.scrollY;
+  document.body.appendChild(z);
+  document.body.classList.add('imp-on');
+  // en pantalla, la hoja A4 se achica para caber entera en el teléfono
+  const hoja = $('impHoja'), ancho = hoja.offsetWidth, cabe = window.innerWidth - 16;
+  if(ancho > cabe) hoja.style.zoom = (cabe / ancho).toFixed(3);
+}
+function cerrarImpresion(){
+  const z = $('impZona'); if(z) z.remove();
+  const st = $('impCss'); if(st) st.remove();
+  if(document.body.classList.contains('imp-on')){
+    document.body.classList.remove('imp-on');
+    window.scrollTo(0, ST.yAntesImp || 0);
+  }
+}
+
 // ═══════════════════════════════════════════════════════════
 // ETIQUETAS QR
 // ═══════════════════════════════════════════════════════════
@@ -4881,27 +4984,31 @@ function pintarUltimos(){
   ).join('');
 }
 
+/** Tamaños de etiqueta para imprimir (A4). */
+const TAMANOS = {
+  p: { n:'Pequeña · envase 1 L',   cols:3, w:63, h:40,  qr:28, id:13, mk:6.5 },
+  m: { n:'Mediana · 1 galón',      cols:3, w:63, h:60,  qr:42, id:17, mk:7.5 },
+  g: { n:'Grande · tineta 4 gl',   cols:2, w:95, h:120, qr:78, id:28, mk:10 }
+};
+function tamActual(){ let t = 'p'; try{ t = localStorage.getItem('lt_tam') || 'p'; }catch(e){} return TAMANOS[t] ? t : 'p'; }
+function setTam(t){
+  try{ localStorage.setItem('lt_tam', t); }catch(e){}
+  document.querySelectorAll('#tamSel button').forEach(b => b.setAttribute('aria-selected', b.dataset.tam === t));
+}
 function imprimirEtiquetas(){
   if(!ST.ultimosQR.length){ toast('Genera etiquetas primero'); return; }
+  const T = TAMANOS[tamActual()];
   const celdas = ST.ultimosQR.map(id =>
-    '<div class="et"><img src="' + qrDataURL(urlEnvase(id), 230, 1) + '"><div class="id">' + esc(id) + '</div><div class="mk">LabTrack</div></div>'
+    '<div class="et"><img src="' + qrDataURL(urlEnvase(id), Math.round(T.qr * 12), 1) + '"><div class="id">' + esc(id) + '</div><div class="mk">LabTrack</div></div>'
   ).join('');
-
-  const html = '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Etiquetas</title><style>'
-    + '@page{size:A4;margin:8mm;}'
-    + 'body{margin:0;font-family:Arial,Helvetica,sans-serif;}'
-    + '.hoja{display:grid;grid-template-columns:repeat(3,63mm);gap:2mm;justify-content:center;}'
-    + '.et{width:63mm;height:38mm;border:0.4mm dashed #B9CBDD;border-radius:2mm;display:flex;flex-direction:column;'
-    + 'align-items:center;justify-content:center;padding:1.5mm;break-inside:avoid;page-break-inside:avoid;}'
-    + '.et img{width:22mm;height:22mm;display:block;}'
-    + '.et .id{font-size:11pt;font-weight:bold;letter-spacing:.04em;margin-top:1mm;color:#000;}'
-    + '.et .mk{font-size:6pt;color:#8BA3BC;letter-spacing:.12em;}'
-    + '</style></head><body><div class="hoja">' + celdas + '</div>'
-    + '<scr' + 'ipt>window.onload=function(){window.print();}</scr' + 'ipt></body></html>';
-
-  const w = window.open('', '_blank');
-  if(w){ w.document.write(html); w.document.close(); }
-  else toast('Permite las ventanas emergentes para imprimir');
+  const css = '@page{size:A4;margin:8mm;}'
+    + '.hoja{display:grid;grid-template-columns:repeat(' + T.cols + ',' + T.w + 'mm);gap:2mm;justify-content:center;}'
+    + '.et{width:' + T.w + 'mm;height:' + T.h + 'mm;border:0.4mm dashed #B9CBDD;border-radius:2mm;display:flex;flex-direction:column;'
+    + 'align-items:center;justify-content:center;padding:1.5mm;break-inside:avoid;page-break-inside:avoid;box-sizing:border-box;}'
+    + '.et img{width:' + T.qr + 'mm;height:' + T.qr + 'mm;display:block;}'
+    + '.et .id{font-size:' + T.id + 'pt;font-weight:bold;letter-spacing:.04em;margin-top:1mm;color:#000;line-height:1.1;}'
+    + '.et .mk{font-size:' + T.mk + 'pt;color:#8BA3BC;letter-spacing:.12em;}';
+  vistaImpresion(ST.ultimosQR.length + ' etiqueta(s) · ' + T.n, '<div class="hoja">' + celdas + '</div>', css);
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -5055,11 +5162,23 @@ function pintarEstado(){
   if(q) lista = lista.filter(e => (e.id + ' ' + (e.mp ? e.mp.codigo + ' ' + e.mp.lote : '')).toUpperCase().indexOf(q) > -1);
 
   if(!lista.length){ $('estRes').innerHTML = '<div class="card">' + vacio('Sin envases que coincidan.') + '</div>'; return; }
+  $('estRes').innerHTML = itemsEstado(lista);
+}
 
-  $('estRes').innerHTML = '<div class="lista">' + lista.map(e => {
+function filtrarEnvases(f){
+  let l = ST.envases.slice();
+  if(f === 'vacio')   l = l.filter(e => e.estado === 'vacio');
+  if(f === 'ocupado') l = l.filter(e => e.estado === 'ocupado');
+  if(f === 'vencido') l = l.filter(e => e.mp && e.mp.vigencia === 'vencido');
+  if(f === 'por_vencer') l = l.filter(e => e.mp && e.mp.vigencia === 'por_vencer');
+  return l;
+}
+
+function itemsEstado(lista){
+  return '<div class="lista">' + lista.map(e => {
     const ocupado = e.estado === 'ocupado' && e.mp;
     const cl = !ocupado ? '' : (e.mp.vigencia === 'vencido' ? 'bad' : (e.mp.vigencia === 'por_vencer' ? 'warn' : 'full'));
-    return '<div class="item" onclick="verDesdeHistorial(\'' + esc(e.id) + '\')">'
+    return '<div class="item" onclick="abrirEnvaseLista(\'' + esc(e.id) + '\')">'
       + '<div class="ic ' + cl + '">' + (ocupado
         ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 12.1a1 1 0 0 1-1 .9H7.2a1 1 0 0 1-1-.9z"/><path d="M9 8V5h6v3"/></svg>'
         : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/></svg>') + '</div>'
@@ -5071,9 +5190,41 @@ function pintarEstado(){
       + (ocupado
         ? '<div class="l2">' + esc(e.mp.codigo) + ' · lote ' + esc(e.mp.lote) + ' · ' + fmtNum(e.mp.cantidad) + ' ' + esc(e.mp.unidad) + '</div>'
           + '<div class="l3">vence ' + fmtFecha(e.mp.vencimiento) + '</div>'
-        : '<div class="l2">Listo para usar</div><div class="l3">Creado el ' + fmtFecha(e.creado) + '</div>')
+        : '<div class="l2">Toca para registrar material</div><div class="l3">Creado el ' + fmtFecha(e.creado) + '</div>')
       + '</div></div>';
   }).join('') + '</div>';
+}
+
+/** Desde una lista: vacío → Registro con su código; con material → Ver y editar. */
+function abrirEnvaseLista(id){
+  const e = ST.envases.find(x => x.id === id);
+  if(e && e.estado === 'ocupado') verDesdeHistorial(id);
+  else editarEnvase(id);
+}
+
+/** Abre Registro con el envase ya cargado (sin cámara): formulario si está vacío, u opciones reemplazar / vaciar. */
+function editarEnvase(id){
+  ir('registro', false, true);
+  procesarEnvase(id);
+}
+
+const MINI_EST = [['todos','Todas',''],['vacio','Vacíos','v'],['ocupado','Con material','o'],['vencido','Vencidos','x'],['por_vencer','Por vencer','w']];
+function pintarEstMini(){
+  const caja = $('estMini'); if(!caja) return;
+  const n = { todos: ST.envases.length };
+  MINI_EST.forEach(f => { if(f[0] !== 'todos') n[f[0]] = filtrarEnvases(f[0]).length; });
+  caja.innerHTML = MINI_EST.map(f => '<button type="button" role="tab" class="' + f[2] + '" aria-selected="' + (ST.miniFiltro === f[0]) + '" onclick="toggleEstMini(\'' + f[0] + '\')"><b>' + n[f[0]] + '</b><span>' + f[1] + '</span></button>').join('');
+  const r = $('estMiniRes');
+  if(!ST.miniFiltro){ r.innerHTML = ''; return; }
+  const l = filtrarEnvases(ST.miniFiltro);
+  if(!l.length){ r.innerHTML = '<div class="card tight">' + vacio('No hay envases en este estado.') + '</div>'; return; }
+  const max = 12;
+  r.innerHTML = itemsEstado(l.slice(0, max))
+    + '<button type="button" class="mas" onclick="ST.estFiltro=\'' + ST.miniFiltro + '\';ir(\'estado\')">' + (l.length > max ? 'Ver los ' + l.length + ' en Estado de las etiquetas ›' : 'Abrir Estado de las etiquetas ›') + '</button>';
+}
+function toggleEstMini(f){
+  ST.miniFiltro = ST.miniFiltro === f ? null : f;
+  pintarEstMini();
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -5198,7 +5349,7 @@ function logoFondo(){
   const base = document.createElement('canvas'); base.width = W; base.height = H;
   const g = base.getContext('2d');
   const gr = g.createLinearGradient(X0, Y0, X0 + L, Y0 + L);
-  gr.addColorStop(0, '#4FA3F0'); gr.addColorStop(.55, '#1E6FC8'); gr.addColorStop(1, '#0F3F7A');
+  gr.addColorStop(0, '#3A93EE'); gr.addColorStop(.55, '#1560C0'); gr.addColorStop(1, '#0B3470');
   g.fillStyle = gr;
   g.beginPath(); if(g.roundRect) g.roundRect(X0, Y0, L, L, 92); else g.rect(X0, Y0, L, L); g.fill();
   g.save(); g.translate(X0 + L * .2, Y0 + L * .2); g.scale(L * .6 / 24, L * .6 / 24);
@@ -5723,6 +5874,7 @@ async function sincronizar(silencioso){
     cacheGuardar();
     if(ST.vista === 'inicio') pintarInicio();
     if(ST.vista === 'estado') pintarEstado();
+    if(ST.vista === 'qr') pintarEstMini();
     if(!silencioso) toast('Datos actualizados');
   }catch(e){
     if(!silencioso) toast('Sin conexión con la base de datos');
@@ -5745,6 +5897,7 @@ async function arranque(){
     cacheGuardar();
     pintarInicio();
     if(ST.vista === 'estado') pintarEstado();
+    if(ST.vista === 'qr') pintarEstMini();
   }catch(e){
     toast('No se pudo conectar. Se muestran los últimos datos guardados.');
   }
@@ -6121,6 +6274,8 @@ function iniciarDiseno(){
   // Etiquetas
   $('btnGen').onclick = generarEtiquetas;
   $('btnImp').onclick = imprimirEtiquetas;
+  document.querySelectorAll('#tamSel button').forEach(b => b.onclick = () => setTam(b.dataset.tam));
+  setTam(tamActual());
 
   // Registro y Ver
   $('btnScan1').onclick = () => toggleScanner('reader');
@@ -6177,7 +6332,9 @@ function iniciarDiseno(){
   arranque().then(() => {
     recuperarUsuario();
     if(env){
-      ir('registro', true, true);
+      // Escaneado con la cámara del celular: siempre solo lectura.
+      ir('ver', true, 'ver');
+      ST.soloLectura = true;
       procesarEnvase(env.trim().toUpperCase());
     }else if(vista === 'traza'){
       ir('traza');
