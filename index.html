@@ -419,6 +419,116 @@ tbody tr.adv td{background:var(--adv-bg);}
 .tl-det{font-size:13px;color:var(--tinta2);margin-top:12px;min-height:40px;}
 .tl-det b{color:var(--tinta);}
 
+/* ═════════ v2.1 · Tamaños más compactos ═════════ */
+.wrap{padding:13px 14px 24px;}
+.titulo{margin-bottom:2px;align-items:center;}
+.titulo h2{font-size:19px;}
+.sub{font-size:12.5px;margin-bottom:11px;line-height:1.4;}
+.sub.sm{font-size:12px;margin-bottom:9px;}
+.card{padding:12px 13px;margin-bottom:10px;border-radius:12px;}
+.card.tight{padding:11px 12px;}
+.card-t{font-size:10.5px;margin-bottom:4px;}
+.card-d{font-size:12px;margin-bottom:9px;line-height:1.4;}
+.fld{margin-bottom:9px;}
+.fld>label{font-size:11.5px;margin-bottom:3px;}
+.fld input,.fld select{height:40px;}
+.fld input,.fld select,.fld textarea{padding:8px 11px;font-size:16px;border-width:1.3px;}
+.hint{font-size:11px;margin-top:2px;line-height:1.35;}
+.btn{padding:9px 13px;font-size:13.5px;gap:6px;border-radius:9px;}
+.btn-sm{padding:7px 11px;font-size:12.5px;}
+.row{gap:8px;}
+.sep{margin:11px 0;}
+.scan-ph{padding:14px 12px;margin-bottom:9px;}
+.scan-ph p{font-size:12.5px;margin-top:5px;}
+.scan-box{margin-bottom:9px;}
+.chips{margin-top:6px;gap:5px;}
+.kpi{padding:9px 8px;}
+.kpi b{font-size:21px;}
+.item{padding:10px 12px;gap:10px;}
+.venc{padding:10px 12px;margin-bottom:10px;}
+.dl{gap:5px 12px;font-size:13px;}
+.hero{padding:16px 15px!important;}
+.hero h1{font-size:19px!important;}
+.hero p{font-size:12.5px!important;}
+thead th{padding:7px 9px;}
+tbody td{padding:7px 9px;font-size:12.5px;}
+
+/* Etiqueta compacta y fila "campo + botón" */
+.lbl{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:var(--tinta2);margin:0 0 3px;}
+.lbl .cnt{margin-left:auto;font-size:11px;font-weight:800;color:var(--azul-600);background:var(--azul-50);border:1px solid var(--azul-100);border-radius:999px;padding:0 8px;}
+.inline{display:flex;gap:7px;align-items:flex-start;}
+.inline .fld{flex:1;margin-bottom:0;min-width:0;}
+.inline .btn{width:auto;flex:none;height:40px;padding:0 14px;}
+.frm .fld{margin-bottom:8px;}
+.row.acc{margin-top:10px;}
+.lnk{border:0;background:none;color:var(--azul-600);font:inherit;font-size:11px;font-weight:700;text-transform:none;letter-spacing:0;cursor:pointer;padding:0;}
+.volver{border:0;background:none;color:var(--azul-600);font:inherit;font-size:13px;font-weight:700;padding:0 0 6px;cursor:pointer;}
+.btn-ok{background:linear-gradient(135deg,#1E9E5A,#13784A);color:#fff;}
+
+/* Menú Fabricar: dos opciones centradas */
+#verMenu{min-height:calc(100vh - 56px - var(--nav) - 40px);display:flex;flex-direction:column;}
+#verMenu .tiles{flex:1;display:flex;flex-direction:column;justify-content:center;gap:12px;max-width:340px;width:100%;margin:0 auto;padding-bottom:30px;}
+.tile{display:flex;flex-direction:column;align-items:center;gap:3px;padding:18px 14px;border-radius:14px;border:1.5px solid var(--azul-100);background:var(--blanco);box-shadow:var(--sh2);cursor:pointer;font:inherit;color:var(--azul-900);transition:transform .08s;}
+.tile:active{transform:scale(.98);}
+.tile .ti{width:50px;height:50px;border-radius:13px;display:grid;place-items:center;background:var(--azul-50);color:var(--azul-600);margin-bottom:5px;}
+.tile b{font-size:16px;font-weight:800;}
+.tile small{font-size:12px;color:var(--tinta2);}
+.tile.verde{border-color:#BFE6CF;}
+.tile.verde .ti{background:#E4F6EC;color:#17804A;}
+
+/* Fabricar: escáner continuo */
+#reader3{width:100%;}
+.scan-box.fab{max-height:38vh;}
+.scan-box.fab #reader3 video{max-height:38vh;object-fit:cover;}
+.scan-box.fab .marco i{width:52%;}
+.scan-box .flash{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .35s;}
+.scan-box .flash.ok{background:rgba(30,158,90,.35);opacity:1;transition:none;}
+.scan-box .flash.mal{background:rgba(192,38,38,.38);opacity:1;transition:none;}
+.scan-box .flash.adv{background:rgba(232,160,30,.35);opacity:1;transition:none;}
+.scan-ph.fab{padding:10px;}
+.fab-ctl{margin-bottom:6px;}
+.fab-n{margin-left:auto;font-size:12px;font-weight:800;color:#fff;background:var(--azul-600);border-radius:999px;padding:2px 10px;}
+.fab-msg{min-height:0;margin:0 0 8px;}
+.fab-msg .m{display:flex;align-items:center;gap:9px;border-radius:11px;padding:8px 11px;font-size:12.5px;font-weight:600;border:1px solid;animation:entra .22s ease-out;}
+.fab-msg .m i{font-style:normal;font-size:16px;line-height:1;}
+.fab-msg .m.ok{background:var(--ok-bg);border-color:var(--ok-bd);color:var(--ok);}
+.fab-msg .m.adv{background:var(--adv-bg);border-color:var(--adv-bd);color:var(--adv);}
+.fab-msg .m.mal{background:var(--mal-bg);border-color:var(--mal-bd);color:var(--mal);}
+.fab-msg .m.inf{background:var(--azul-50);border-color:var(--azul-100);color:var(--azul-700);}
+@keyframes entra{from{transform:translateY(-4px);opacity:0;}to{transform:none;opacity:1;}}
+.ft{width:100%;border-collapse:collapse;font-size:12px;}
+.ft th{position:sticky;top:0;background:var(--azul-50);text-align:left;padding:6px 7px;font-size:9.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--azul-700);white-space:nowrap;border-bottom:1px solid var(--linea);}
+.ft td{padding:6px 7px;border-bottom:1px solid var(--azul-50);white-space:nowrap;font-variant-numeric:tabular-nums;}
+.ft tr.nuevo td{animation:nuevo 1.1s ease-out;}
+@keyframes nuevo{from{background:#D6F2E2;}to{background:transparent;}}
+.ft tr.mal td{background:var(--mal-bg);}
+.ft td.ed{width:1%;padding:2px 4px;}
+.ft td.ed button{border:0;background:var(--azul-50);color:var(--azul-600);width:28px;height:28px;border-radius:8px;display:grid;place-items:center;cursor:pointer;}
+.ft .pill{font-size:10.5px;padding:2px 8px;}
+.fab-w{overflow:auto;max-height:46vh;border:1px solid var(--linea);border-radius:10px;}
+.fab-vacia{text-align:center;color:var(--tinta3);font-size:12.5px;padding:16px 8px;}
+
+/* Trazabilidad: selector de tres modos */
+.seg3{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--azul-50);border:1px solid var(--linea);border-radius:11px;padding:3px;margin:8px 0 10px;}
+.seg3 button{border:0;background:none;font:inherit;font-size:12px;font-weight:700;color:var(--tinta2);padding:7px 4px;border-radius:8px;cursor:pointer;}
+.seg3 button[aria-selected="true"]{background:var(--blanco);color:var(--azul-700);box-shadow:var(--sh);}
+
+/* QR de fabricación */
+.fabqr{text-align:center;margin:4px 0 10px;}
+.fabqr img{width:220px;max-width:100%;border:1px solid var(--linea);border-radius:10px;background:#fff;}
+.fab-cab{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-size:12.5px;margin-bottom:10px;}
+.fab-cab dt{color:var(--tinta3);font-weight:600;}
+.fab-cab dd{margin:0;font-weight:700;color:var(--tinta);text-align:right;}
+
+/* Visor (QR escaneado fuera de la app) */
+body.modo-visor .hdr,body.modo-visor .wrap,body.modo-visor .nav{display:none!important;}
+body.modo-visor{padding-bottom:0;}
+#visor{max-width:760px;margin:0 auto;padding:16px 14px 30px;}
+#visor .vh{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+#visor .vh .m-ic{width:34px;height:34px;border-radius:9px;background:linear-gradient(140deg,#1E9E5A,#13784A);display:grid;place-items:center;}
+#visor .vh b{font-size:17px;color:var(--azul-900);}
+#visor .vh span{display:block;font-size:11.5px;color:var(--tinta2);}
+
 </style>
 </head>
 <body>
@@ -2771,9 +2881,8 @@ var __Html5QrcodeLibrary__;(()=>{var t={449:function(t,e,r){!function(t){"use st
     <div class="card-t">Generar</div>
     <div class="card-d">Los números son correlativos y no se repiten, aunque varias personas generen al mismo tiempo.</div>
     <div class="fld">
-      <label for="qCant">Cantidad de etiquetas</label>
+      <label for="qCant">Cantidad de etiquetas <span style="font-weight:600;color:var(--tinta3);">(1 a 200 por vez)</span></label>
       <input type="number" id="qCant" value="10" min="1" max="200" inputmode="numeric">
-      <div class="hint">Entre 1 y 200 por vez.</div>
     </div>
     <button class="btn btn-p" id="btnGen"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>Generar etiquetas</button>
   </div>
@@ -2796,90 +2905,140 @@ var __Html5QrcodeLibrary__;(()=>{var t={449:function(t,e,r){!function(t){"use st
   <div id="regPaso1">
     <div class="scan-box" id="scanBox1"><div id="reader"></div><div class="marco"><i></i></div></div>
     <div class="scan-ph" id="scanPh1">
-      <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>
+      <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>
       <p>Apunta la cámara al código QR del envase</p>
     </div>
     <button class="btn btn-p" id="btnScan1"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Abrir cámara</button>
 
     <div class="sep"></div>
-    <div class="fld" style="margin-bottom:9px;">
-      <label for="manual1">¿La cámara no lee? Escribe el código</label>
-      <input type="text" id="manual1" placeholder="ENV-001" autocomplete="off" autocapitalize="characters">
+    <label class="lbl" for="manual1">¿La cámara no lee? Escribe el código</label>
+    <div class="inline">
+      <div class="fld"><input type="text" id="manual1" placeholder="ENV-001" autocomplete="off" autocapitalize="characters"></div>
+      <button class="btn btn-w btn-sm" id="btnMan1">Buscar</button>
     </div>
-    <button class="btn btn-w btn-sm" id="btnMan1">Buscar envase</button>
   </div>
 
   <div id="regPaso2" style="display:none;"></div>
 </section>
 
-<!-- ══════════════ CONSULTAR ENVASE ══════════════ -->
+<!-- ══════════════ FABRICAR (menú) + VER ENVASE ══════════════ -->
 <section class="pg" id="pg-ver">
-  <div class="titulo"><h2>Ver envase</h2></div>
-  <div class="sub">Escanea un envase y mira qué contiene, su vencimiento y su historial.</div>
-
-  <div id="verPaso1">
-    <div class="scan-box" id="scanBox2"><div id="reader2"></div><div class="marco"><i></i></div></div>
-    <div class="scan-ph" id="scanPh2">
-      <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M3 12h18"/></svg>
-      <p>Apunta la cámara al código QR del envase</p>
+  <div id="verMenu">
+    <div class="titulo"><h2>Fabricar</h2></div>
+    <div class="sub">Elige qué quieres hacer.</div>
+    <div class="tiles">
+      <button class="tile" id="tileVer">
+        <span class="ti"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8V5.5A2.5 2.5 0 0 1 5.5 3H8M16 3h2.5A2.5 2.5 0 0 1 21 5.5V8M21 16v2.5a2.5 2.5 0 0 1-2.5 2.5H16M8 21H5.5A2.5 2.5 0 0 1 3 18.5V16"/><path d="M3.5 12h17"/></svg></span>
+        <b>Ver envase</b><small>Escanea y mira qué contiene</small>
+      </button>
+      <button class="tile verde" id="tileFab">
+        <span class="ti"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v6.5L4.5 17A2.5 2.5 0 0 0 6.7 21h10.6a2.5 2.5 0 0 0 2.2-4L15 9.5V3"/><path d="M7.5 3h9M7 14h10"/></svg></span>
+        <b>Fabricar</b><small>Escanea lo que usas y genera su QR</small>
+      </button>
     </div>
-    <button class="btn btn-p" id="btnScan2"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Abrir cámara</button>
-
-    <div class="sep"></div>
-    <div class="fld" style="margin-bottom:9px;">
-      <label for="manual2">¿La cámara no lee? Escribe el código</label>
-      <input type="text" id="manual2" placeholder="ENV-001" autocomplete="off" autocapitalize="characters">
-    </div>
-    <button class="btn btn-w btn-sm" id="btnMan2">Buscar envase</button>
   </div>
 
-  <div id="verPaso2" style="display:none;"></div>
+  <div id="verZona" hidden>
+    <button class="volver" onclick="mostrarMenuFab()">‹ Volver</button>
+    <div class="titulo"><h2>Ver envase</h2></div>
+    <div class="sub">Escanea un envase y mira qué contiene, su vencimiento y su historial.</div>
+
+    <div id="verPaso1">
+      <div class="scan-box" id="scanBox2"><div id="reader2"></div><div class="marco"><i></i></div></div>
+      <div class="scan-ph" id="scanPh2">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M3 12h18"/></svg>
+        <p>Apunta la cámara al código QR del envase</p>
+      </div>
+      <button class="btn btn-p" id="btnScan2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Abrir cámara</button>
+      <div class="sep"></div>
+      <label class="lbl" for="manual2">¿La cámara no lee? Escribe el código</label>
+      <div class="inline">
+        <div class="fld"><input type="text" id="manual2" placeholder="ENV-001" autocomplete="off" autocapitalize="characters"></div>
+        <button class="btn btn-w btn-sm" id="btnMan2">Buscar</button>
+      </div>
+    </div>
+
+    <div id="verPaso2" style="display:none;"></div>
+  </div>
+</section>
+
+<!-- ══════════════ FABRICAR (escaneo continuo) ══════════════ -->
+<section class="pg" id="pg-fab">
+  <button class="volver" onclick="salirFab()">‹ Volver</button>
+  <div class="titulo"><h2>Fabricar</h2><span class="fab-n" id="fabN">0</span></div>
+
+  <div class="scan-box fab" id="scanBox3"><div id="reader3"></div><div class="marco"><i></i></div><div class="flash" id="fabFlash"></div></div>
+  <div class="scan-ph fab" id="scanPh3">
+    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>
+    <p>Cámara en pausa</p>
+  </div>
+  <div class="inline fab-ctl">
+    <div class="fld"><input type="text" id="fabMan" placeholder="Escribe ENV-001" autocomplete="off" autocapitalize="characters"></div>
+    <button class="btn btn-w btn-sm" id="btnFabMan">Agregar</button>
+    <button class="btn btn-s btn-sm" id="btnScan3" aria-label="Pausar o abrir cámara">Pausar</button>
+  </div>
+  <div class="fab-msg" id="fabMsg" role="status" aria-live="polite"></div>
+
+  <div class="card tight">
+    <div class="card-t">Materias primas leídas <button class="lnk" id="btnFabVaciar" style="margin-left:auto;">Vaciar lista</button></div>
+    <div id="fabTabla"></div>
+  </div>
+
+  <div class="row">
+    <button class="btn btn-w" id="btnFabPrev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Vista previa</button>
+    <button class="btn btn-ok" id="btnFabImp"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Imprimir registro</button>
+  </div>
 </section>
 
 <!-- ══════════════ TRAZABILIDAD ══════════════ -->
 <section class="pg" id="pg-traza">
   <div class="titulo"><h2>Trazabilidad</h2></div>
-  <div class="sub">Qué lotes de una materia prima estaban en un envase en una fecha determinada.</div>
 
   <div id="trazaForm">
-    <div class="card">
-      <div class="card-t">Fecha objetivo</div>
-      <div class="card-d">El día de la fabricación que quieres investigar.</div>
-      <div class="fld" style="margin-bottom:0;"><input type="date" id="tzFecha"></div>
+    <div class="seg3" role="tablist" aria-label="Tipo de consulta">
+      <button type="button" role="tab" data-tz="fecha" aria-selected="true">Fecha y MP</button>
+      <button type="button" role="tab" data-tz="lote" aria-selected="false">Lote de MP</button>
+      <button type="button" role="tab" data-tz="lmat" aria-selected="false">Lmat / ensayo</button>
     </div>
 
-    <div class="card">
-      <div class="card-t">Materias primas <span id="tzCount" style="margin-left:auto;color:var(--tinta3);font-weight:700;">0</span></div>
-      <div class="card-d">Escribe un código o pega una lista separada por comas. También sirve pegar una columna desde Excel.</div>
-      <div class="fld ac" style="margin-bottom:6px;">
-        <input type="text" id="tzCod" placeholder="V5048, V5049, A0102…" autocomplete="off" autocapitalize="characters">
-        <div class="ac-list" id="tzAc"></div>
+    <!-- Fecha + materias primas -->
+    <div class="card tight" id="tzPaneFecha">
+      <div class="sub sm">Qué lotes de una materia prima estaban en un envase en una fecha.</div>
+      <div class="frm">
+        <label class="lbl" for="tzFecha">Fecha objetivo</label>
+        <div class="fld"><input type="date" id="tzFecha"></div>
+        <label class="lbl" for="tzCod">Materias primas <span class="cnt" id="tzCount">0</span></label>
+        <div class="fld ac">
+          <input type="text" id="tzCod" placeholder="V5048, V5049, A0102…" autocomplete="off" autocapitalize="characters">
+          <div class="ac-list" id="tzAc"></div>
+        </div>
+        <div class="hint">Escribe o pega una lista (también una columna de Excel). Con coma o Enter se agrega.</div>
+        <div class="chips" id="tzChips"></div>
       </div>
-      <div class="hint">Al escribir una coma o pulsar Enter, el código se agrega abajo.</div>
-      <div class="chips" id="tzChips"></div>
-      <div class="row" style="margin-top:11px;">
+      <div class="row acc">
         <button class="btn btn-w btn-sm" id="tzLimpiar">Limpiar</button>
+        <button class="btn btn-p btn-sm" id="tzConsultar"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>Consultar</button>
       </div>
     </div>
 
-    <button class="btn btn-p" id="tzConsultar"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>Consultar</button>
-
-    <div class="sep"></div>
-
-    <div class="card">
-      <div class="card-t">Acceso directo</div>
-      <div class="card-d">Pega este QR o este enlace en informes y fichas. Siempre abre esta pantalla, lista para consultar.</div>
-      <div style="text-align:center;margin-bottom:13px;"><img id="qrAcceso" alt="Código QR de acceso a Trazabilidad" style="width:176px;height:176px;border:1px solid var(--linea);border-radius:10px;padding:8px;background:#fff;"></div>
-      <div class="copiable"><code id="urlAcceso"></code></div>
-      <div class="row" style="margin-bottom:9px;">
-        <button class="btn btn-s btn-sm" id="btnCopiarImg">Copiar imagen</button>
-        <button class="btn btn-s btn-sm" id="btnBajarImg">Descargar PNG</button>
+    <!-- Por lote -->
+    <div class="card tight" id="tzPaneLote" hidden>
+      <div class="sub sm">Qué producto y qué Lmat / ensayo consumió un lote de materia prima.</div>
+      <label class="lbl" for="tzLote">Lote de materia prima</label>
+      <div class="inline">
+        <div class="fld"><input type="text" id="tzLote" placeholder="Ej: L-2588" autocomplete="off" autocapitalize="characters"></div>
+        <button class="btn btn-p btn-sm" id="tzBuscarLote">Buscar</button>
       </div>
-      <div class="row">
-        <button class="btn btn-w btn-sm" id="btnCopiarUrl">Copiar enlace</button>
-        <button class="btn btn-w btn-sm" id="btnImprimirQR">Imprimir</button>
+    </div>
+
+    <!-- Por Lmat / ensayo -->
+    <div class="card tight" id="tzPaneLmat" hidden>
+      <div class="sub sm">Trae directo la lista de materias primas usadas.</div>
+      <label class="lbl" for="tzLmat">Lmat / ensayo N°</label>
+      <div class="inline">
+        <div class="fld"><input type="text" id="tzLmat" placeholder="Ej: FC00012375 / E01" autocomplete="off" autocapitalize="characters"></div>
+        <button class="btn btn-p btn-sm" id="tzBuscarLmat">Buscar</button>
       </div>
-      <div class="hint" style="margin-top:9px;">Si copias la imagen, pégala con Ctrl+V dentro de Word.</div>
     </div>
   </div>
 
@@ -2944,8 +3103,8 @@ var __Html5QrcodeLibrary__;(()=>{var t={449:function(t,e,r){!function(t){"use st
   </button>
 
   <button class="nb main" data-pg="ver">
-    <span class="bx"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8V5.5A2.5 2.5 0 0 1 5.5 3H8M16 3h2.5A2.5 2.5 0 0 1 21 5.5V8M21 16v2.5a2.5 2.5 0 0 1-2.5 2.5H16M8 21H5.5A2.5 2.5 0 0 1 3 18.5V16"/><path d="M3.5 12h17"/></svg></span>
-    <span class="lb">Ver envase</span>
+    <span class="bx"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v6.5L4.5 17A2.5 2.5 0 0 0 6.7 21h10.6a2.5 2.5 0 0 0 2.2-4L15 9.5V3"/><path d="M7.5 3h9M7 14h10"/></svg></span>
+    <span class="lb">Fabricar</span>
   </button>
 
   <button class="nb min" data-pg="traza">
@@ -2978,6 +3137,9 @@ var __Html5QrcodeLibrary__;(()=>{var t={449:function(t,e,r){!function(t){"use st
   </div>
   <div class="dr-f" id="drFoot">LabTrack</div>
 </aside>
+
+<!-- ══════════════ VISOR DEL QR DE FABRICACIÓN ══════════════ -->
+<div id="visor" hidden></div>
 
 <!-- ══════════════ HOJA INFERIOR ══════════════ -->
 <div class="sheet-ov" id="ovSheet"></div>
@@ -3023,7 +3185,11 @@ const ST = {
   estFiltro: 'todos',
   historial: [],
   inventario: [],
-  cargando: false
+  cargando: false,
+  fab: { items: [], ultTxt: '', ultT: 0, ultimo: null },   // Fabricar
+  fechaApertura: '',
+  tzModo: 'fecha',
+  ultSync: 0
 };
 
 // ═══════════════════════════════════════════════════════════
@@ -3159,7 +3325,7 @@ async function apiGet(params, timeoutMs){
   try{
     const r = await fetch(u.toString(), { method:'GET', signal: ctrl.signal, redirect:'follow' });
     const j = await r.json();
-    if(!j.ok) throw new Error(j.error ? j.error.detail : j.message);
+    if(!j.ok){ const e = new Error(j.error ? j.error.detail : j.message); e.code = j.error ? j.error.code : ''; throw e; }
     return j.data;
   } finally { clearTimeout(t); }
 }
@@ -3181,7 +3347,7 @@ async function apiPost(payload, timeoutMs){
       redirect:'follow'
     });
     const j = await r.json();
-    if(!j.ok) throw new Error(j.error ? j.error.detail : j.message);
+    if(!j.ok){ const e = new Error(j.error ? j.error.detail : j.message); e.code = j.error ? j.error.code : ''; throw e; }
     return j.data;
   } finally { clearTimeout(t); }
 }
@@ -3268,12 +3434,11 @@ function qrDataURL(texto, px, margen){
 }
 
 function urlEnvase(id){ return CFG.URL_APP + '?env=' + id; }
-function urlTraza(){ return CFG.URL_APP + '?v=traza'; }
 
 // ═══════════════════════════════════════════════════════════
 // NAVEGACIÓN
 // ═══════════════════════════════════════════════════════════
-const VISTAS = ['inicio','qr','registro','ver','traza','inv','hist','estado'];
+const VISTAS = ['inicio','qr','registro','ver','fab','traza','inv','hist','estado'];
 
 function ir(v, silencio, sinCamara){
   if(ST.timerScan){ clearTimeout(ST.timerScan); ST.timerScan = null; }
@@ -3282,13 +3447,14 @@ function ir(v, silencio, sinCamara){
     const el = $('pg-' + x);
     if(el) el.classList.toggle('on', x === v);
   });
-  document.querySelectorAll('.nb').forEach(b => b.classList.toggle('on', b.dataset.pg === v));
+  document.querySelectorAll('.nb').forEach(b => b.classList.toggle('on', b.dataset.pg === v || (v === 'fab' && b.dataset.pg === 'ver')));
   ST.vista = v;
   if(!silencio) window.scrollTo(0, 0);
   cerrarDrawer();
 
   if(v === 'registro'){ resetRegistro(); if(!sinCamara) ST.timerScan = setTimeout(() => iniciarScanner('reader'), 220); }
-  if(v === 'ver'){ resetVer(); if(!sinCamara) ST.timerScan = setTimeout(() => iniciarScanner('reader2'), 220); }
+  if(v === 'ver'){ resetVer(); if(sinCamara === 'ver') abrirVerEnvase(true); else mostrarMenuFab(); }
+  if(v === 'fab') entrarFab();
   if(v === 'traza') prepararTraza();
   if(v === 'inv' && !ST.inventario.length) cargarInventario('');
   if(v === 'hist') cargarHistorial();
@@ -3399,33 +3565,49 @@ function conIdentidad(fn){
 // ═══════════════════════════════════════════════════════════
 // ESCÁNER
 // ═══════════════════════════════════════════════════════════
+const NUM_SCAN = { reader:'1', reader2:'2', reader3:'3' };
+
 async function iniciarScanner(cual){
   if(ST.escaneando === cual) return;
   if(ST.escaneando) await detenerScanner();
 
-  const n = cual === 'reader' ? '1' : '2';
+  const n = NUM_SCAN[cual];
   const box = $('scanBox' + n), ph = $('scanPh' + n), btn = $('btnScan' + n);
+  const continuo = cual === 'reader3';
 
   try{
-    ST.scanner = new Html5Qrcode(cual);
+    // Solo QR y, si el teléfono lo trae, el lector nativo (mucho más rápido en Android)
+    let opciones = { verbose: false };
+    try{
+      opciones.formatsToSupport = [Html5QrcodeSupportedFormats.QR_CODE];
+      opciones.experimentalFeatures = { useBarCodeDetectorIfSupported: true };
+    }catch(e){}
+    ST.scanner = new Html5Qrcode(cual, opciones);
     box.classList.add('on');
     ph.style.display = 'none';
-    btn.innerHTML = 'Detener cámara';
-    btn.className = 'btn btn-w';
+    if(continuo){ btn.textContent = 'Pausar'; }
+    else{ btn.innerHTML = 'Detener cámara'; btn.className = 'btn btn-w'; }
     ST.escaneando = cual;
 
     await ST.scanner.start(
       { facingMode: 'environment' },
-      { fps: 10, qrbox: { width: 230, height: 230 } },
-      txt => { const id = extraerEnvase(txt); detenerScanner(); procesarEnvase(id); },
+      continuo ? { fps: 15, qrbox: (w, h) => { const m = Math.floor(Math.min(w, h) * 0.62); return { width: m, height: m }; }, disableFlip: true }
+               : { fps: 10, qrbox: { width: 230, height: 230 } },
+      txt => {
+        if(continuo){ onFabScan(txt); return; }
+        detenerScanner();
+        if(/[?&]fab=/i.test(txt)){ const m = String(txt).match(/[?&]fab=([A-Za-z0-9-]+)/); verFabEnApp(m[1].toUpperCase()); resetVer(); return; }
+        procesarEnvase(extraerEnvase(txt));
+      },
       () => {}
     );
   }catch(e){
     ST.escaneando = null;
+    ST.scanner = null;
     box.classList.remove('on');
     ph.style.display = '';
-    btn.innerHTML = 'Abrir cámara';
-    btn.className = 'btn btn-p';
+    if(continuo){ btn.textContent = 'Cámara'; }
+    else{ btn.innerHTML = 'Abrir cámara'; btn.className = 'btn btn-p'; }
     toast('No se pudo abrir la cámara. Usa el código escrito.');
   }
 }
@@ -3437,11 +3619,14 @@ async function detenerScanner(){
   }
   ST.scanner = null;
   ST.escaneando = null;
-  ['1','2'].forEach(n => {
+  ['1','2','3'].forEach(n => {
     const box = $('scanBox' + n), ph = $('scanPh' + n), btn = $('btnScan' + n);
     if(box) box.classList.remove('on');
     if(ph) ph.style.display = '';
-    if(btn){ btn.innerHTML = 'Abrir cámara'; btn.className = 'btn btn-p'; }
+    if(btn){
+      if(n === '3') btn.textContent = 'Cámara';
+      else{ btn.innerHTML = 'Abrir cámara'; btn.className = 'btn btn-p'; }
+    }
   });
 }
 
@@ -3833,10 +4018,7 @@ function pintarVerEnvase(d){
 // ═══════════════════════════════════════════════════════════
 function prepararTraza(){
   if(!$('tzFecha').value) $('tzFecha').value = ST.hoy || hoyISO();
-  if(!$('qrAcceso').src){
-    $('qrAcceso').src = qrDataURL(urlTraza(), 460, 2);
-    $('urlAcceso').textContent = urlTraza();
-  }
+  setTzModo(ST.tzModo || 'fecha');
   pintarChipsTz();
 }
 
@@ -4097,64 +4279,480 @@ function imprimirTraza(){
 }
 
 // ═══════════════════════════════════════════════════════════
-// QR DE ACCESO
+// FABRICAR — menú, escaneo continuo, lista, QR del registro
 // ═══════════════════════════════════════════════════════════
-function lienzoQRAcceso(){
-  return new Promise(res => {
-    const im = new Image();
-    im.onload = () => {
-      const c = document.createElement('canvas');
-      c.width = im.width; c.height = im.height;
-      const x = c.getContext('2d');
-      x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height);
-      x.imageSmoothingEnabled = false;
-      x.drawImage(im, 0, 0);
-      res(c);
-    };
-    im.src = qrDataURL(urlTraza(), 620, 3);
+const ESTADO_CORTO = { vigente:'Vigente', por_vencer:'Por vencer', vencido:'Vencido', sin_fecha:'Sin fecha' };
+function pillEstado(e){
+  return '<span class="pill p-' + claseVig(e) + '">' + esc(ESTADO_CORTO[e] || e || '—') + '</span>';
+}
+function urlFab(id){ return CFG.URL_APP + '?fab=' + id; }
+
+function mostrarMenuFab(){
+  if(ST.escaneando) detenerScanner();
+  $('verMenu').hidden = false;
+  $('verZona').hidden = true;
+}
+/** "Ver envase": lo que antes hacía el botón, con la cámara abierta de inmediato. */
+function abrirVerEnvase(sinCamara){
+  $('verMenu').hidden = true;
+  $('verZona').hidden = false;
+  resetVer();
+  if(!sinCamara) ST.timerScan = setTimeout(() => iniciarScanner('reader2'), 200);
+}
+
+function fabGuardarLocal(){
+  try{ localStorage.setItem('lt_fab', JSON.stringify(ST.fab.items)); }catch(e){}
+}
+function fabLeerLocal(){
+  try{ ST.fab.items = JSON.parse(localStorage.getItem('lt_fab') || '[]') || []; }catch(e){ ST.fab.items = []; }
+  ST.fab.items = ST.fab.items.filter(x => x && x.envase && !x.buscando);
+}
+
+function entrarFab(){
+  ST.fab.ultTxt = ''; ST.fab.ultT = 0;
+  $('fabMsg').innerHTML = '';
+  pintarFabTabla();
+  pintarUltimoFab();
+  // Caché fresca para que cada lectura sea instantánea (sin esperar a internet)
+  if(Date.now() - (ST.ultSync || 0) > 60000) sincronizar(true);
+  ST.timerScan = setTimeout(() => iniciarScanner('reader3'), 200);
+}
+function salirFab(){
+  if(ST.escaneando) detenerScanner();
+  ir('ver');
+}
+
+/* ── Señales: sonido corto, vibración y destello en el visor ── */
+function pitido(tipo){
+  try{
+    const C = window.AudioContext || window.webkitAudioContext;
+    if(!C) return;
+    ST.audio = ST.audio || new C();
+    const a = ST.audio, o = a.createOscillator(), g = a.createGain();
+    o.type = 'sine';
+    o.frequency.value = tipo === 'ok' ? 1320 : (tipo === 'adv' ? 660 : 330);
+    g.gain.setValueAtTime(0.0001, a.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.18, a.currentTime + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, a.currentTime + (tipo === 'ok' ? 0.09 : 0.22));
+    o.connect(g); g.connect(a.destination);
+    o.start(); o.stop(a.currentTime + 0.25);
+  }catch(e){}
+  try{ if(navigator.vibrate) navigator.vibrate(tipo === 'ok' ? 35 : [60, 50, 60]); }catch(e){}
+  const f = $('fabFlash');
+  if(f){ f.className = 'flash ' + tipo; clearTimeout(f._t); f._t = setTimeout(() => { f.className = 'flash'; }, 180); }
+}
+function msgFab(tipo, icono, html){
+  $('fabMsg').innerHTML = '<div class="m ' + tipo + '"><i>' + icono + '</i><div>' + html + '</div></div>';
+}
+
+/** Lectura de la cámara. La misma etiqueta frente a la cámara no se repite mientras siga ahí. */
+function onFabScan(txt){
+  if($('sheet').classList.contains('on') || $('ovAl').classList.contains('on')) return;   // con una ventana abierta no se lee
+  const now = Date.now();
+  if(txt === ST.fab.ultTxt && now - ST.fab.ultT < 2500){ ST.fab.ultT = now; return; }
+  ST.fab.ultTxt = txt; ST.fab.ultT = now;
+  if(/[?&]fab=/i.test(txt)){ pitido('adv'); msgFab('inf', 'i', 'Ese es el QR de un registro de fabricación, no de un envase.'); return; }
+  agregarEnvaseFab(extraerEnvase(txt));
+}
+
+function itemDesdeCache(e){
+  return {
+    envase: e.id, codigo: e.mp.codigo, lote: e.mp.lote, vence: e.mp.vencimiento || '',
+    proveedor: e.mp.proveedor || '', estado: vigenciaDe(e.mp.vencimiento).estado
+  };
+}
+
+/** Agrega un envase a la lista. Con la caché local es instantáneo; si no está, consulta al servidor sin frenar la cámara. */
+async function agregarEnvaseFab(id, reemplazaA){
+  id = String(id || '').trim().toUpperCase();
+  if(!/^ENV-\d{1,6}$/.test(id)){
+    pitido('mal'); msgFab('mal', '✕', '<b>' + esc(id || 'Código vacío') + '</b> no es una etiqueta de envase.');
+    return false;
+  }
+  const ya = ST.fab.items.find(x => x.envase === id);
+  if(ya && id !== reemplazaA){
+    pitido('adv');
+    msgFab('adv', '✓', '<b>' + esc(id) + '</b> ya está en la lista · ' + esc(ya.codigo) + ' · lote ' + esc(ya.lote));
+    resaltarFilaFab(id);
+    return false;
+  }
+
+  let e = ST.envases.find(x => x.id === id);
+  if(!e || e.estado !== 'ocupado' || !e.mp){
+    // La caché puede estar atrasada: se confirma con el servidor
+    msgFab('inf', '…', 'Consultando <b>' + esc(id) + '</b>…');
+    try{
+      const d = await apiGet({ accion:'envase', id }, 15000);
+      if(d.actual && d.envase.estado === 'ocupado'){
+        e = { id, estado:'ocupado', mp:{ codigo:d.actual.codigo, lote:d.actual.lote, vencimiento:d.actual.vencimiento, proveedor:d.actual.proveedor } };
+        const i = ST.envases.findIndex(x => x.id === id);
+        if(i > -1) ST.envases[i] = Object.assign({}, ST.envases[i], e); else ST.envases.push(e);
+      }else{
+        pitido('mal'); msgFab('mal', '✕', '<b>' + esc(id) + '</b> está vacío: no se agrega a la lista.');
+        return false;
+      }
+    }catch(err){
+      pitido('mal'); msgFab('mal', '✕', '<b>' + esc(id) + '</b>: ' + esc(err.message));
+      return false;
+    }
+    if(ST.fab.items.find(x => x.envase === id) && id !== reemplazaA){ resaltarFilaFab(id); return false; }
+  }
+
+  const it = itemDesdeCache(e);
+  if(reemplazaA){
+    const i = ST.fab.items.findIndex(x => x.envase === reemplazaA);
+    if(i > -1) ST.fab.items.splice(i, 1, it); else ST.fab.items.unshift(it);
+  }else{
+    ST.fab.items.unshift(it);
+  }
+  ST.fab.nuevo = id;
+  fabGuardarLocal();
+  pintarFabTabla();
+  if(it.estado === 'vencido'){
+    pitido('adv');
+    msgFab('mal', '!', '<b>' + esc(id) + '</b> · ' + esc(it.codigo) + ' agregado, pero está <b>vencido</b>. Queda registrado.');
+  }else{
+    pitido('ok');
+    msgFab('ok', '✓', '<b>' + esc(id) + '</b> · ' + esc(it.codigo) + ' · lote ' + esc(it.lote));
+  }
+  return true;
+}
+
+function resaltarFilaFab(id){
+  const tr = document.querySelector('#fabTabla tr[data-env="' + id + '"]');
+  if(!tr) return;
+  tr.classList.remove('nuevo'); void tr.offsetWidth; tr.classList.add('nuevo');
+  tr.scrollIntoView({ block:'nearest' });
+}
+
+function filasFab(items, conLapiz){
+  return items.map(x =>
+    '<tr data-env="' + esc(x.envase) + '"' + (x.estado === 'vencido' ? ' class="mal' + (ST.fab.nuevo === x.envase ? ' nuevo' : '') + '"' : (ST.fab.nuevo === x.envase ? ' class="nuevo"' : '')) + '>'
+    + '<td class="mono">' + esc(x.codigo) + '</td><td>' + esc(x.envase) + '</td><td>' + esc(x.lote) + '</td>'
+    + '<td>' + fmtFecha(x.vence) + '</td><td>' + esc(x.proveedor || '—') + '</td><td>' + pillEstado(x.estado) + '</td>'
+    + (conLapiz ? '<td class="ed"><button type="button" aria-label="Corregir ' + esc(x.envase) + '" onclick="editarFilaFab(\'' + esc(x.envase) + '\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button></td>' : '')
+    + '</tr>'
+  ).join('');
+}
+function tablaFab(items, conLapiz){
+  return '<div class="fab-w"><table class="ft"><thead><tr><th>Código</th><th>Envase</th><th>Lote</th><th>Vence</th><th>Proveedor</th><th>Estado</th>'
+    + (conLapiz ? '<th></th>' : '') + '</tr></thead><tbody>' + filasFab(items, conLapiz) + '</tbody></table></div>';
+}
+
+function pintarFabTabla(){
+  const n = ST.fab.items.length;
+  $('fabN').textContent = n;
+  $('fabTabla').innerHTML = n ? tablaFab(ST.fab.items, true)
+    : '<div class="fab-vacia">Escanea los envases que vas a usar. Aparecen aquí al instante.</div>';
+  ST.fab.nuevo = null;
+}
+
+function editarFilaFab(id){
+  const x = ST.fab.items.find(i => i.envase === id);
+  if(!x) return;
+  abrirSheet('<h3>Corregir ' + esc(id) + '</h3>'
+    + '<div class="sd">' + esc(x.codigo) + ' · lote ' + esc(x.lote) + '. Si la cámara leyó otro envase, cámbialo o quítalo.</div>'
+    + '<label class="lbl" for="edEnv">Cambiar por el envase</label>'
+    + '<div class="inline" style="margin-bottom:12px;"><div class="fld"><input type="text" id="edEnv" placeholder="ENV-000" autocomplete="off" autocapitalize="characters"></div>'
+    + '<button class="btn btn-p btn-sm" id="edOk">Cambiar</button></div>'
+    + '<div class="row"><button class="btn btn-w" onclick="cerrarSheet()">Cancelar</button>'
+    + '<button class="btn btn-d" onclick="quitarFilaFab(\'' + esc(id) + '\')">Quitar de la lista</button></div>');
+  $('edEnv').onkeydown = ev => { if(ev.key === 'Enter') $('edOk').click(); };
+  $('edOk').onclick = async () => {
+    const nuevo = extraerEnvase($('edEnv').value);
+    if(!$('edEnv').value.trim()){ toast('Escribe el envase correcto'); return; }
+    if(nuevo === id){ cerrarSheet(); return; }
+    $('edOk').disabled = true;
+    const hecho = await agregarEnvaseFab(nuevo, id);
+    if(hecho) cerrarSheet(); else { $('edOk').disabled = false; toast($('fabMsg').textContent.trim()); }
+  };
+}
+function quitarFilaFab(id){
+  ST.fab.items = ST.fab.items.filter(x => x.envase !== id);
+  fabGuardarLocal(); pintarFabTabla(); cerrarSheet();
+  msgFab('inf', '−', '<b>' + esc(id) + '</b> quitado de la lista.');
+}
+function vaciarListaFab(){
+  if(!ST.fab.items.length) return;
+  alerta({ tipo:'warn', titulo:'¿Vaciar la lista?', texto:'Se quitan las ' + ST.fab.items.length + ' lecturas. No afecta los envases.',
+    botones:[{ txt:'Cancelar' }, { txt:'Vaciar', clase:'btn-d', fn:() => { ST.fab.items = []; fabGuardarLocal(); pintarFabTabla(); $('fabMsg').innerHTML = ''; } }] });
+}
+
+function vistaPreviaFab(){
+  const it = ST.fab.items;
+  if(!it.length){ toast('La lista está vacía'); return; }
+  const nv = it.filter(x => x.estado === 'vencido').length;
+  abrirSheet('<h3>Vista previa</h3>'
+    + '<div class="sd">' + it.length + ' materia' + (it.length === 1 ? '' : 's') + ' prima' + (it.length === 1 ? '' : 's')
+    + (nv ? ' · <b style="color:var(--mal);">' + nv + ' vencida' + (nv === 1 ? '' : 's') + '</b>' : '') + '. Así quedará la tabla del registro.</div>'
+    + tablaFab(it, false)
+    + '<div class="row" style="margin-top:12px;"><button class="btn btn-w" onclick="cerrarSheet()">Seguir escaneando</button>'
+    + '<button class="btn btn-ok" onclick="cerrarSheet();setTimeout(formFab,180)">Imprimir registro</button></div>');
+}
+
+/* ── Imprimir registro: datos + generar QR ── */
+function formFab(){
+  if(!ST.fab.items.length){ toast('Escanea al menos un envase'); return; }
+  conIdentidad(() => {
+    abrirSheet('<h3>Imprimir registro</h3>'
+      + '<div class="sd">' + ST.fab.items.length + ' materia(s) prima(s). Completa los datos para generar el QR.</div>'
+      + '<div class="fld"><label for="fbFecha">Fecha</label><input type="date" id="fbFecha" value="' + esc(ST.fab.fecha || ST.fechaApertura) + '"></div>'
+      + '<div class="fld"><label for="fbProd">Código producto</label><input type="text" id="fbProd" placeholder="Ej: 12345" autocomplete="off" autocapitalize="characters" maxlength="30" value="' + esc(ST.fab.prod || '') + '"></div>'
+      + '<div class="fld"><label for="fbLmat">Lmat / ensayo N°</label><input type="text" id="fbLmat" placeholder="Ej: FC00012375 / E01" autocomplete="off" autocapitalize="characters" maxlength="40" value="' + esc(ST.fab.lmat || '') + '"></div>'
+      + '<div id="fbErr"></div>'
+      + '<div class="row"><button class="btn btn-w" onclick="cerrarSheet()">Cancelar</button>'
+      + '<button class="btn btn-ok" id="fbOk"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM21 14v3M18 21h3"/></svg>Generar QR</button></div>');
+    $('fbOk').onclick = guardarFab;
   });
 }
 
-async function copiarQRImagen(){
+async function guardarFab(){
+  const fecha = $('fbFecha').value, prod = $('fbProd').value.trim(), lmat = $('fbLmat').value.trim().toUpperCase();
+  const err = m => { $('fbErr').innerHTML = '<div class="venc mal" style="padding:8px 11px;"><div class="vi">✕</div><div><span>' + esc(m) + '</span></div></div>'; };
+  if(!fecha) return err('Elige la fecha.');
+  if(!prod) return err('Escribe el código del producto.');
+  if(!lmat) return err('Escribe el Lmat o N° de ensayo.');
+  ST.fab.fecha = fecha; ST.fab.prod = prod; ST.fab.lmat = lmat;
+  const b = $('fbOk'); b.disabled = true; b.textContent = 'Guardando…';
   try{
-    const c = await lienzoQRAcceso();
-    const blob = await new Promise(r => c.toBlob(r, 'image/png'));
-    await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-    toast('Imagen copiada. Pégala con Ctrl+V en Word');
+    const d = await apiPost({ accion:'guardarFabricacion', dispositivo_id: ST.dispositivo, fecha, codigo_producto: prod, lmat,
+      items: ST.fab.items.map(x => x.envase) });
+    ST.fab.ultimo = d;
+    try{ localStorage.setItem('lt_fab_ult', JSON.stringify(d)); }catch(e){}
+    ST.fab.items = []; ST.fab.prod = ''; ST.fab.lmat = ''; ST.fab.fecha = '';
+    fabGuardarLocal(); pintarFabTabla();
+    $('fabMsg').innerHTML = '';
+    pintarUltimoFab();
+    mostrarQRFab(d);
   }catch(e){
-    toast('Tu navegador no permite copiar imágenes. Usa Descargar PNG');
+    err(e.message);
+    b.disabled = false; b.textContent = 'Generar QR';
   }
 }
 
-async function bajarQRImagen(){
-  const c = await lienzoQRAcceso();
+function pintarUltimoFab(){
+  const d = ST.fab.ultimo;
+  if(!d || ST.fab.items.length){ return; }
+  $('fabMsg').innerHTML = '<div class="m inf"><i>✓</i><div>Último registro: <b>' + esc(d.lmat) + '</b> · prod. ' + esc(d.codigo_producto)
+    + ' <button class="lnk" style="font-size:12.5px;margin-left:4px;" onclick="mostrarQRFab(ST.fab.ultimo)">Ver QR</button></div></div>';
+}
+
+/** Imagen del QR con su identificación arriba (para distinguirlo de las etiquetas de envase). */
+function lienzoFab(d){
+  return new Promise(res => {
+    const im = new Image();
+    im.onload = () => {
+      const W = 640, pad = 28, qr = W - pad * 2;
+      const c = document.createElement('canvas');
+      c.width = W; c.height = qr + 150;
+      const x = c.getContext('2d');
+      x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height);
+      x.fillStyle = '#13784A'; x.fillRect(0, 0, W, 8);
+      x.textAlign = 'center'; x.fillStyle = '#07213B';
+      x.font = 'bold 34px Arial, Helvetica, sans-serif';
+      x.fillText(String(d.lmat).slice(0, 34), W / 2, 56);
+      x.font = '24px Arial, Helvetica, sans-serif'; x.fillStyle = '#55718F';
+      x.fillText('Producto ' + d.codigo_producto + '  ·  ' + fmtFecha(d.fecha), W / 2, 92);
+      x.imageSmoothingEnabled = false;
+      x.drawImage(im, pad, 108, qr, qr);
+      x.font = '18px Arial, Helvetica, sans-serif'; x.fillStyle = '#8BA3BC';
+      x.fillText(d.fab_id + ' · registro de fabricación', W / 2, qr + 136);
+      res(c);
+    };
+    im.src = qrDataURL(urlFab(d.fab_id), 600, 2);
+  });
+}
+
+async function mostrarQRFab(d){
+  if(!d) return;
+  ST.fab.verQR = d;
+  const c = await lienzoFab(d);
+  const nv = (d.items || []).filter(x => x.estado === 'vencido').length;
+  abrirSheet('<h3>Registro listo</h3>'
+    + '<div class="sd">Escanéalo para ver la lista. Solo lo ven usuarios de LabTrack.</div>'
+    + '<div class="fabqr"><img alt="QR del registro ' + esc(d.fab_id) + '" src="' + c.toDataURL('image/png') + '"></div>'
+    + '<dl class="fab-cab"><dt>Lmat / ensayo</dt><dd>' + esc(d.lmat) + '</dd><dt>Producto</dt><dd>' + esc(d.codigo_producto) + '</dd>'
+    + '<dt>Fecha</dt><dd>' + fmtFecha(d.fecha) + '</dd><dt>Materias primas</dt><dd>' + (d.items || []).length + (nv ? ' · <span style="color:var(--mal);">' + nv + ' vencida(s)</span>' : '') + '</dd>'
+    + '<dt>Registro</dt><dd>' + esc(d.fab_id) + '</dd></dl>'
+    + '<div class="row" style="margin-bottom:7px;"><button class="btn btn-s btn-sm" onclick="copiarImgFab()">Copiar imagen</button><button class="btn btn-s btn-sm" onclick="bajarImgFab()">Descargar PNG</button></div>'
+    + '<div class="row" style="margin-bottom:12px;"><button class="btn btn-w btn-sm" onclick="copiarUrlFab()">Copiar enlace</button><button class="btn btn-w btn-sm" onclick="imprimirFab()">Imprimir / PDF</button></div>'
+    + '<button class="btn btn-p" onclick="cerrarSheet()">Listo</button>');
+}
+
+async function copiarImgFab(){
+  try{
+    const c = await lienzoFab(ST.fab.verQR);
+    const blob = await new Promise(r => c.toBlob(r, 'image/png'));
+    await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+    toast('Imagen copiada. Pégala con Ctrl+V en Word');
+  }catch(e){ toast('Tu navegador no permite copiar imágenes. Usa Descargar PNG'); }
+}
+async function bajarImgFab(){
+  const d = ST.fab.verQR, c = await lienzoFab(d);
   const a = document.createElement('a');
   a.href = c.toDataURL('image/png');
-  a.download = 'QR_Trazabilidad.png';
+  a.download = 'QR_' + String(d.lmat).replace(/[^A-Z0-9]+/gi, '_') + '.png';
   document.body.appendChild(a); a.click(); a.remove();
 }
-
-async function copiarUrlTraza(){
-  try{ await navigator.clipboard.writeText(urlTraza()); toast('Enlace copiado'); }
-  catch(e){ toast('No se pudo copiar. Selecciona el texto a mano'); }
+async function copiarUrlFab(){
+  try{ await navigator.clipboard.writeText(urlFab(ST.fab.verQR.fab_id)); toast('Enlace copiado'); }
+  catch(e){ toast('No se pudo copiar: ' + urlFab(ST.fab.verQR.fab_id), 5000); }
+}
+async function imprimirFab(dd){
+  const d = dd || ST.fab.verQR;
+  const w = window.open('', '_blank');
+  if(!w){ toast('Permite las ventanas emergentes para imprimir'); return; }
+  const c = await lienzoFab(d);
+  const filas = (d.items || []).map(x => '<tr' + (x.estado === 'vencido' ? ' class="v"' : '') + '><td><b>' + esc(x.codigo) + '</b></td><td>' + esc(x.envase) + '</td><td>' + esc(x.lote)
+    + '</td><td>' + fmtFecha(x.vence) + '</td><td>' + esc(x.proveedor || '') + '</td><td>' + esc(ESTADO_CORTO[x.estado] || x.estado) + '</td></tr>').join('');
+  w.document.write('<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Registro ' + esc(d.lmat) + '</title><style>'
+    + '@page{size:A4;margin:14mm;}body{font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#10273F;}'
+    + '.top{display:flex;gap:8mm;align-items:flex-start;margin-bottom:6mm;}.top img{width:52mm;}'
+    + 'h1{font-size:16px;color:#13784A;margin:0 0 3mm;}dl{display:grid;grid-template-columns:auto 1fr;gap:1.5mm 5mm;margin:0;font-size:11px;}dt{color:#55718F;}dd{margin:0;font-weight:700;}'
+    + 'table{width:100%;border-collapse:collapse;}th{background:#EFF6FD;border:1px solid #C3D9EE;padding:4px 5px;text-align:left;font-size:9.5px;text-transform:uppercase;color:#12457A;}'
+    + 'td{border:1px solid #D9E7F4;padding:4px 5px;}tr.v td{background:#FDEBEB;color:#C02626;}'
+    + '.pie{margin-top:6mm;font-size:9px;color:#8BA3BC;}</style></head><body>'
+    + '<div class="top"><img src="' + c.toDataURL('image/png') + '"><div><h1>Registro de fabricación</h1><dl>'
+    + '<dt>Lmat / ensayo</dt><dd>' + esc(d.lmat) + '</dd><dt>Producto</dt><dd>' + esc(d.codigo_producto) + '</dd>'
+    + '<dt>Fecha</dt><dd>' + fmtFecha(d.fecha) + '</dd><dt>Registró</dt><dd>' + esc(d.por || '') + '</dd>'
+    + '<dt>Registro</dt><dd>' + esc(d.fab_id) + '</dd><dt>Materias primas</dt><dd>' + (d.items || []).length + '</dd></dl></div></div>'
+    + '<table><thead><tr><th>Código</th><th>Envase</th><th>Lote</th><th>Vence</th><th>Proveedor</th><th>Estado</th></tr></thead><tbody>' + filas + '</tbody></table>'
+    + '<div class="pie">Estado calculado a la fecha de fabricación. Documento generado por LabTrack.</div>'
+    + '<scr' + 'ipt>window.onload=function(){window.print();}</scr' + 'ipt></body></html>');
+  w.document.close();
 }
 
-function imprimirQRAcceso(){
-  const img = qrDataURL(urlTraza(), 520, 3);
-  const html = '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Acceso a Trazabilidad</title><style>'
-    + '@page{margin:15mm;}body{font-family:Arial,Helvetica,sans-serif;text-align:center;padding-top:22mm;color:#10273F;}'
-    + 'h1{font-size:25px;letter-spacing:.05em;color:#12457A;margin:0 0 3mm;}'
-    + 'p{font-size:12px;color:#55718F;margin:0 0 9mm;}'
-    + 'img{width:78mm;height:78mm;border:1.5px solid #D9E7F4;border-radius:4mm;padding:4mm;}'
-    + '.u{font-size:9px;color:#8BA3BC;margin-top:5mm;word-break:break-all;}'
-    + '.f{font-size:10px;color:#8BA3BC;margin-top:9mm;}'
-    + '</style></head><body><h1>TRAZABILIDAD</h1>'
-    + '<p>Escanea para consultar qué lotes estaban disponibles en una fecha</p>'
-    + '<img src="' + img + '"><div class="u">' + esc(urlTraza()) + '</div><div class="f">LabTrack</div>'
-    + '<scr' + 'ipt>window.onload=function(){window.print();}</scr' + 'ipt></body></html>';
-  const w = window.open('', '_blank');
-  if(w){ w.document.write(html); w.document.close(); }
-  else toast('Permite las ventanas emergentes para imprimir');
+/** QR de fabricación leído desde dentro de la app (botón Ver envase). */
+async function verFabEnApp(id){
+  abrirSheet(cargando('Abriendo registro…'));
+  try{
+    const d = await apiGet({ accion:'fabricacion', id, dispositivo: ST.dispositivo, nombre: (ST.usuario && ST.usuario.nombre) || '' });
+    const f = d.fabricacion;
+    abrirSheet('<h3>' + esc(f.lmat) + '</h3><div class="sd">Producto ' + esc(f.codigo_producto) + ' · ' + fmtFecha(f.fecha) + ' · ' + esc(f.por) + '</div>'
+      + tablaFab(f.items, false)
+      + '<div class="row" style="margin-top:12px;"><button class="btn btn-w" onclick="cerrarSheet()">Cerrar</button>'
+      + '<button class="btn btn-s" onclick="mostrarQRFab(ST.fab.visto)">Ver QR</button></div>');
+    ST.fab.visto = f;
+  }catch(e){
+    abrirSheet('<h3>No se pudo abrir</h3><div class="sd">' + esc(e.message) + '</div><button class="btn btn-w" onclick="cerrarSheet()">Cerrar</button>');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// VISOR — lo que ve quien escanea el QR de una fabricación
+// ═══════════════════════════════════════════════════════════
+async function modoVisor(id){
+  document.body.classList.add('modo-visor');
+  const v = $('visor');
+  v.hidden = false;
+  const cab = '<div class="vh"><div class="m-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v6.5L4.5 17A2.5 2.5 0 0 0 6.7 21h10.6a2.5 2.5 0 0 0 2.2-4L15 9.5V3"/><path d="M7.5 3h9M7 14h10"/></svg></div>'
+    + '<div><b>Registro de fabricación</b><span>LabTrack · solo lectura</span></div></div>';
+  v.innerHTML = cab + cargando('Abriendo registro…');
+  let nombre = '';
+  try{ nombre = localStorage.getItem('lt_visor_nombre') || ((usuarioLocal() || {}).nombre) || ''; }catch(e){}
+  try{
+    const d = await apiGet({ accion:'fabricacion', id, dispositivo: dispositivoId(), nombre });
+    const f = d.fabricacion;
+    const nv = f.items.filter(x => x.estado === 'vencido').length;
+    v.innerHTML = cab
+      + '<div class="card tight"><dl class="fab-cab" style="margin:0;"><dt>Lmat / ensayo</dt><dd>' + esc(f.lmat) + '</dd><dt>Producto</dt><dd>' + esc(f.codigo_producto) + '</dd>'
+      + '<dt>Fecha</dt><dd>' + fmtFecha(f.fecha) + '</dd><dt>Registró</dt><dd>' + esc(f.por) + '</dd>'
+      + '<dt>Materias primas</dt><dd>' + f.items.length + (nv ? ' · <span style="color:var(--mal);">' + nv + ' vencida(s)</span>' : '') + '</dd></dl></div>'
+      + '<div class="hint-scroll">Desliza la tabla para ver más columnas →</div>'
+      + tablaFab(f.items, false)
+      + '<div class="hint" style="margin-top:8px;">Estado calculado a la fecha de fabricación · ' + esc(f.fab_id) + '</div>';
+  }catch(e){
+    if(e.code === 'NO_AUTORIZADO'){
+      v.innerHTML = cab + '<div class="card tight"><div class="venc n" style="margin-bottom:10px;"><div class="vi">🔒</div><div><b>Solo para usuarios de LabTrack</b>'
+        + '<span>Escribe tu nombre y apellido tal como lo registraste en la app.</span></div></div>'
+        + '<div class="inline"><div class="fld"><input type="text" id="vsNom" placeholder="Nombre y apellido" autocomplete="name"></div>'
+        + '<button class="btn btn-p btn-sm" id="vsOk">Ver</button></div><div id="vsErr" class="hint" style="color:var(--mal);"></div></div>';
+      if(nombre) $('vsErr').textContent = 'Ese nombre no está registrado en LabTrack.';
+      $('vsOk').onclick = () => {
+        const n = $('vsNom').value.trim();
+        if(n.length < 3){ $('vsErr').textContent = 'Escribe tu nombre y apellido.'; return; }
+        try{ localStorage.setItem('lt_visor_nombre', n); }catch(err){}
+        modoVisor(id);
+      };
+      $('vsNom').onkeydown = ev => { if(ev.key === 'Enter') $('vsOk').click(); };
+    }else{
+      v.innerHTML = cab + '<div class="card"><div class="venc mal"><div class="vi">✕</div><div><b>No se pudo abrir</b><span>' + esc(e.message) + '</span></div></div></div>';
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// TRAZABILIDAD POR LOTE Y POR LMAT / ENSAYO
+// ═══════════════════════════════════════════════════════════
+function setTzModo(m){
+  ST.tzModo = m;
+  document.querySelectorAll('.seg3 button').forEach(b => b.setAttribute('aria-selected', b.dataset.tz === m));
+  $('tzPaneFecha').hidden = m !== 'fecha';
+  $('tzPaneLote').hidden = m !== 'lote';
+  $('tzPaneLmat').hidden = m !== 'lmat';
+}
+
+function resultadoTz(html){
+  $('trazaForm').style.display = 'none';
+  $('trazaRes').style.display = '';
+  $('trazaRes').innerHTML = html;
+  window.scrollTo(0, 0);
+}
+function errorTz(e){
+  resultadoTz('<div class="card"><div class="venc mal"><div class="vi">✕</div><div><b>No se pudo consultar</b><span>' + esc(e.message) + '</span></div></div>'
+    + '<button class="btn btn-w" onclick="volverTraza()">Volver</button></div>');
+}
+
+async function buscarLoteTz(){
+  const lote = $('tzLote').value.trim();
+  if(lote.length < 2){ toast('Escribe el lote'); return; }
+  resultadoTz(cargando('Buscando el lote…'));
+  try{
+    const d = await apiGet({ accion:'trazaLote', lote });
+    let h = '<div class="card tight"><div class="card-t">Lote ' + esc(d.lote) + '</div>'
+      + (d.exacto ? '' : '<div class="nota" style="margin-bottom:6px;">Sin coincidencia exacta: se muestran lotes que contienen «' + esc(d.lote) + '».</div>')
+      + '<div class="card-d" style="margin:0;">' + d.usos.length + ' uso(s) en fabricación · ' + d.registros.length + ' ingreso(s) a envases.</div></div>';
+    h += '<div class="card tight"><div class="card-t">Lo consumieron</div>';
+    if(!d.usos.length) h += vacio('Ningún registro de fabricación usó ese lote.');
+    else{
+      h += '<div class="hint-scroll">Desliza la tabla para ver más columnas →</div><div class="fab-w"><table class="ft"><thead><tr><th>Fecha</th><th>Producto</th><th>Lmat / ensayo</th><th>Código MP</th><th>Lote</th><th>Envase</th><th>Estado</th></tr></thead><tbody>'
+        + d.usos.map(u => '<tr' + (u.estado === 'vencido' ? ' class="mal"' : '') + '><td>' + fmtFecha(u.fecha) + '</td><td class="mono">' + esc(u.codigo_producto) + '</td><td><b>' + esc(u.lmat) + '</b></td>'
+          + '<td>' + esc(u.codigo) + '</td><td>' + esc(u.lote) + '</td><td>' + esc(u.envase) + '</td><td>' + pillEstado(u.estado) + '</td></tr>').join('')
+        + '</tbody></table></div>';
+    }
+    h += '</div>';
+    if(d.registros.length){
+      h += '<div class="card tight"><div class="card-t">Dónde estuvo</div><div class="hint-scroll">Desliza la tabla para ver más columnas →</div><div class="fab-w"><table class="ft"><thead><tr><th>Código</th><th>Lote</th><th>Envase</th><th>Ingreso</th><th>Vence</th><th>Salida</th><th>Proveedor</th></tr></thead><tbody>'
+        + d.registros.map(r => '<tr><td class="mono">' + esc(r.codigo) + '</td><td>' + esc(r.lote) + '</td><td>' + esc(r.envase) + '</td><td>' + fmtFecha(r.ingreso) + '</td><td>' + fmtFecha(r.vencimiento)
+          + '</td><td>' + (r.cierre ? fmtFecha(r.cierre) : 'Sigue') + '</td><td>' + esc(r.proveedor || '—') + '</td></tr>').join('')
+        + '</tbody></table></div></div>';
+    }
+    h += '<button class="btn btn-w" onclick="volverTraza()">Nueva consulta</button>';
+    resultadoTz(h);
+  }catch(e){ errorTz(e); }
+}
+
+async function buscarLmatTz(){
+  const lmat = $('tzLmat').value.trim();
+  if(lmat.length < 2){ toast('Escribe el Lmat o N° de ensayo'); return; }
+  resultadoTz(cargando('Buscando el registro…'));
+  try{
+    const d = await apiGet({ accion:'trazaLmat', lmat });
+    ST.tzFabs = d.fabricaciones;
+    let h = d.exacto ? '' : '<div class="nota" style="margin-bottom:10px;">Sin coincidencia exacta: se muestran los que contienen «' + esc(d.lmat) + '».</div>';
+    if(!d.fabricaciones.length) h += '<div class="card">' + vacio('No hay registros de fabricación con ese Lmat / ensayo.') + '</div>';
+    d.fabricaciones.forEach((f, i) => {
+      const nv = f.items.filter(x => x.estado === 'vencido').length;
+      h += '<div class="card tight"><div class="card-t">' + esc(f.lmat) + '<span style="margin-left:auto;color:var(--tinta3);">' + esc(f.fab_id) + '</span></div>'
+        + '<div class="card-d">Producto <b>' + esc(f.codigo_producto) + '</b> · ' + fmtFecha(f.fecha) + ' · ' + esc(f.por) + ' · ' + f.items.length + ' MP'
+        + (nv ? ' · <b style="color:var(--mal);">' + nv + ' vencida(s)</b>' : '') + '</div>'
+        + '<div class="hint-scroll">Desliza la tabla para ver más columnas →</div>' + tablaFab(f.items, false)
+        + '<div class="row" style="margin-top:9px;"><button class="btn btn-s btn-sm" onclick="mostrarQRFab(ST.tzFabs[' + i + '])">Ver QR</button>'
+        + '<button class="btn btn-w btn-sm" onclick="imprimirFab(ST.tzFabs[' + i + '])">Imprimir / PDF</button></div></div>';
+    });
+    h += '<button class="btn btn-w" onclick="volverTraza()">Nueva consulta</button>';
+    resultadoTz(h);
+  }catch(e){ errorTz(e); }
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -4335,7 +4933,7 @@ function pintarHistorial(){
 }
 
 function verDesdeHistorial(envase){
-  ir('ver', false, true);
+  ir('ver', false, 'ver');
   procesarEnvase(envase);
 }
 
@@ -4879,8 +5477,8 @@ function abrirAyuda(){
     + '<div class="lista">'
     + pasoAyuda('1', 'Etiquetas', 'Genera las que necesites, imprímelas y pega una en cada envase físico.')
     + pasoAyuda('2', 'Registro', 'Escanea un envase y carga el material: código, lote, cantidad y fechas.')
-    + pasoAyuda('3', 'Ver envase', 'Escanea para saber qué contiene, si está vigente y qué tuvo antes.')
-    + pasoAyuda('4', 'Trazabilidad', 'Elige una fecha y los códigos: te dice qué lotes había disponibles ese día.')
+    + pasoAyuda('3', 'Fabricar', 'Ver envase: escanea para saber qué contiene. Fabricar: escanea seguido lo que usas y genera el QR del registro.')
+    + pasoAyuda('4', 'Trazabilidad', 'Por fecha y materia prima, por lote (qué producto lo consumió) o por Lmat / ensayo.')
     + pasoAyuda('5', 'Inventario', 'Stock cargado hoy, agrupado por código y ordenado por vencimiento.')
     + '</div>'
     + '<div class="nota" style="margin-top:14px;">Nada se borra nunca. Al reemplazar o vaciar un envase, el registro anterior queda cerrado con su fecha y su motivo.</div>'
@@ -4905,6 +5503,7 @@ async function sincronizar(silencioso){
     ST.envases = sinNombres(d.envases);
     ST.resumen = d.resumen || ST.resumen;
     ST.hoy = d.hoy || ST.hoy;
+    ST.ultSync = Date.now();
     cacheGuardar();
     if(ST.vista === 'inicio') pintarInicio();
     if(ST.vista === 'estado') pintarEstado();
@@ -4925,6 +5524,7 @@ async function arranque(){
     ST.resumen = d.resumen || ST.resumen;
     ST.diasAlerta = d.dias_alerta || 30;
     ST.hoy = d.hoy || hoyISO();
+    ST.ultSync = Date.now();
     indexarCatalogo();
     cacheGuardar();
     pintarInicio();
@@ -4947,7 +5547,13 @@ async function recuperarUsuario(){
 // ARRANQUE
 // ═══════════════════════════════════════════════════════════
 (function init(){
+  const qFab = new URLSearchParams(location.search).get('fab');
+  if(qFab){ modoVisor(qFab.trim().toUpperCase()); return; }
+
   ST.dispositivo = dispositivoId();
+  ST.fechaApertura = hoyISO();
+  fabLeerLocal();
+  try{ ST.fab.ultimo = JSON.parse(localStorage.getItem('lt_fab_ult') || 'null'); }catch(e){}
   ST.hoy = hoyISO();
   cacheLeer();
   pintarUsuario();
@@ -4988,6 +5594,14 @@ async function recuperarUsuario(){
   // Registro y Ver
   $('btnScan1').onclick = () => toggleScanner('reader');
   $('btnScan2').onclick = () => toggleScanner('reader2');
+  $('btnScan3').onclick = () => toggleScanner('reader3');
+  $('tileVer').onclick = () => abrirVerEnvase(false);
+  $('tileFab').onclick = () => ir('fab');
+  $('btnFabMan').onclick = () => { const v = $('fabMan').value.trim(); if(!v){ toast('Escribe un código'); return; } agregarEnvaseFab(extraerEnvase(v)); $('fabMan').value = ''; };
+  $('fabMan').onkeydown = e => { if(e.key === 'Enter') $('btnFabMan').click(); };
+  $('btnFabVaciar').onclick = vaciarListaFab;
+  $('btnFabPrev').onclick = vistaPreviaFab;
+  $('btnFabImp').onclick = formFab;
   $('btnMan1').onclick = () => { const v = $('manual1').value.trim(); if(v) procesarEnvase(extraerEnvase(v)); else toast('Escribe un código'); };
   $('btnMan2').onclick = () => { const v = $('manual2').value.trim(); if(v) procesarEnvase(extraerEnvase(v)); else toast('Escribe un código'); };
   $('manual1').onkeydown = e => { if(e.key === 'Enter') $('btnMan1').click(); };
@@ -5007,10 +5621,11 @@ async function recuperarUsuario(){
       },
       onEnter: v => { agregarCodigosTz(v); $('tzCod').value = ''; }
     });
-  $('btnCopiarImg').onclick = copiarQRImagen;
-  $('btnBajarImg').onclick = bajarQRImagen;
-  $('btnCopiarUrl').onclick = copiarUrlTraza;
-  $('btnImprimirQR').onclick = imprimirQRAcceso;
+  document.querySelectorAll('.seg3 button').forEach(b => { b.onclick = () => setTzModo(b.dataset.tz); });
+  $('tzBuscarLote').onclick = buscarLoteTz;
+  $('tzLote').onkeydown = e => { if(e.key === 'Enter') buscarLoteTz(); };
+  $('tzBuscarLmat').onclick = buscarLmatTz;
+  $('tzLmat').onkeydown = e => { if(e.key === 'Enter') buscarLmatTz(); };
 
   // Inventario
   $('btnInv').onclick = () => cargarInventario($('invFiltro').value.trim());
@@ -5043,7 +5658,8 @@ async function recuperarUsuario(){
     }
   });
 
-  setInterval(() => { if(!ST.escaneando && document.visibilityState === 'visible') sincronizar(true); }, CFG.SYNC_MS);
+  setInterval(() => { if((!ST.escaneando || ST.escaneando === 'reader3') && document.visibilityState === 'visible') sincronizar(true); }, CFG.SYNC_MS);
 })();
+
 </script>
 </body></html>
