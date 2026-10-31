@@ -5652,7 +5652,10 @@ function disCambiar(k, dir){
   disGuardar(); disPanel(); disMarcar();
 }
 function disAplicarDesp(el, c){
-  el.style.transform = (c.dx || c.dy) ? 'translate(' + c.dx + 'px,' + c.dy + 'px)' : '';
+  // left/top (no transform): en iPhone el texto de los campos se descuadra dentro de elementos con transform
+  el.style.transform = '';
+  el.style.left = c.dx ? c.dx + 'px' : '';
+  el.style.top = c.dy ? c.dy + 'px' : '';
   if(c.dx || c.dy){
     if(getComputedStyle(el).position === 'static') el.style.position = 'relative';
     el.style.zIndex = '30';
