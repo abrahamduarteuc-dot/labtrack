@@ -5653,8 +5653,14 @@ function disCambiar(k, dir){
 }
 function disAplicarDesp(el, c){
   el.style.transform = (c.dx || c.dy) ? 'translate(' + c.dx + 'px,' + c.dy + 'px)' : '';
-  el.style.position = el.style.position || '';
-  if(c.dx || c.dy){ el.style.zIndex = el.style.zIndex || '5'; }
+  if(c.dx || c.dy){
+    if(getComputedStyle(el).position === 'static') el.style.position = 'relative';
+    el.style.zIndex = '30';
+    // los contenedores no deben recortar lo desplazado
+    for(let p = el.parentElement; p && p !== document.body; p = p.parentElement){
+      if(getComputedStyle(p).overflow !== 'visible'){ p.style.overflow = 'visible'; }
+    }
+  }
 }
 function disDesplazar(dx, dy){
   const el = DIS.sel; if(!el) return;
