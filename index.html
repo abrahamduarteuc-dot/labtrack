@@ -562,6 +562,54 @@ body.dis-drag .dis-sel{touch-action:none;cursor:grab;user-select:none;-webkit-us
 .dl-r button.p{background:#1565C0;color:#fff;border-color:#1565C0;flex-basis:100%;}
 .dl-b small{font-size:11px;color:#8BA3BC;}
 
+/* ───────── Ajustes de diseño (modo diseño, 31-oct) ───────── */
+#scanBox1{max-height:502px;}
+/* barra de abajo */
+.nb:nth-child(1){height:60px;}
+.nb:nth-child(2){height:77px;padding-left:10px;padding-right:10px;}
+.nb:nth-child(2) .bx{height:46px;position:relative;top:1px;}
+.nb:nth-child(2) .bx svg{width:29px;height:29px;}
+.nb:nth-child(3) .bx svg{width:35px;height:35px;}
+.nb:nth-child(4){height:62px;}
+.nb:nth-child(4) .lb{font-size:12px;position:relative;top:4px;}
+.nb:nth-child(5) .bx svg{width:30px;height:30px;}
+.nb:nth-child(5) .lb{font-size:11.5px;}
+/* menú Fabricar */
+#tileVer .ti svg{width:56px;height:56px;}
+#tileFab .ti svg{width:46px;height:46px;}
+#tileVer .ti,#tileFab .ti{width:auto;height:auto;min-width:50px;min-height:50px;padding:4px 8px;}
+/* campos */
+#qCant,#tzFecha{text-align:center;}
+#tzFecha{width:30%;}
+/* logo del encabezado */
+.hdr .marca .m-ic{width:47px;height:38px;border-radius:7px;}
+.hdr .marca .m-ic svg{width:24px;height:24px;}
+/* inicio: sin contadores */
+#pg-inicio .kpis{display:none;}
+/* ventana de clave */
+#sheetBody #btnPin{display:block;width:60%;margin-left:auto;margin-right:auto;}
+#sheetBody > div:nth-child(6) > button:nth-child(1){display:block;width:50%;margin-left:auto;margin-right:auto;}
+
+/* ───────── Inicio: filtros rápidos ───────── */
+.hero .buscador{width:77.5%;margin:0 auto;}
+.hero .buscador input{flex:1 1 37%;}
+.hero .buscador button{margin-left:auto;}
+.ff{display:flex;gap:6px;justify-content:center;margin:0 0 12px;}
+.ff button{
+  flex:1 1 0;max-width:122px;border:1px solid rgba(143,194,240,.38);background:rgba(255,255,255,.08);color:#D4E7FA;
+  font:inherit;font-size:12px;font-weight:700;padding:7px 4px;border-radius:999px;cursor:pointer;white-space:nowrap;
+}
+.ff button[aria-selected=true]{background:#fff;color:var(--azul-700);border-color:#fff;}
+
+
+#resFast{margin-top:2px;}
+.env-big{display:flex;align-items:center;gap:11px;}
+.env-big .eb{font-weight:800;font-size:17px;letter-spacing:-.2px;color:var(--azul-800);background:var(--azul-50);border:1.5px solid var(--azul-100);border-radius:10px;padding:7px 10px;white-space:nowrap;}
+/* logo grande de fondo en el inicio */
+#bgLogo{position:fixed;right:-70px;bottom:calc(var(--nav,78px) + 10px);width:390px;max-width:105vw;pointer-events:none;z-index:0;opacity:.17;}
+#bgLogo svg{width:100%;height:auto;display:block;}
+#pg-inicio .hero,#pg-inicio #avisosInicio,#pg-inicio #resFast{position:relative;z-index:1;}
+
 </style>
 </head>
 <body>
@@ -2884,10 +2932,16 @@ var __Html5QrcodeLibrary__;(()=>{var t={449:function(t,e,r){!function(t){"use st
 
 <!-- ══════════════ INICIO ══════════════ -->
 <section class="pg on" id="pg-inicio">
+  <div id="bgLogo" aria-hidden="true"></div>
   <div class="hero">
     <div class="hero-t">Consulta rápida</div>
     <h1>¿Qué hay disponible?</h1>
-    <p>Escribe un código de materia prima y mira sus lotes cargados ahora mismo.</p>
+    <div class="ff" id="ffTabs" role="tablist" aria-label="Tipo de búsqueda">
+      <button type="button" role="tab" data-ff="mp" aria-selected="true">Material</button>
+      <button type="button" role="tab" data-ff="lote" aria-selected="false">Lote → envase</button>
+      <button type="button" role="tab" data-ff="lmat" aria-selected="false">Lmat / ensayo</button>
+    </div>
+    <p id="ffAyuda">Escribe un código de materia prima y mira sus lotes.</p>
     <div class="buscador">
       <input type="text" id="qFast" placeholder="Ej: V5048" autocomplete="off" autocapitalize="characters" inputmode="text">
       <button id="btnFast"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>Buscar</button>
@@ -3029,9 +3083,9 @@ var __Html5QrcodeLibrary__;(()=>{var t={449:function(t,e,r){!function(t){"use st
 
   <div id="trazaForm">
     <div class="seg3" role="tablist" aria-label="Tipo de consulta">
+      <button type="button" role="tab" data-tz="lmat" aria-selected="false">Lmat / ensayo</button>
       <button type="button" role="tab" data-tz="fecha" aria-selected="true">Fecha y MP</button>
       <button type="button" role="tab" data-tz="lote" aria-selected="false">Lote de MP</button>
-      <button type="button" role="tab" data-tz="lmat" aria-selected="false">Lmat / ensayo</button>
     </div>
 
     <!-- Fecha + materias primas -->
@@ -4765,6 +4819,22 @@ async function buscarLoteTz(){
   }catch(e){ errorTz(e); }
 }
 
+/** Tarjetas con el resumen de cada registro de fabricación (vista previa de la tabla). */
+function tarjetasLmat(d, conQR){
+  let h = d.exacto ? '' : '<div class="nota" style="margin-bottom:10px;">Sin coincidencia exacta: se muestran los que contienen «' + esc(d.lmat) + '».</div>';
+  if(!d.fabricaciones.length) h += '<div class="card">' + vacio('No hay registros de fabricación con ese Lmat / ensayo.') + '</div>';
+  d.fabricaciones.forEach((f, i) => {
+    const nv = f.items.filter(x => x.estado === 'vencido').length;
+    h += '<div class="card tight"><div class="card-t">' + esc(f.lmat) + '<span style="margin-left:auto;color:var(--tinta3);">' + esc(f.fab_id) + '</span></div>'
+      + '<div class="card-d">Producto <b>' + esc(f.codigo_producto) + '</b> · ' + fmtFecha(f.fecha) + ' · ' + esc(f.por) + ' · ' + f.items.length + ' MP'
+      + (nv ? ' · <b style="color:var(--mal);">' + nv + ' vencida(s)</b>' : '') + '</div>'
+      + '<div class="hint-scroll">Desliza la tabla para ver más columnas →</div>' + tablaFab(f.items, false)
+      + '<div class="row" style="margin-top:9px;">' + (conQR ? '<button class="btn btn-s btn-sm" onclick="mostrarQRFab(ST.tzFabs[' + i + '])">Ver QR</button>' : '')
+      + '<button class="btn btn-w btn-sm" onclick="imprimirFab(ST.tzFabs[' + i + '])">Imprimir / PDF</button></div></div>';
+  });
+  return h;
+}
+
 async function buscarLmatTz(){
   const lmat = $('tzLmat').value.trim();
   if(lmat.length < 2){ toast('Escribe el Lmat o N° de ensayo'); return; }
@@ -4772,17 +4842,7 @@ async function buscarLmatTz(){
   try{
     const d = await apiGet({ accion:'trazaLmat', lmat });
     ST.tzFabs = d.fabricaciones;
-    let h = d.exacto ? '' : '<div class="nota" style="margin-bottom:10px;">Sin coincidencia exacta: se muestran los que contienen «' + esc(d.lmat) + '».</div>';
-    if(!d.fabricaciones.length) h += '<div class="card">' + vacio('No hay registros de fabricación con ese Lmat / ensayo.') + '</div>';
-    d.fabricaciones.forEach((f, i) => {
-      const nv = f.items.filter(x => x.estado === 'vencido').length;
-      h += '<div class="card tight"><div class="card-t">' + esc(f.lmat) + '<span style="margin-left:auto;color:var(--tinta3);">' + esc(f.fab_id) + '</span></div>'
-        + '<div class="card-d">Producto <b>' + esc(f.codigo_producto) + '</b> · ' + fmtFecha(f.fecha) + ' · ' + esc(f.por) + ' · ' + f.items.length + ' MP'
-        + (nv ? ' · <b style="color:var(--mal);">' + nv + ' vencida(s)</b>' : '') + '</div>'
-        + '<div class="hint-scroll">Desliza la tabla para ver más columnas →</div>' + tablaFab(f.items, false)
-        + '<div class="row" style="margin-top:9px;"><button class="btn btn-s btn-sm" onclick="mostrarQRFab(ST.tzFabs[' + i + '])">Ver QR</button>'
-        + '<button class="btn btn-w btn-sm" onclick="imprimirFab(ST.tzFabs[' + i + '])">Imprimir / PDF</button></div></div>';
-    });
+    let h = tarjetasLmat(d, true);
     h += '<button class="btn btn-w" onclick="volverTraza()">Nueva consulta</button>';
     resultadoTz(h);
   }catch(e){ errorTz(e); }
@@ -5027,7 +5087,71 @@ function pintarInicio(){
   $('avisosInicio').innerHTML = a ? '<div class="avisos">' + a + '</div>' : '';
 }
 
+const FF_TXT = {
+  mp:   { ayuda:'Escribe un código de materia prima y mira sus lotes.', ph:'Ej: V5048', caps:'characters' },
+  lote: { ayuda:'Escribe un lote y mira en qué envase está.', ph:'Ej: lote del proveedor', caps:'characters' },
+  lmat: { ayuda:'Escribe el Lmat o ensayo y mira su registro.', ph:'Ej: FC00012375 / E01', caps:'characters' }
+};
+function setFastModo(m){
+  ST.ffModo = m;
+  document.querySelectorAll('#ffTabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.ff === m));
+  $('ffAyuda').textContent = FF_TXT[m].ayuda;
+  $('qFast').placeholder = FF_TXT[m].ph;
+  $('qFast').value = ''; $('resFast').innerHTML = '';
+}
+
 function buscarRapido(){
+  const m = ST.ffModo || 'mp';
+  if(m === 'lote') return buscarLoteInicio();
+  if(m === 'lmat') return buscarLmatInicio();
+  return buscarMpInicio();
+}
+
+/** Lote → envase: dice en qué envase está ahora (y dónde estuvo si ya salió). */
+async function buscarLoteInicio(){
+  const q = ($('qFast').value || '').trim().toUpperCase();
+  if(q.length < 2){ if(q) toast('Escribe al menos 2 caracteres'); else $('resFast').innerHTML = ''; return; }
+  const aqui = ST.envases.filter(e => e.estado === 'ocupado' && e.mp && String(e.mp.lote || '').toUpperCase().indexOf(q) > -1);
+  if(aqui.length){
+    aqui.sort((a, b) => a.id < b.id ? -1 : 1);
+    let h = '<div class="card"><div class="card-t">' + aqui.length + ' envase(s) con el lote «' + esc(q) + '»</div><div class="lista">';
+    aqui.forEach(e => {
+      const v = { estado: e.mp.vigencia, dias: e.mp.dias };
+      h += '<div class="item" onclick="verDesdeHistorial(\'' + esc(e.id) + '\')"><div class="cu"><div class="env-big"><span class="eb">' + esc(e.id) + '</span>'
+        + '<div><div class="l1"><b>' + esc(e.mp.codigo) + '</b>' + pillVig(v) + '</div>'
+        + '<div class="l2">lote ' + esc(e.mp.lote) + ' · ' + fmtNum(e.mp.cantidad) + ' ' + esc(e.mp.unidad) + '</div>'
+        + '<div class="l3">vence ' + fmtFecha(e.mp.vencimiento) + '</div></div></div></div></div>';
+    });
+    $('resFast').innerHTML = h + '</div></div>';
+    return;
+  }
+  $('resFast').innerHTML = '<div class="card">' + cargando('Buscando el lote…') + '</div>';
+  try{
+    const d = await apiGet({ accion:'trazaLote', lote:q });
+    const reg = (d.registros || []).slice(-6).reverse();
+    $('resFast').innerHTML = '<div class="card">' + vacio('El lote «' + esc(q) + '» no está en ningún envase ahora.')
+      + (reg.length ? '<div class="nota" style="text-align:center;">Estuvo en: ' + reg.map(r => esc(r.envase) + (r.cierre ? ' (salió ' + fmtFecha(r.cierre) + ')' : '')).join(', ') + '</div>' : '')
+      + '</div>';
+  }catch(e){
+    $('resFast').innerHTML = '<div class="card">' + vacio('No se pudo consultar: ' + esc(e.message)) + '</div>';
+  }
+}
+
+/** Lmat / ensayo: muestra directo la vista previa del registro (sin QR). */
+async function buscarLmatInicio(){
+  const q = ($('qFast').value || '').trim();
+  if(q.length < 2){ if(q) toast('Escribe el Lmat o N° de ensayo'); else $('resFast').innerHTML = ''; return; }
+  $('resFast').innerHTML = cargando('Buscando el registro…');
+  try{
+    const d = await apiGet({ accion:'trazaLmat', lmat:q });
+    ST.tzFabs = d.fabricaciones;
+    $('resFast').innerHTML = tarjetasLmat(d, false);
+  }catch(e){
+    $('resFast').innerHTML = '<div class="card">' + vacio('No se pudo consultar: ' + esc(e.message)) + '</div>';
+  }
+}
+
+function buscarMpInicio(){
   const q = ($('qFast').value || '').trim().toUpperCase();
   if(!q){ $('resFast').innerHTML = ''; return; }
 
@@ -5061,6 +5185,31 @@ function buscarRapido(){
   });
   h += '</div></div>';
   $('resFast').innerHTML = h;
+}
+
+
+/** Logo grande, translúcido y "desintegrado" para el fondo del inicio. */
+function logoFondo(){
+  const cont = $('bgLogo'); if(!cont) return;
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  let huecos = '', particulas = '';
+  // huecos: aumentan hacia abajo-derecha, como si el logo se deshiciera
+  for(let i = 0; i < 520; i++){
+    const x = rnd() * 240, y = rnd() * 240, t = (x + y) / 480;
+    if(rnd() < Math.pow(t, 1.7) * 1.15) huecos += '<rect x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + (3 + rnd() * 9).toFixed(1) + '" height="' + (3 + rnd() * 9).toFixed(1) + '" fill="#000"/>';
+  }
+  // partículas que se escapan hacia la esquina
+  for(let i = 0; i < 90; i++){
+    const t = rnd(), x = 140 + t * 105 + rnd() * 40, y = 140 + t * 105 + rnd() * 40 - 25;
+    const z = 2 + rnd() * 7;
+    particulas += '<rect x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + z.toFixed(1) + '" height="' + z.toFixed(1) + '" rx="1" fill="#1565C0" opacity="' + (0.85 - t * 0.7).toFixed(2) + '"/>';
+  }
+  cont.innerHTML = '<svg viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg"><defs>'
+    + '<linearGradient id="bgG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2E8BE6"/><stop offset="1" stop-color="#0A2540"/></linearGradient>'
+    + '<mask id="bgM" maskUnits="userSpaceOnUse" x="0" y="0" width="240" height="240"><rect width="240" height="240" fill="#fff"/>' + huecos + '</mask></defs>'
+    + '<g mask="url(#bgM)"><rect x="0" y="0" width="240" height="240" rx="58" fill="url(#bgG)"/>'
+    + '<g transform="translate(48 48) scale(6)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v6.5L4.5 17A2.5 2.5 0 0 0 6.7 21h10.6a2.5 2.5 0 0 0 2.2-4L15 9.5V3"/><path d="M7.5 3h9M7 14h10"/></g></g>'
+    + particulas + '</svg>';
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -5929,6 +6078,8 @@ function iniciarDiseno(){
   });
 
   // Inicio
+  document.querySelectorAll('#ffTabs button').forEach(b => b.onclick = () => setFastModo(b.dataset.ff));
+  logoFondo();
   $('btnFast').onclick = buscarRapido;
   $('qFast').onkeydown = e => { if(e.key === 'Enter') buscarRapido(); };
   $('qFast').oninput = () => { if(!$('qFast').value.trim()) $('resFast').innerHTML = ''; };
