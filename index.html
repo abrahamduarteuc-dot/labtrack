@@ -529,6 +529,34 @@ body.modo-visor{padding-bottom:0;}
 #visor .vh b{font-size:17px;color:var(--azul-900);}
 #visor .vh span{display:block;font-size:11.5px;color:var(--tinta2);}
 
+/* ═════════ Modo diseño (solo con ?diseno=1) ═════════ */
+body.dis{padding-top:42px;}
+body.dis .hdr{top:42px;}
+#disBar{position:fixed;top:0;left:0;right:0;z-index:900;height:42px;background:#07213B;display:flex;gap:5px;align-items:center;padding:0 8px;}
+#disBar button{flex:1;border:1px solid #2E8BE6;background:#0C3157;color:#fff;font:inherit;font-size:11.5px;font-weight:700;border-radius:8px;padding:6px 4px;cursor:pointer;}
+#disBar button.on{background:#E8A01E;border-color:#E8A01E;color:#07213B;}
+#disPanel{position:fixed;left:0;right:0;bottom:calc(var(--nav) + env(safe-area-inset-bottom,0px));z-index:890;background:#fff;border-top:2px solid #E8A01E;box-shadow:0 -8px 24px rgba(7,33,59,.25);padding:8px 10px 10px;max-height:40vh;overflow:auto;}
+.dp-h{text-align:center;padding:6px 0;}.dp-h b{display:block;font-size:13.5px;color:#07213B;}.dp-h span{font-size:11.5px;color:#55718F;}
+.dp-top{display:flex;gap:6px;align-items:center;margin-bottom:7px;}
+.dp-n{flex:1;min-width:0;}.dp-n b{display:block;font-size:12.5px;color:#07213B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.dp-n span{display:block;font-size:9.5px;color:#8BA3BC;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.dp-top button,.dp-r button{border:1px solid #C3D9EE;background:#EFF6FD;color:#12457A;font:inherit;font-size:11.5px;font-weight:700;border-radius:8px;padding:6px 8px;cursor:pointer;}
+.dp-g{display:grid;grid-template-columns:1fr 1fr;gap:6px 8px;margin-bottom:7px;}
+.dp-s label{display:block;font-size:10px;font-weight:700;color:#55718F;margin-bottom:2px;}
+.dp-s div{display:flex;align-items:center;gap:4px;}
+.dp-s button{width:34px;height:30px;border:1px solid #C3D9EE;background:#fff;color:#12457A;font:inherit;font-size:17px;font-weight:800;border-radius:8px;cursor:pointer;line-height:1;}
+.dp-s span{flex:1;text-align:center;font-size:12px;font-weight:700;color:#07213B;font-variant-numeric:tabular-nums;}
+.dp-r{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:7px;}.dp-r button{flex:1;}
+.dp-i{width:100%;margin-bottom:6px;padding:7px 9px;border:1.3px solid #C3D9EE;border-radius:8px;font:inherit;font-size:16px;}
+.dis-sel{outline:2.5px dashed #E8A01E!important;outline-offset:2px;}
+.dl-ov{position:fixed;inset:0;z-index:950;background:rgba(7,33,59,.6);display:grid;place-items:center;padding:14px;}
+.dl-b{background:#fff;border-radius:14px;padding:14px;width:100%;max-width:560px;max-height:88vh;overflow:auto;}
+.dl-b b{font-size:15px;color:#07213B;}.dl-b p{font-size:13px;color:#55718F;}
+.dl-b textarea{width:100%;height:42vh;margin:8px 0;border:1px solid #C3D9EE;border-radius:8px;padding:8px;font:12px/1.4 ui-monospace,Consolas,monospace;}
+.dl-r{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;}.dl-r button{flex:1;border:1px solid #C3D9EE;background:#EFF6FD;color:#12457A;font:inherit;font-size:12.5px;font-weight:700;border-radius:9px;padding:9px 8px;cursor:pointer;}
+.dl-r button.p{background:#1565C0;color:#fff;border-color:#1565C0;flex-basis:100%;}
+.dl-b small{font-size:11px;color:#8BA3BC;}
+
 </style>
 </head>
 <body>
@@ -5544,6 +5572,258 @@ async function recuperarUsuario(){
 }
 
 // ═══════════════════════════════════════════════════════════
+// MODO DISEÑO — solo se activa con ?diseno=1. No guarda nada en la hoja.
+// Sirve para ajustar a mano tamaños, posiciones y textos, y mandarme la lista.
+// ═══════════════════════════════════════════════════════════
+const DIS = { sel:null, modo:'editar', cambios:{}, ejemplo:false };
+
+function disGuardar(){}
+function disLeer(){ DIS.cambios = {}; }
+
+function disSelector(el){
+  if(el.id) return '#' + el.id;
+  const partes = []; let e = el;
+  while(e && e !== document.body && partes.length < 7){
+    if(e.id){ partes.unshift('#' + e.id); break; }
+    const p = e.parentElement; if(!p) break;
+    partes.unshift(e.tagName.toLowerCase() + ':nth-child(' + (Array.prototype.indexOf.call(p.children, e) + 1) + ')');
+    e = p;
+  }
+  return partes.join(' > ');
+}
+function disNombre(el){
+  const t = (el.innerText || el.value || el.placeholder || '').replace(/\s+/g, ' ').trim().slice(0, 34);
+  const tipo = el.tagName === 'BUTTON' ? 'botón' : el.tagName === 'INPUT' ? 'campo' : el.tagName === 'SELECT' ? 'lista' :
+    /^H[1-6]$/.test(el.tagName) ? 'título' : el.tagName === 'TABLE' ? 'tabla' : el.classList.contains('card') ? 'cuadro' :
+    el.classList.contains('sub') ? 'texto' : el.tagName === 'LABEL' ? 'etiqueta' : el.tagName === 'IMG' ? 'imagen' : 'elemento';
+  return tipo + (t ? ' «' + t + '»' : '');
+}
+function disPantalla(){
+  const m = { inicio:'Inicio', qr:'Etiquetas', registro:'Registro', ver:'Fabricar (menú / Ver envase)', fab:'Fabricar (escaneo)', traza:'Trazabilidad', inv:'Inventario', hist:'Historial', estado:'Estado de etiquetas' };
+  const hoja = $('sheet').classList.contains('on') ? ' · ventana abierta' : '';
+  return (m[ST.vista] || ST.vista) + hoja;
+}
+
+function disRegistro(el){
+  const s = disSelector(el);
+  if(!DIS.cambios[s]){
+    const cs = getComputedStyle(el);
+    DIS.cambios[s] = { nombre: disNombre(el), pantalla: disPantalla(), orig: {
+      letra: parseFloat(cs.fontSize), ancho: el.parentElement ? r1(el.getBoundingClientRect().width / el.parentElement.getBoundingClientRect().width * 100) : 100, alto: Math.round(el.getBoundingClientRect().height),
+      pv: parseFloat(cs.paddingTop), ph: parseFloat(cs.paddingLeft), mt: parseFloat(cs.marginTop), mb: parseFloat(cs.marginBottom), radio: parseFloat(cs.borderTopLeftRadius)
+    }, nuevo:{}, mover:0, oculto:false, texto:null, alinear:null, nota:'' };
+  }
+  return DIS.cambios[s];
+}
+const r1 = n => Math.round(n * 10) / 10;
+
+/** Cada control: lee el valor actual y lo cambia en pasos. */
+const CONTROLES = [
+  { k:'letra', t:'Letra', u:'px', paso:0.5, get: e => parseFloat(getComputedStyle(e).fontSize), set:(e,v) => { e.style.fontSize = v + 'px'; } },
+  { k:'ancho', t:'Ancho', u:'%', paso:5, get: e => { const p = e.parentElement; return p ? e.getBoundingClientRect().width / p.getBoundingClientRect().width * 100 : 100; },
+    set:(e,v) => { e.style.width = Math.max(5, Math.min(100, v)) + '%'; e.style.flex = '0 0 auto'; e.style.maxWidth = '100%'; } },
+  { k:'alto', t:'Alto', u:'px', paso:2, get: e => e.getBoundingClientRect().height, set:(e,v) => { e.style.height = Math.max(8, v) + 'px'; e.style.minHeight = '0'; } },
+  { k:'pv', t:'Aire ↕ dentro', u:'px', paso:1, get: e => parseFloat(getComputedStyle(e).paddingTop), set:(e,v) => { e.style.paddingTop = e.style.paddingBottom = Math.max(0, v) + 'px'; } },
+  { k:'ph', t:'Aire ↔ dentro', u:'px', paso:1, get: e => parseFloat(getComputedStyle(e).paddingLeft), set:(e,v) => { e.style.paddingLeft = e.style.paddingRight = Math.max(0, v) + 'px'; } },
+  { k:'mt', t:'Espacio arriba', u:'px', paso:2, get: e => parseFloat(getComputedStyle(e).marginTop), set:(e,v) => { e.style.marginTop = v + 'px'; } },
+  { k:'mb', t:'Espacio abajo', u:'px', paso:2, get: e => parseFloat(getComputedStyle(e).marginBottom), set:(e,v) => { e.style.marginBottom = v + 'px'; } },
+  { k:'radio', t:'Redondeo', u:'px', paso:2, get: e => parseFloat(getComputedStyle(e).borderTopLeftRadius), set:(e,v) => { e.style.borderRadius = Math.max(0, v) + 'px'; } }
+];
+
+function disMover(dir){
+  const el = DIS.sel; if(!el) return;
+  const c = disRegistro(el);
+  if(dir < 0 && el.previousElementSibling){ el.parentElement.insertBefore(el, el.previousElementSibling); c.mover -= 1; }
+  else if(dir > 0 && el.nextElementSibling){ el.parentElement.insertBefore(el.nextElementSibling, el); c.mover += 1; }
+  else { toast('No se puede mover más en esa dirección'); return; }
+  disGuardar(); disPanel(); disMarcar();
+}
+function disCambiar(k, dir){
+  const el = DIS.sel; if(!el) return;
+  const ctl = CONTROLES.find(x => x.k === k), c = disRegistro(el);
+  const actual = c.nuevo[k] !== undefined ? c.nuevo[k] : ctl.get(el);
+  const v = r1(actual + dir * ctl.paso);
+  ctl.set(el, v); c.nuevo[k] = v;
+  disGuardar(); disPanel(); disMarcar();
+}
+function disAlinear(a){
+  const el = DIS.sel; if(!el) return;
+  const c = disRegistro(el); el.style.textAlign = a; c.alinear = a;
+  if(el.tagName === 'BUTTON'){ el.style.justifyContent = a === 'left' ? 'flex-start' : a === 'right' ? 'flex-end' : 'center'; }
+  disGuardar(); disPanel();
+}
+function disOcultar(){
+  const el = DIS.sel; if(!el) return;
+  const c = disRegistro(el); c.oculto = !c.oculto;
+  el.style.opacity = c.oculto ? '0.25' : '';        // se atenúa para poder seguir tocándolo
+  el.style.outline = ''; disGuardar(); disPanel(); disMarcar();
+}
+/** Primer texto propio del elemento (un botón con ícono tiene el texto suelto junto al dibujo). */
+function disNodoTexto(el){
+  return Array.prototype.find.call(el.childNodes, n => n.nodeType === 3 && n.textContent.trim());
+}
+function disTexto(v){
+  const el = DIS.sel; if(!el) return;
+  const c = disRegistro(el); c.texto = v;
+  const n = disNodoTexto(el); if(n) n.textContent = v;
+  disGuardar();
+}
+function disNota(v){
+  const el = DIS.sel; if(!el) return;
+  disRegistro(el).nota = v; disGuardar();
+}
+function disRestablecer(){
+  const el = DIS.sel; if(!el) return;
+  el.removeAttribute('style');
+  delete DIS.cambios[disSelector(el)];
+  disGuardar(); disPanel(); disMarcar();
+}
+function disMarcar(){
+  document.querySelectorAll('.dis-sel').forEach(x => x.classList.remove('dis-sel'));
+  if(DIS.sel) DIS.sel.classList.add('dis-sel');
+}
+function disSeleccionar(el){
+  DIS.sel = el; disMarcar(); disPanel();
+}
+
+function disPanel(){
+  const p = $('disPanel'); if(!p) return;
+  const el = DIS.sel;
+  if(!el){ p.innerHTML = '<div class="dp-h"><b>Toca lo que quieras ajustar</b><span>Un botón, un cuadro, un texto, una tabla…</span></div>'; document.body.style.paddingBottom = 'calc(var(--nav) + 110px)'; return; }
+  const c = DIS.cambios[disSelector(el)] || { nuevo:{}, mover:0, oculto:false, nota:'', texto:null };
+  const val = ctl => { const v = c.nuevo && c.nuevo[ctl.k] !== undefined ? c.nuevo[ctl.k] : ctl.get(el); return r1(v); };
+  let h = '<div class="dp-top"><div class="dp-n"><b>' + esc(disNombre(el)) + '</b><span>' + esc(disSelector(el).slice(-46)) + '</span></div>'
+    + '<button onclick="disSubir()" title="Elegir el cuadro que lo contiene">⬆ Contenedor</button><button onclick="disSeleccionar(null)">✕</button></div>';
+  h += '<div class="dp-g">';
+  CONTROLES.forEach(ctl => {
+    h += '<div class="dp-s"><label>' + ctl.t + '</label><div><button onclick="disCambiar(\'' + ctl.k + '\',-1)">−</button><span>' + val(ctl) + ctl.u + '</span><button onclick="disCambiar(\'' + ctl.k + '\',1)">+</button></div></div>';
+  });
+  h += '</div><div class="dp-r">'
+    + '<button onclick="disMover(-1)">▲ Subir</button><button onclick="disMover(1)">▼ Bajar</button>'
+    + '<button onclick="disAlinear(\'left\')">⇤</button><button onclick="disAlinear(\'center\')">⇔</button><button onclick="disAlinear(\'right\')">⇥</button>'
+    + '<button onclick="disOcultar()">' + (c.oculto ? 'Mostrar' : 'Quitar') + '</button><button onclick="disRestablecer()">Deshacer</button></div>';
+  const nt = el.tagName !== 'INPUT' && el.tagName !== 'SELECT' ? disNodoTexto(el) : null;
+  if(nt){
+    h += '<input class="dp-i" id="disTxt" placeholder="Cambiar el texto…" value="' + esc(c.texto !== null && c.texto !== undefined ? c.texto : nt.textContent.trim()) + '" oninput="disTexto(this.value)">';
+  }
+  h += '<input class="dp-i" id="disNota" placeholder="Explícame con palabras qué quieres aquí (opcional)" value="' + esc(c.nota || '') + '" oninput="disNota(this.value)">';
+  p.innerHTML = h;
+  document.body.style.paddingBottom = 'calc(var(--nav) + 330px)';
+}
+function disSubir(){ if(DIS.sel && DIS.sel.parentElement && DIS.sel.parentElement !== document.body) disSeleccionar(DIS.sel.parentElement); }
+
+/** Texto completo de los ajustes, listo para pegar en el chat. */
+function disTextoAjustes(){
+  const claves = Object.keys(DIS.cambios).filter(k => {
+    const c = DIS.cambios[k]; return Object.keys(c.nuevo).length || c.mover || c.oculto || c.texto || c.alinear || c.nota;
+  });
+  if(!claves.length) return '';
+  const nombres = { letra:'letra', ancho:'ancho', alto:'alto', pv:'aire arriba/abajo dentro', ph:'aire izq/der dentro', mt:'espacio arriba', mb:'espacio abajo', radio:'redondeo' };
+  const unid = { letra:'px', ancho:'%', alto:'px', pv:'px', ph:'px', mt:'px', mb:'px', radio:'px' };
+  let t = 'AJUSTES DE DISEÑO · LabTrack · pantalla de ' + window.innerWidth + ' px de ancho\n\n';
+  claves.forEach((k, i) => {
+    const c = DIS.cambios[k];
+    t += (i + 1) + '. [' + c.pantalla + '] ' + c.nombre + '\n   selector: ' + k + '\n';
+    Object.keys(c.nuevo).forEach(p => {
+      const o = c.orig[p] !== undefined ? r1(c.orig[p]) + unid[p] : '?';
+      t += '   - ' + nombres[p] + ': ' + o + ' → ' + c.nuevo[p] + unid[p] + '\n';
+    });
+    if(c.mover) t += '   - posición: ' + (c.mover < 0 ? 'subir ' + Math.abs(c.mover) : 'bajar ' + c.mover) + ' lugar(es) dentro de su grupo\n';
+    if(c.alinear) t += '   - alineación: ' + ({ left:'izquierda', center:'centro', right:'derecha' })[c.alinear] + '\n';
+    if(c.oculto) t += '   - quitar de la pantalla\n';
+    if(c.texto) t += '   - nuevo texto: «' + c.texto + '»\n';
+    if(c.nota) t += '   - nota: ' + c.nota + '\n';
+    t += '\n';
+  });
+  return t;
+}
+
+function disAjustes(){
+  const t = disTextoAjustes();
+  const n = t ? (t.match(/^\d+\. \[/gm) || []).length : 0;
+  const o = document.createElement('div'); o.id = 'disLista'; o.className = 'dl-ov';
+  o.innerHTML = '<div class="dl-b"><b>Tus ajustes (' + n + ')</b>'
+    + (n ? '<textarea id="disTA" readonly>' + esc(t) + '</textarea>' : '<p>Todavía no hay ajustes. Toca un elemento y cámbialo.</p>')
+    + '<div class="dl-r">' + (n ? '<button class="p" onclick="disCopiar()">Copiar para pegar en el chat</button><button onclick="disBajar()">Descargar .txt</button>' : '')
+    + '<button onclick="disBorrarTodo()">Borrar todo</button><button onclick="document.getElementById(\'disLista\').remove()">Cerrar</button></div>'
+    + '<small>Después de copiar, pégalo en el chat. Puedes agregar una captura de tu pantalla para que yo vea tu idea.</small></div>';
+  document.body.appendChild(o);
+}
+async function disCopiar(){
+  const t = disTextoAjustes();
+  try{ await navigator.clipboard.writeText(t); toast('Copiado. Pégalo en el chat'); }
+  catch(e){ const ta = $('disTA'); ta.removeAttribute('readonly'); ta.select(); toast('Selecciona todo y copia a mano'); }
+}
+function disBajar(){
+  const b = new Blob([disTextoAjustes()], { type:'text/plain;charset=utf-8' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'ajustes_diseno_labtrack.txt';
+  ($('disLista') || document.body).appendChild(a); a.click(); a.remove();
+}
+function disBorrarTodo(){
+  if(!confirm('¿Borrar todos los ajustes? La pantalla vuelve a su diseño original.')) return;
+  DIS.cambios = {}; disGuardar(); location.reload();
+}
+
+function disModo(){
+  DIS.modo = DIS.modo === 'editar' ? 'navegar' : 'editar';
+  $('disBtnModo').textContent = DIS.modo === 'editar' ? '✎ Editando' : '👆 Navegando';
+  $('disBtnModo').classList.toggle('on', DIS.modo === 'editar');
+  if(DIS.modo === 'navegar'){ disSeleccionar(null); }
+  $('disPanel').style.display = DIS.modo === 'editar' ? '' : 'none';
+  document.body.style.paddingBottom = '';
+  if(DIS.modo === 'editar') disPanel();
+}
+
+/** Datos inventados para ver las pantallas llenas. No se guardan en ninguna parte. */
+function disEjemplo(){
+  if(!ST.usuario) ST.usuario = { nombre:'Usuario de ejemplo', cargo:'Químico', area:'Laboratorio' };
+  ST.fab.items = [
+    { envase:'ENV-012', codigo:'V5048', lote:'L-2610', vence:'2027-04-14', proveedor:'Prov. Sur', estado:'vigente' },
+    { envase:'ENV-007', codigo:'A0072', lote:'L-2655', vence:'2026-09-01', proveedor:'Prov. Centro', estado:'vencido' },
+    { envase:'ENV-003', codigo:'A0019', lote:'L-2588', vence:'2026-11-20', proveedor:'Prov. Norte', estado:'por_vencer' },
+    { envase:'ENV-021', codigo:'A0201', lote:'L-3001', vence:'2027-06-30', proveedor:'Prov. Norte', estado:'vigente' }
+  ];
+  ir('fab', false, true);
+  if(ST.escaneando) detenerScanner();
+  setTimeout(() => { pintarFabTabla(); msgFab('ok', '✓', '<b>ENV-021</b> · A0201 · lote L-3001'); }, 80);
+  toast('Datos de ejemplo cargados (no se guardan)');
+}
+function disEjemploQR(){
+  if(!ST.usuario) ST.usuario = { nombre:'Usuario de ejemplo', cargo:'Químico', area:'Laboratorio' };
+  mostrarQRFab({ fab_id:'FAB-000001', fecha: hoyISO(), codigo_producto:'12345', lmat:'FC00012375 / E01', por:'Usuario de ejemplo',
+    items:[{ envase:'ENV-012', codigo:'V5048', lote:'L-2610', vence:'2027-04-14', proveedor:'Prov. Sur', estado:'vigente' }] });
+}
+
+function iniciarDiseno(){
+  disLeer();
+  document.body.classList.add('dis');
+  apiPost = async () => { throw new Error('Modo diseño: aquí no se guarda nada.'); };
+
+  const b = document.createElement('div'); b.id = 'disBar';
+  b.innerHTML = '<button id="disBtnModo" class="on">✎ Editando</button><button id="disBtnEj">Ejemplo</button><button id="disBtnQR">QR</button><button id="disBtnAj">Ajustes</button><button id="disBtnSalir">Salir</button>';
+  document.body.appendChild(b);
+  const p = document.createElement('div'); p.id = 'disPanel'; document.body.appendChild(p);
+  $('disBtnModo').onclick = disModo;
+  $('disBtnEj').onclick = disEjemplo;
+  $('disBtnQR').onclick = disEjemploQR;
+  $('disBtnAj').onclick = disAjustes;
+  $('disBtnSalir').onclick = () => { location.href = location.pathname; };
+  disPanel();
+
+  // En modo "Editando", tocar selecciona en vez de ejecutar. Lo propio de la barra y el panel funciona normal.
+  document.addEventListener('click', ev => {
+    if(DIS.modo !== 'editar') return;
+    const t = ev.target;
+    if(t.closest('#disBar, #disPanel, #disLista, #alBox')) return;
+    ev.preventDefault(); ev.stopPropagation();
+    if(t === document.documentElement || t === document.body) return;
+    disSeleccionar(t);
+  }, true);
+  document.addEventListener('submit', ev => { if(DIS.modo === 'editar') ev.preventDefault(); }, true);
+}
+
+
+// ═══════════════════════════════════════════════════════════
 // ARRANQUE
 // ═══════════════════════════════════════════════════════════
 (function init(){
@@ -5657,6 +5937,8 @@ async function recuperarUsuario(){
       ir('inv');
     }
   });
+
+  if(new URLSearchParams(location.search).get('diseno')) iniciarDiseno();
 
   setInterval(() => { if((!ST.escaneando || ST.escaneando === 'reader3') && document.visibilityState === 'visible') sincronizar(true); }, CFG.SYNC_MS);
 })();
