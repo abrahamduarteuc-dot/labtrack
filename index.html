@@ -640,12 +640,17 @@ body.dis-drag .dis-sel{touch-action:none;cursor:grab;user-select:none;-webkit-us
 #impBar button{border:0;border-radius:10px;font:inherit;font-weight:800;font-size:14px;padding:10px 14px;cursor:pointer;}
 #impBar .vol{background:rgba(255,255,255,.14);color:#fff;}
 #impBar .imp{background:#fff;color:var(--azul-700);}
+#impHoja .pagina{break-after:page;page-break-after:always;margin-bottom:14px;padding-bottom:12px;border-bottom:2px dashed #C3D9EE;}
+#impHoja .pagina:last-child{break-after:auto;page-break-after:auto;border-bottom:0;}
+#impHoja .pg-n{font:700 11px Arial,sans-serif;color:#55718F;margin-bottom:6px;}
 #impHoja{background:#fff;margin:12px auto 40px;padding:8mm;width:210mm;box-shadow:0 4px 18px rgba(10,37,64,.18);color:#10273F;font-family:Arial,Helvetica,sans-serif;}
 @media print{
   body.imp-on{padding:0!important;background:#fff!important;}
   body.imp-on > *:not(#impZona){display:none!important;}
   body.imp-on #impZona{position:static;overflow:visible;background:#fff;}
   body.imp-on #impBar{display:none!important;}
+  body.imp-on #impHoja .pg-n{display:none!important;}
+  body.imp-on #impHoja .pagina{margin-bottom:0!important;padding-bottom:0!important;border-bottom:0!important;}
   body.imp-on #impHoja{margin:0;padding:0;width:auto;max-width:none;box-shadow:none;zoom:1!important;}
 }
 
@@ -4984,11 +4989,11 @@ function pintarUltimos(){
   ).join('');
 }
 
-/** Tamaños de etiqueta para imprimir (A4). */
+/** Tamaños de etiqueta. rows = filas por hoja (pensado para que quepan en Carta y A4, aun con los pies de página de Safari). */
 const TAMANOS = {
-  p: { n:'Pequeña · envase 1 L',   cols:3, w:63, h:40,  qr:28, id:13, mk:6.5 },
-  m: { n:'Mediana · 1 galón',      cols:3, w:63, h:60,  qr:42, id:17, mk:7.5 },
-  g: { n:'Grande · tineta 4 gl',   cols:2, w:95, h:120, qr:78, id:28, mk:10 }
+  p: { n:'Pequeña · envase 1 L',   cols:3, rows:5, w:63, h:38,  qr:25, id:12, mk:6 },
+  m: { n:'Mediana · 1 galón',      cols:3, rows:3, w:63, h:60,  qr:42, id:17, mk:7.5 },
+  g: { n:'Grande · tineta 4 gl',   cols:2, rows:2, w:95, h:104, qr:74, id:26, mk:10 }
 };
 function tamActual(){ let t = 'p'; try{ t = localStorage.getItem('lt_tam') || 'p'; }catch(e){} return TAMANOS[t] ? t : 'p'; }
 function setTam(t){
@@ -4997,18 +5002,24 @@ function setTam(t){
 }
 function imprimirEtiquetas(){
   if(!ST.ultimosQR.length){ toast('Genera etiquetas primero'); return; }
-  const T = TAMANOS[tamActual()];
-  const celdas = ST.ultimosQR.map(id =>
-    '<div class="et"><img src="' + qrDataURL(urlEnvase(id), Math.round(T.qr * 12), 1) + '"><div class="id">' + esc(id) + '</div><div class="mk">LabTrack</div></div>'
-  ).join('');
-  const css = '@page{size:A4;margin:8mm;}'
-    + '.hoja{display:grid;grid-template-columns:repeat(' + T.cols + ',' + T.w + 'mm);gap:2mm;justify-content:center;}'
+  const T = TAMANOS[tamActual()], porHoja = T.cols * T.rows;
+  const celda = id => '<div class="et"><img src="' + qrDataURL(urlEnvase(id), Math.round(T.qr * 12), 1) + '"><div class="id">' + esc(id) + '</div><div class="mk">LabTrack</div></div>';
+  const nHojas = Math.ceil(ST.ultimosQR.length / porHoja);
+  let hojas = '';
+  for(let i = 0; i < nHojas; i++){
+    hojas += '<div class="pagina"><div class="pg-n">Hoja ' + (i + 1) + ' de ' + nHojas + '</div><div class="hoja">'
+      + ST.ultimosQR.slice(i * porHoja, (i + 1) * porHoja).map(celda).join('') + '</div></div>';
+  }
+  // Cada hoja es un bloque de alto fijo con salto de página propio: ninguna etiqueta se parte entre hojas.
+  const css = '@page{margin:8mm;}'
+    + '.pagina{height:' + (T.rows * (T.h + 2) - 2) + 'mm;overflow:hidden;}'
+    + '.hoja{display:grid;grid-template-columns:repeat(' + T.cols + ',' + T.w + 'mm);grid-auto-rows:' + T.h + 'mm;gap:2mm;justify-content:center;}'
     + '.et{width:' + T.w + 'mm;height:' + T.h + 'mm;border:0.4mm dashed #B9CBDD;border-radius:2mm;display:flex;flex-direction:column;'
-    + 'align-items:center;justify-content:center;padding:1.5mm;break-inside:avoid;page-break-inside:avoid;box-sizing:border-box;}'
-    + '.et img{width:' + T.qr + 'mm;height:' + T.qr + 'mm;display:block;}'
-    + '.et .id{font-size:' + T.id + 'pt;font-weight:bold;letter-spacing:.04em;margin-top:1mm;color:#000;line-height:1.1;}'
-    + '.et .mk{font-size:' + T.mk + 'pt;color:#8BA3BC;letter-spacing:.12em;}';
-  vistaImpresion(ST.ultimosQR.length + ' etiqueta(s) · ' + T.n, '<div class="hoja">' + celdas + '</div>', css);
+    + 'align-items:center;justify-content:center;padding:1.5mm;box-sizing:border-box;overflow:hidden;}'
+    + '.et img{width:' + T.qr + 'mm;height:' + T.qr + 'mm;display:block;flex:none;}'
+    + '.et .id{font-size:' + T.id + 'pt;font-weight:bold;letter-spacing:.04em;margin-top:1mm;color:#000;line-height:1.1;flex:none;}'
+    + '.et .mk{font-size:' + T.mk + 'pt;color:#8BA3BC;letter-spacing:.12em;flex:none;}';
+  vistaImpresion(ST.ultimosQR.length + ' etiqueta(s) · ' + T.n + ' · ' + nHojas + ' hoja(s)', hojas, css);
 }
 
 // ═══════════════════════════════════════════════════════════
