@@ -656,6 +656,22 @@ body.dis-drag .dis-sel{touch-action:none;cursor:grab;user-select:none;-webkit-us
   body.imp-on #impHoja{margin:0;padding:0;width:auto;max-width:none;box-shadow:none;zoom:1!important;}
 }
 
+/* ───────── Generaciones de etiquetas ───────── */
+.gen{border:1.3px solid var(--linea);border-radius:12px;margin-bottom:7px;background:var(--blanco);overflow:hidden;}
+.gen.on{border-color:var(--azul-200,#9CC6EE);box-shadow:var(--sh);}
+.gen-h{width:100%;display:flex;align-items:center;gap:8px;border:0;background:none;font:inherit;text-align:left;padding:9px 11px;cursor:pointer;color:var(--tinta);}
+.gen-r{display:flex;flex-direction:column;min-width:0;flex:1;}
+.gen-r b{font-size:14px;font-weight:800;color:var(--azul-800);letter-spacing:.01em;}
+.gen-r small{font-size:11.5px;color:var(--tinta3);}
+.gen-p{font-size:11.5px;font-weight:700;color:var(--tinta2);text-align:right;max-width:44%;line-height:1.25;}
+.gen.ant .gen-p{font-weight:600;color:var(--tinta3);font-style:italic;}
+.gen-c{font-size:20px;color:var(--tinta3);transition:transform .15s;}
+.gen.on .gen-c{transform:rotate(90deg);}
+.gen-b{padding:0 11px 11px;border-top:1px solid var(--linea);}
+.gen-b .qr-grid{max-height:340px;overflow:auto;padding-top:9px;}
+.gen-b .qr-it{font:inherit;cursor:pointer;}
+.gen-mas{display:block;width:100%;border:1.3px dashed var(--linea2);background:none;border-radius:11px;padding:8px;font:inherit;font-size:12.5px;font-weight:700;color:var(--azul-600);cursor:pointer;margin:2px 0 7px;}
+.gen-ant .gen{opacity:.92;}
 </style>
 </head>
 <body>
@@ -3023,11 +3039,9 @@ var __Html5QrcodeLibrary__;(()=>{var t={449:function(t,e,r){!function(t){"use st
     <button class="btn btn-p" id="btnGen"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>Generar etiquetas</button>
   </div>
 
-  <div class="card" id="cardUlt" style="display:none;">
-    <div class="card-t">Últimas generadas</div>
-    <div class="card-d" id="ultTx"></div>
-    <div class="qr-grid" id="ultGrid"></div>
-    <div class="sep"></div>
+  <div class="card" id="cardGen">
+    <div class="card-t">Etiquetas generadas</div>
+    <div class="card-d">Cada generación queda guardada con quién la hizo. Toca una para ver sus QR o reimprimir.</div>
     <label class="lbl">Tamaño de la etiqueta</label>
     <div class="tam" id="tamSel">
       <button type="button" data-tam="p"><b>Pequeña</b><small>envase 1 L</small></button>
@@ -3039,8 +3053,8 @@ var __Html5QrcodeLibrary__;(()=>{var t={449:function(t,e,r){!function(t){"use st
       <button type="button" data-papel="a4"><b>A4</b></button>
       <button type="button" data-papel="carta"><b>Carta</b></button>
     </div>
-    <button class="btn btn-w" id="btnImp"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Imprimir etiquetas</button>
-    <div class="hint" style="margin-top:8px;">Se crea un PDF con medidas exactas. Al imprimirlo elige «Tamaño real» o 100 %.</div>
+    <div id="genLista"></div>
+    <div class="hint">Se imprime como PDF con medidas exactas. Al imprimir elige «Tamaño real» o 100 %.</div>
   </div>
 </section>
 
@@ -3607,7 +3621,7 @@ function ir(v, silencio, sinCamara){
   if(v === 'hist') cargarHistorial();
   if(v === 'estado') pintarEstado();
   if(v === 'inicio') pintarInicio();
-  if(v === 'qr') pintarEstMini();
+  if(v === 'qr'){ pintarEstMini(); cargarGeneraciones(); }
 }
 
 function abrirDrawer(){ $('ovDrawer').classList.add('on'); $('drawer').classList.add('on'); }
@@ -4969,31 +4983,103 @@ function cerrarImpresion(){
 // ═══════════════════════════════════════════════════════════
 // ETIQUETAS QR
 // ═══════════════════════════════════════════════════════════
-async function generarEtiquetas(){
+function generarEtiquetas(){
   const n = parseInt($('qCant').value, 10);
   if(!n || n < 1 || n > 200){ toast('Elige una cantidad entre 1 y 200'); return; }
+  conIdentidad(() => crearLoteEtiquetas(n));
+}
+async function crearLoteEtiquetas(n){
   const btn = $('btnGen');
   btn.disabled = true; btn.textContent = 'Generando…';
   try{
-    const d = await apiPost({ accion:'crearEnvases', cantidad: n });
+    const d = await apiPost({ accion:'crearEnvases', cantidad: n, dispositivo_id: ST.dispositivo, nombre: (ST.usuario && ST.usuario.nombre) || '' });
     ST.ultimosQR = d.envases || [];
-    pintarUltimos();
+    const g = d.generacion || {};
+    ST.genFresca = g.gen_id || null;
+    ST.genAbierta = g.gen_id || null;
     toast(ST.ultimosQR.length + ' etiqueta(s) creada(s)');
     sincronizar(true);
+    await cargarGeneraciones();
   }catch(e){
     alerta({ tipo:'err', titulo:'No se pudieron generar', texto: esc(e.message) });
   }finally{
-    btn.disabled = false; btn.innerHTML = 'Generar etiquetas';
+    btn.disabled = false; btn.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>Generar etiquetas';
   }
 }
 
-function pintarUltimos(){
-  if(!ST.ultimosQR.length){ $('cardUlt').style.display = 'none'; return; }
-  $('cardUlt').style.display = '';
-  $('ultTx').textContent = ST.ultimosQR.length + ' etiqueta(s): de ' + ST.ultimosQR[0] + ' a ' + ST.ultimosQR[ST.ultimosQR.length - 1] + '.';
-  $('ultGrid').innerHTML = ST.ultimosQR.map(id =>
-    '<div class="qr-it"><img src="' + qrDataURL(urlEnvase(id), 190, 2) + '" alt="' + esc(id) + '"><span>' + esc(id) + '</span></div>'
-  ).join('');
+/* ── Generaciones: cada vez que alguien genera etiquetas queda una línea (rango, fecha y quién) ── */
+const GEN_VISIBLES = 3;
+function idEnv(n){ return 'ENV-' + String(n).padStart(3, '0'); }
+function idsGen(g){ const l = []; for(let i = g.desde; i <= g.hasta; i++) l.push(idEnv(i)); return l; }
+async function cargarGeneraciones(){
+  const caja = $('genLista'); if(!caja) return;
+  if(!ST.gens) caja.innerHTML = cargando('Cargando generaciones…');
+  try{
+    const d = await apiGet({ accion:'generaciones' });
+    ST.gens = d.generaciones || [];
+    ST.gensError = null;
+  }catch(e){
+    ST.gensError = e.message;
+  }
+  pintarGens();
+}
+function pintarGens(){
+  const caja = $('genLista'); if(!caja) return;
+  if(ST.gensError && !ST.gens){ caja.innerHTML = '<div class="nota">No se pudo cargar la lista (' + esc(ST.gensError) + '). Si recién actualizaste la app, publica también el script nuevo.</div>'; return; }
+  const g = ST.gens || [];
+  if(!g.length){ caja.innerHTML = '<div class="nota">Aún no se han generado etiquetas.</div>'; return; }
+  const linea = x => {
+    const abierta = ST.genAbierta === x.gen_id;
+    const rango = x.desde === x.hasta ? idEnv(x.desde) : idEnv(x.desde) + ' – ' + idEnv(x.hasta);
+    let h = '<div class="gen' + (abierta ? ' on' : '') + (x.legado ? ' ant' : '') + '">'
+      + '<button type="button" class="gen-h" onclick="toggleGen(\'' + esc(x.gen_id) + '\')">'
+      + '<span class="gen-r"><b>' + rango + '</b><small>' + x.cantidad + ' etiqueta' + (x.cantidad === 1 ? '' : 's') + ' · ' + fmtFecha(x.fecha) + '</small></span>'
+      + '<span class="gen-p">' + esc(x.por) + '</span><span class="gen-c">›</span></button>';
+    if(abierta){
+      h += '<div class="gen-b"><div class="qr-grid">' + idsGen(x).map(id =>
+        '<button type="button" class="qr-it" onclick="reimprimirUna(\'' + id + '\',\'' + esc(x.gen_id) + '\')"><img src="' + qrDataURL(urlEnvase(id), 150, 1) + '" alt="' + id + '"><span>' + id + '</span></button>').join('') + '</div>'
+        + '<div class="hint" style="margin:6px 0 8px;">Solo vista. Toca un QR para reimprimir solo esa etiqueta.</div>'
+        + '<button type="button" class="btn ' + (ST.genFresca === x.gen_id ? 'btn-p' : 'btn-w') + '" onclick="imprimirGen(\'' + esc(x.gen_id) + '\')">'
+        + (ST.genFresca === x.gen_id ? 'Imprimir estas ' + x.cantidad + ' etiquetas' : 'Reimprimir las ' + x.cantidad + ' etiquetas') + '</button></div>';
+    }
+    return h + '</div>';
+  };
+  const vis = g.slice(0, GEN_VISIBLES), ant = g.slice(GEN_VISIBLES);
+  let h = vis.map(linea).join('');
+  if(ant.length){
+    const abiertaAnt = ant.some(x => x.gen_id === ST.genAbierta);
+    h += '<button type="button" class="gen-mas" onclick="ST.genVerAnt=!ST.genVerAnt;pintarGens()">' + (ST.genVerAnt || abiertaAnt ? 'Ocultar anteriores' : 'Ver ' + ant.length + ' generación(es) anterior(es)') + '</button>';
+    if(ST.genVerAnt || abiertaAnt) h += '<div class="gen-ant">' + ant.map(linea).join('') + '</div>';
+  }
+  caja.innerHTML = h;
+}
+function toggleGen(id){ ST.genAbierta = ST.genAbierta === id ? null : id; pintarGens(); }
+function genPorId(id){ return (ST.gens || []).find(x => x.gen_id === id); }
+
+/** Imprimir: la generación recién hecha se imprime directo; las anteriores piden confirmar (evita etiquetas duplicadas). */
+function imprimirGen(id){
+  const g = genPorId(id); if(!g) return;
+  const ids = idsGen(g);
+  if(ST.genFresca === id){ imprimirEtiquetas(ids); return; }
+  const usados = ids.filter(x => { const e = ST.envases.find(v => v.id === x); return e && e.estado === 'ocupado'; }).length;
+  alerta({
+    tipo:'warn',
+    titulo:'¿Reimprimir ' + idEnv(g.desde) + (g.cantidad > 1 ? ' a ' + idEnv(g.hasta) : '') + '?',
+    texto:'Estas etiquetas ya se generaron el ' + fmtFecha(g.fecha) + (g.legado ? '' : ' (' + esc(g.por) + ')') + '. Reimprímelas solo si se perdieron o dañaron.'
+      + (usados ? '<br><br><b>' + usados + (usados === 1 ? ' de estos envases ya tiene' : ' de estos envases ya tienen') + ' material.</b>' : '')
+      + '<br><br><b>No pegues dos etiquetas con el mismo código</b> en envases distintos: se mezcla la trazabilidad.',
+    botones:[{ txt:'Cancelar', clase:'btn-w' }, { txt:'Sí, reimprimir', clase:'btn-o', fn:() => imprimirEtiquetas(ids) }]
+  });
+}
+function reimprimirUna(envId, genId){
+  const e = ST.envases.find(v => v.id === envId);
+  const estado = e && e.estado === 'ocupado' && e.mp ? 'Tiene material: <b>' + esc(e.mp.codigo) + '</b> · lote ' + esc(e.mp.lote) + '.' : 'Está vacío.';
+  alerta({
+    tipo:'warn',
+    titulo:'¿Reimprimir ' + envId + '?',
+    texto: estado + '<br><br>Reimprime solo para reponer la etiqueta de <b>este mismo envase</b>. No la pegues en otro envase.',
+    botones:[{ txt:'Cancelar', clase:'btn-w' }, { txt:'Sí, reimprimir', clase:'btn-o', fn:() => imprimirEtiquetas([envId]) }]
+  });
 }
 
 /** Tamaños de etiqueta en mm (ancho × alto, lado del QR, letra del código en pt). */
@@ -5086,30 +5172,31 @@ function pdfEtiquetas(ids, T, P){
 }
 
 /** Vista previa en la app (mismo orden y cantidad por hoja que el PDF). */
-function imprimirEtiquetas(){
-  if(!ST.ultimosQR.length){ toast('Genera etiquetas primero'); return; }
+function imprimirEtiquetas(ids){
+  if(ids && ids.length) ST.impIds = ids;
+  if(!ST.impIds || !ST.impIds.length){ toast('Elige qué etiquetas imprimir'); return; }
   const T = TAMANOS[tamActual()], P = PAPELES[papelActual()], D = disposicion(T, P);
-  const nHojas = Math.ceil(ST.ultimosQR.length / D.porHoja);
+  const nHojas = Math.ceil(ST.impIds.length / D.porHoja);
   const celda = id => '<div class="et"><img src="' + qrDataURL(urlEnvase(id), 300, 1) + '" style="width:' + (T.qr / T.w * 100) + '%"><div class="id">' + esc(id) + '</div><div class="mk">LabTrack</div></div>';
   let h = '';
   for(let i = 0; i < nHojas; i++){
     h += '<div class="pagina"><div class="pg-n">Hoja ' + (i + 1) + ' de ' + nHojas + ' · ' + P.n + '</div><div class="hoja">'
-      + ST.ultimosQR.slice(i * D.porHoja, (i + 1) * D.porHoja).map(celda).join('') + '</div></div>';
+      + ST.impIds.slice(i * D.porHoja, (i + 1) * D.porHoja).map(celda).join('') + '</div></div>';
   }
   const css = '.hoja{display:grid;grid-template-columns:repeat(' + D.cols + ',minmax(0,1fr));gap:6px;}'
     + '.et{aspect-ratio:' + T.w + '/' + T.h + ';border:1px dashed #B9CBDD;border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px;min-width:0;}'
     + '.et img{display:block;height:auto;}'
     + '.et .id{font-weight:bold;letter-spacing:.04em;margin-top:2px;color:#000;font-size:' + (T.id * 0.75) + 'px;}'
     + '.et .mk{font-size:8px;color:#8BA3BC;letter-spacing:.12em;}';
-  vistaImpresion(ST.ultimosQR.length + ' etiqueta(s) · ' + nHojas + ' hoja(s) ' + P.n, h, css, 'descargarPdfEtiquetas()', 'PDF para imprimir');
+  vistaImpresion(ST.impIds.length + ' etiqueta(s) · ' + nHojas + ' hoja(s) ' + P.n, h, css, 'descargarPdfEtiquetas()', 'PDF para imprimir');
   const z = $('impHoja');
   z.insertAdjacentHTML('afterbegin', '<div class="pdf-nota">Se crea un PDF con medidas exactas (' + T.n + ', QR de ' + T.qr + ' mm, ' + D.porHoja + ' por hoja). Al imprimirlo elige <b>tamaño real / 100 %</b>.</div>');
 }
 
 function descargarPdfEtiquetas(){
   const T = TAMANOS[tamActual()], P = PAPELES[papelActual()];
-  const r = pdfEtiquetas(ST.ultimosQR, T, P);
-  const nombre = 'LabTrack-etiquetas-' + ST.ultimosQR[0] + (ST.ultimosQR.length > 1 ? '-a-' + ST.ultimosQR[ST.ultimosQR.length - 1] : '') + '.pdf';
+  const r = pdfEtiquetas(ST.impIds, T, P);
+  const nombre = 'LabTrack-etiquetas-' + ST.impIds[0] + (ST.impIds.length > 1 ? '-a-' + ST.impIds[ST.impIds.length - 1] : '') + '.pdf';
   const archivo = new File([r.blob], nombre, { type:'application/pdf' });
   // iPhone / Android: hoja de compartir (desde ahí se imprime o se guarda). Computador: se descarga.
   if(navigator.canShare && navigator.canShare({ files:[archivo] }) && /iPhone|iPad|Android/i.test(navigator.userAgent)){
@@ -6385,7 +6472,6 @@ function iniciarDiseno(){
 
   // Etiquetas
   $('btnGen').onclick = generarEtiquetas;
-  $('btnImp').onclick = imprimirEtiquetas;
   document.querySelectorAll('#tamSel button').forEach(b => b.onclick = () => setTam(b.dataset.tam));
   setTam(tamActual());
   document.querySelectorAll('#papelSel button').forEach(b => b.onclick = () => setPapel(b.dataset.papel));
