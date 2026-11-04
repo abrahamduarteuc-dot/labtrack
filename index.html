@@ -633,6 +633,8 @@ body.dis-drag .dis-sel{touch-action:none;cursor:grab;user-select:none;-webkit-us
 .tam b{font-size:13.5px;font-weight:800;} .tam small{font-size:11px;color:var(--tinta3);}
 .tam button[aria-selected=true]{border-color:var(--azul-600);background:var(--azul-50);box-shadow:0 0 0 3px rgba(46,139,230,.15);}
 .tam button[aria-selected=true] b{color:var(--azul-700);}
+.tam.tam2{grid-template-columns:repeat(2,1fr);}
+#impHoja .pdf-nota{font:12px/1.4 Arial,sans-serif;color:#12457A;background:#EFF6FD;border:1px solid #C3D9EE;border-radius:6px;padding:7px 9px;margin-bottom:10px;}
 
 #impZona{position:fixed;inset:0;z-index:5000;background:#DCE6F0;overflow:auto;-webkit-overflow-scrolling:touch;}
 #impBar{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:8px;background:var(--azul-900);color:#fff;padding:10px 12px;padding-top:calc(10px + env(safe-area-inset-top,0px));box-shadow:0 2px 10px rgba(0,0,0,.2);}
@@ -3032,8 +3034,13 @@ var __Html5QrcodeLibrary__;(()=>{var t={449:function(t,e,r){!function(t){"use st
       <button type="button" data-tam="m"><b>Mediana</b><small>1 galón</small></button>
       <button type="button" data-tam="g"><b>Grande</b><small>tineta 4 gl</small></button>
     </div>
+    <label class="lbl">Hoja</label>
+    <div class="tam tam2" id="papelSel">
+      <button type="button" data-papel="a4"><b>A4</b></button>
+      <button type="button" data-papel="carta"><b>Carta</b></button>
+    </div>
     <button class="btn btn-w" id="btnImp"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Imprimir etiquetas</button>
-    <div class="hint" style="margin-top:8px;">En el cuadro de impresión de Chrome, desactiva «Encabezados y pies de página».</div>
+    <div class="hint" style="margin-top:8px;">Se crea un PDF con medidas exactas. Al imprimirlo elige «Tamaño real» o 100 %.</div>
   </div>
 </section>
 
@@ -4934,14 +4941,14 @@ function imprimirDoc(html, titulo){
   doc.querySelectorAll('script').forEach(x => x.remove());
   vistaImpresion(titulo || doc.title || 'Imprimir', doc.body.innerHTML, css);
 }
-function vistaImpresion(titulo, cuerpo, css){
+function vistaImpresion(titulo, cuerpo, css, accion, txtAccion){
   cerrarImpresion();
   const st = document.createElement('style'); st.id = 'impCss'; st.textContent = cssAcotado(css || '');
   document.head.appendChild(st);
   const z = document.createElement('div'); z.id = 'impZona';
   z.innerHTML = '<div id="impBar"><button type="button" class="vol" onclick="cerrarImpresion()">‹ Volver</button>'
     + '<div class="t">' + esc(titulo) + '</div>'
-    + '<button type="button" class="imp" onclick="window.print()">Imprimir / PDF</button></div>'
+    + '<button type="button" class="imp" onclick="' + (accion || 'window.print()') + '">' + (txtAccion || 'Imprimir / PDF') + '</button></div>'
     + '<div id="impHoja">' + cuerpo + '</div>';
   ST.yAntesImp = window.scrollY;
   document.body.appendChild(z);
@@ -4989,37 +4996,131 @@ function pintarUltimos(){
   ).join('');
 }
 
-/** Tamaños de etiqueta. rows = filas por hoja (pensado para que quepan en Carta y A4, aun con los pies de página de Safari). */
+/** Tamaños de etiqueta en mm (ancho × alto, lado del QR, letra del código en pt). */
 const TAMANOS = {
-  p: { n:'Pequeña · envase 1 L',   cols:3, rows:5, w:63, h:38,  qr:25, id:12, mk:6 },
-  m: { n:'Mediana · 1 galón',      cols:3, rows:3, w:63, h:60,  qr:42, id:17, mk:7.5 },
-  g: { n:'Grande · tineta 4 gl',   cols:2, rows:2, w:95, h:104, qr:74, id:26, mk:10 }
+  p: { n:'Pequeña · envase 1 L', w:60, h:38,  qr:25, id:12, mk:6 },
+  m: { n:'Mediana · 1 galón',    w:60, h:58,  qr:40, id:16, mk:7 },
+  g: { n:'Grande · tineta 4 gl', w:90, h:100, qr:70, id:26, mk:9 }
 };
+const PAPELES = { a4:{ n:'A4', w:210, h:297 }, carta:{ n:'Carta', w:215.9, h:279.4 } };
+const MARGEN_PDF = 12, ESPACIO_PDF = 3;
 function tamActual(){ let t = 'p'; try{ t = localStorage.getItem('lt_tam') || 'p'; }catch(e){} return TAMANOS[t] ? t : 'p'; }
+function papelActual(){ let t = 'a4'; try{ t = localStorage.getItem('lt_papel') || 'a4'; }catch(e){} return PAPELES[t] ? t : 'a4'; }
 function setTam(t){
   try{ localStorage.setItem('lt_tam', t); }catch(e){}
   document.querySelectorAll('#tamSel button').forEach(b => b.setAttribute('aria-selected', b.dataset.tam === t));
 }
+function setPapel(t){
+  try{ localStorage.setItem('lt_papel', t); }catch(e){}
+  document.querySelectorAll('#papelSel button').forEach(b => b.setAttribute('aria-selected', b.dataset.papel === t));
+}
+/** Cuántas etiquetas caben por hoja y dónde va cada una (mm, desde arriba a la izquierda). */
+function disposicion(T, P){
+  const uw = P.w - 2 * MARGEN_PDF, uh = P.h - 2 * MARGEN_PDF;
+  const cols = Math.max(1, Math.floor((uw + ESPACIO_PDF) / (T.w + ESPACIO_PDF)));
+  const rows = Math.max(1, Math.floor((uh + ESPACIO_PDF) / (T.h + ESPACIO_PDF)));
+  const x0 = (P.w - (cols * T.w + (cols - 1) * ESPACIO_PDF)) / 2;
+  return { cols, rows, porHoja: cols * rows, x0, y0: MARGEN_PDF };
+}
+
+/* ── PDF hecho a mano: medidas exactas en mm, sin depender de cómo imprime cada navegador ── */
+const ANCHO_HB = { E:667, N:722, V:667, '-':333, ' ':278 }, ANCHO_H = { L:556, a:556, b:556, T:611, r:333, c:500, k:500 };
+function anchoTexto(t, tabla, pt){ let w = 0; for(const ch of t) w += (tabla[ch] || (/\d/.test(ch) ? 556 : 600)); return w / 1000 * pt; }
+function pdfEtiquetas(ids, T, P){
+  const k = 72 / 25.4, H = P.h * k, D = disposicion(T, P);
+  const n = v => (Math.round(v * 100) / 100).toString();
+  const paginas = [];
+  for(let i = 0; i < ids.length; i += D.porHoja) paginas.push(ids.slice(i, i + D.porHoja));
+  const flujos = paginas.map(lista => {
+    let c = '';
+    lista.forEach((id, j) => {
+      const col = j % D.cols, fila = Math.floor(j / D.cols);
+      const x = D.x0 + col * (T.w + ESPACIO_PDF), y = D.y0 + fila * (T.h + ESPACIO_PDF);
+      // borde punteado (guía de corte)
+      c += '0.72 0.8 0.87 RG 0.6 w [3 2] 0 d ' + n(x * k) + ' ' + n(H - (y + T.h) * k) + ' ' + n(T.w * k) + ' ' + n(T.h * k) + ' re S [] 0 d\n';
+      // QR vectorial, módulo a módulo (agrupado por tramos)
+      const qr = qrcode(0, 'M'); qr.addData(urlEnvase(id)); qr.make();
+      const m = qr.getModuleCount(), mod = T.qr / m;
+      const idPt = T.id, mkPt = T.mk, idMm = idPt / k, mkMm = mkPt / k;
+      const bloque = T.qr + 1.2 + idMm + 0.6 + mkMm;
+      const qx = x + (T.w - T.qr) / 2, qy = y + (T.h - bloque) / 2;
+      c += '0 0 0 rg\n';
+      for(let r = 0; r < m; r++){
+        let cc = 0;
+        while(cc < m){
+          if(!qr.isDark(r, cc)){ cc++; continue; }
+          let fin = cc; while(fin < m && qr.isDark(r, fin)) fin++;
+          c += n((qx + cc * mod) * k) + ' ' + n(H - (qy + (r + 1) * mod) * k) + ' ' + n((fin - cc) * mod * k + 0.05) + ' ' + n(mod * k + 0.05) + ' re\n';
+          cc = fin;
+        }
+      }
+      c += 'f\n';
+      // código del envase y marca
+      const ty = qy + T.qr + 1.2 + idMm * 0.8;
+      c += 'BT /F1 ' + idPt + ' Tf ' + n((x + T.w / 2) * k - anchoTexto(id, ANCHO_HB, idPt) / 2) + ' ' + n(H - ty * k) + ' Td (' + id + ') Tj ET\n';
+      const my = ty + 0.6 + mkMm;
+      c += '0.55 0.64 0.74 rg BT /F2 ' + mkPt + ' Tf ' + n((x + T.w / 2) * k - anchoTexto('LabTrack', ANCHO_H, mkPt) / 2) + ' ' + n(H - my * k) + ' Td (LabTrack) Tj ET\n';
+    });
+    return c;
+  });
+  // armar el archivo
+  const obj = [];
+  obj[1] = '<< /Type /Catalog /Pages 2 0 R >>';
+  obj[3] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>';
+  obj[4] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>';
+  const kids = [];
+  flujos.forEach((f, i) => {
+    const pg = 5 + i * 2, ct = pg + 1;
+    kids.push(pg + ' 0 R');
+    obj[pg] = '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ' + n(P.w * k) + ' ' + n(H) + '] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ' + ct + ' 0 R >>';
+    obj[ct] = '<< /Length ' + f.length + ' >>\nstream\n' + f + 'endstream';
+  });
+  obj[2] = '<< /Type /Pages /Kids [' + kids.join(' ') + '] /Count ' + kids.length + ' >>';
+  let out = '%PDF-1.4\n', xref = [];
+  for(let i = 1; i < obj.length; i++){ xref[i] = out.length; out += i + ' 0 obj\n' + obj[i] + '\nendobj\n'; }
+  const xi = out.length;
+  out += 'xref\n0 ' + obj.length + '\n0000000000 65535 f \n';
+  for(let i = 1; i < obj.length; i++) out += String(xref[i]).padStart(10, '0') + ' 00000 n \n';
+  out += 'trailer\n<< /Size ' + obj.length + ' /Root 1 0 R >>\nstartxref\n' + xi + '\n%%EOF';
+  return { blob: new Blob([out], { type:'application/pdf' }), hojas: paginas.length };
+}
+
+/** Vista previa en la app (mismo orden y cantidad por hoja que el PDF). */
 function imprimirEtiquetas(){
   if(!ST.ultimosQR.length){ toast('Genera etiquetas primero'); return; }
-  const T = TAMANOS[tamActual()], porHoja = T.cols * T.rows;
-  const celda = id => '<div class="et"><img src="' + qrDataURL(urlEnvase(id), Math.round(T.qr * 12), 1) + '"><div class="id">' + esc(id) + '</div><div class="mk">LabTrack</div></div>';
-  const nHojas = Math.ceil(ST.ultimosQR.length / porHoja);
-  let hojas = '';
+  const T = TAMANOS[tamActual()], P = PAPELES[papelActual()], D = disposicion(T, P);
+  const nHojas = Math.ceil(ST.ultimosQR.length / D.porHoja);
+  const celda = id => '<div class="et"><img src="' + qrDataURL(urlEnvase(id), 300, 1) + '" style="width:' + (T.qr / T.w * 100) + '%"><div class="id">' + esc(id) + '</div><div class="mk">LabTrack</div></div>';
+  let h = '';
   for(let i = 0; i < nHojas; i++){
-    hojas += '<div class="pagina"><div class="pg-n">Hoja ' + (i + 1) + ' de ' + nHojas + '</div><div class="hoja">'
-      + ST.ultimosQR.slice(i * porHoja, (i + 1) * porHoja).map(celda).join('') + '</div></div>';
+    h += '<div class="pagina"><div class="pg-n">Hoja ' + (i + 1) + ' de ' + nHojas + ' · ' + P.n + '</div><div class="hoja">'
+      + ST.ultimosQR.slice(i * D.porHoja, (i + 1) * D.porHoja).map(celda).join('') + '</div></div>';
   }
-  // Cada hoja es un bloque de alto fijo con salto de página propio: ninguna etiqueta se parte entre hojas.
-  const css = '@page{margin:8mm;}'
-    + '.pagina{height:' + (T.rows * (T.h + 2) - 2) + 'mm;}'
-    + '.hoja{display:grid;grid-template-columns:repeat(' + T.cols + ',minmax(0,1fr));grid-auto-rows:' + T.h + 'mm;gap:2mm;width:100%;}'
-    + '.et{width:100%;height:' + T.h + 'mm;border:0.4mm dashed #B9CBDD;border-radius:2mm;display:flex;flex-direction:column;'
-    + 'align-items:center;justify-content:center;padding:1.5mm;box-sizing:border-box;}'
-    + '.et img{width:' + T.qr + 'mm;height:' + T.qr + 'mm;display:block;flex:none;}'
-    + '.et .id{font-size:' + T.id + 'pt;font-weight:bold;letter-spacing:.04em;margin-top:1mm;color:#000;line-height:1.1;flex:none;}'
-    + '.et .mk{font-size:' + T.mk + 'pt;color:#8BA3BC;letter-spacing:.12em;flex:none;}';
-  vistaImpresion(ST.ultimosQR.length + ' etiqueta(s) · ' + T.n + ' · ' + nHojas + ' hoja(s)', hojas, css);
+  const css = '.hoja{display:grid;grid-template-columns:repeat(' + D.cols + ',minmax(0,1fr));gap:6px;}'
+    + '.et{aspect-ratio:' + T.w + '/' + T.h + ';border:1px dashed #B9CBDD;border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px;min-width:0;}'
+    + '.et img{display:block;height:auto;}'
+    + '.et .id{font-weight:bold;letter-spacing:.04em;margin-top:2px;color:#000;font-size:' + (T.id * 0.75) + 'px;}'
+    + '.et .mk{font-size:8px;color:#8BA3BC;letter-spacing:.12em;}';
+  vistaImpresion(ST.ultimosQR.length + ' etiqueta(s) · ' + nHojas + ' hoja(s) ' + P.n, h, css, 'descargarPdfEtiquetas()', 'PDF para imprimir');
+  const z = $('impHoja');
+  z.insertAdjacentHTML('afterbegin', '<div class="pdf-nota">Se crea un PDF con medidas exactas (' + T.n + ', QR de ' + T.qr + ' mm, ' + D.porHoja + ' por hoja). Al imprimirlo elige <b>tamaño real / 100 %</b>.</div>');
+}
+
+function descargarPdfEtiquetas(){
+  const T = TAMANOS[tamActual()], P = PAPELES[papelActual()];
+  const r = pdfEtiquetas(ST.ultimosQR, T, P);
+  const nombre = 'LabTrack-etiquetas-' + ST.ultimosQR[0] + (ST.ultimosQR.length > 1 ? '-a-' + ST.ultimosQR[ST.ultimosQR.length - 1] : '') + '.pdf';
+  const archivo = new File([r.blob], nombre, { type:'application/pdf' });
+  // iPhone / Android: hoja de compartir (desde ahí se imprime o se guarda). Computador: se descarga.
+  if(navigator.canShare && navigator.canShare({ files:[archivo] }) && /iPhone|iPad|Android/i.test(navigator.userAgent)){
+    navigator.share({ files:[archivo], title: nombre }).catch(() => {});
+    return;
+  }
+  const url = URL.createObjectURL(r.blob);
+  const a = document.createElement('a'); a.href = url; a.download = nombre;
+  $('impZona').appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+  toast('PDF listo: ' + r.hojas + ' hoja(s)');
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -6287,6 +6388,8 @@ function iniciarDiseno(){
   $('btnImp').onclick = imprimirEtiquetas;
   document.querySelectorAll('#tamSel button').forEach(b => b.onclick = () => setTam(b.dataset.tam));
   setTam(tamActual());
+  document.querySelectorAll('#papelSel button').forEach(b => b.onclick = () => setPapel(b.dataset.papel));
+  setPapel(papelActual());
 
   // Registro y Ver
   $('btnScan1').onclick = () => toggleScanner('reader');
