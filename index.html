@@ -4112,7 +4112,7 @@ function montarAcLote(){
   const render = () => {
     const q = inp.value.trim(), cod = $('fCod').value.trim().toUpperCase();
     if(!ST.base || !ST.base.length){ lst.classList.remove('on'); return; }
-    if(q.length >= 2) act = buscarLotesBase(q, cod);
+    if(normLote(q).length >= 2) act = buscarLotesBase(q, cod);
     else if(!q && cod && ST.baseCod[cod]) act = ST.baseCod[cod].slice().sort((a, b) => a[2] < b[2] ? -1 : 1).slice(0, 20);
     else { lst.classList.remove('on'); return; }
     if(!act.length){ lst.innerHTML = '<div class="ac-i"><span>No está en la base de lotes. Puedes escribirlo igual.</span></div>'; lst.classList.add('on'); return; }
@@ -4130,7 +4130,7 @@ function montarAcLote(){
     // Si lo escrito coincide exacto con un solo lote de la base, completa lo que falta
     const q = inp.value.trim().toUpperCase(), cod = $('fCod').value.trim().toUpperCase();
     if(!q || ST.regOrigen || !ST.base) return;
-    const ex = ST.base.filter(r => r[1].toUpperCase() === q && (!cod || r[0] === cod));
+    const ex = ST.base.filter(r => normLote(r[1]) === normLote(q) && (!cod || r[0] === cod));
     if(ex.length === 1 && !$('fVen').value) elegirLoteBase(ex[0]);
   }, 160);
   inp.onkeydown = e => {
@@ -6552,11 +6552,14 @@ async function manejarBase(info){
 }
 
 /** Lotes que coinciden con lo escrito; primero los del código elegido y los que empiezan igual. */
+/** Quita espacios, guiones, barras y puntos para que "TKCA 773 0326" encuentre "TKCA-773-0326". */
+function normLote(s){ return String(s).toUpperCase().replace(/[\s\-\/_.]/g, ''); }
+
 function buscarLotesBase(q, cod){
-  const Q = String(q).trim().toUpperCase();
+  const Q = normLote(q);
   const hits = [];
   for(const r of ST.base){
-    const L = r[1].toUpperCase(), i = L.indexOf(Q);
+    const L = normLote(r[1]), i = L.indexOf(Q);
     if(i < 0) continue;
     hits.push({ r, p: (cod && r[0] === cod ? 0 : 2) + (i === 0 ? 0 : 1) });
     if(hits.length > 400) break;
