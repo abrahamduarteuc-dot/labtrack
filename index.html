@@ -4017,10 +4017,10 @@ function pintarFormulario(envaseId, prefill, esReemplazo){
     + '<input type="date" id="fVen"></div>'
     + '<div id="fAviso"></div>'
 
-    + '<div class="fld ac"><label for="fCod">Código de materia prima<span class="tag-base" id="tgCod" hidden>de la base</span></label>'
+    + '<div class="fld ac"><label for="fCod">Código de materia prima <span class="req">*</span><span class="tag-base" id="tgCod" hidden>de la base</span></label>'
     + '<input type="text" id="fCod" placeholder="Se completa con el lote, o búscalo" autocomplete="off" autocapitalize="characters" maxlength="20">'
     + '<div class="ac-list" id="fAc"></div>'
-    + '<div class="hint" id="fNom">Opcional, pero sin código el envase no aparece en Inventario ni en Trazabilidad por código.</div></div>'
+    + '<div class="hint" id="fNom">Obligatorio. Se completa solo al elegir el lote de la lista, o búscalo.</div></div>'
 
     + '<div class="g2-3">'
     + '<div class="fld"><label for="fCant">Cantidad</label>'
@@ -4029,9 +4029,11 @@ function pintarFormulario(envaseId, prefill, esReemplazo){
     + '<select id="fUni"><option value="kg">kg</option><option value="g">g</option><option value="L">L</option><option value="gal">gal</option></select></div>'
     + '</div>'
 
-    + '<details class="mas"><summary>Más datos (opcional)</summary>'
     + '<div class="fld"><label for="fIng">Fecha de ingreso</label>'
-    + '<input type="date" id="fIng" value="' + (ST.hoy || hoyISO()) + '"></div>'
+    + '<input type="date" id="fIng" value="' + (ST.hoy || hoyISO()) + '">'
+    + '<div class="hint">Viene con la fecha de hoy. Puedes cambiarla si hace falta.</div></div>'
+
+    + '<details class="mas"><summary>Más datos (opcional)</summary>'
     + '<div class="g2">'
     + '<div class="fld"><label for="fProv">Proveedor</label><input type="text" id="fProv" autocomplete="off" maxlength="60"></div>'
     + '<div class="fld"><label for="fFab">Fabricante</label><input type="text" id="fFab" autocomplete="off" maxlength="60"></div>'
@@ -4070,7 +4072,7 @@ function pintarFormulario(envaseId, prefill, esReemplazo){
 function pistaCodigo(){
   const c = $('fCod').value.trim().toUpperCase(), el = $('fNom'); if(!el) return;
   const cat = ST.mapaCat[c];
-  if(!c) el.innerHTML = 'Opcional, pero sin código el envase no aparece en Inventario ni en Trazabilidad por código.';
+  if(!c) el.innerHTML = 'Obligatorio. Se completa solo al elegir el lote de la lista, o búscalo.';
   else if(cat) el.innerHTML = cat.v ? 'Código del catálogo' : '<span style="color:var(--mal);font-weight:700;">Código descontinuado, no usar</span>';
   else if(ST.baseCod && ST.baseCod[c]) el.innerHTML = 'Código de la base de lotes (no está en tu catálogo).';
   else el.innerHTML = '<span style="color:var(--mal);font-weight:700;">Este código no está en el catálogo ni en la base.</span>';
@@ -4210,6 +4212,7 @@ async function guardarRegistro(envaseId){
 
   if(!lote) return falla('Escribe el lote.');
   if(!ven) return falla('Indica la fecha de vencimiento.');
+  if(!codigo) return falla('Indica el código de materia prima.');
   if(codigo && !ST.mapaCat[codigo] && !(ST.baseCod && ST.baseCod[codigo])) return falla('El código ' + codigo + ' no está en el catálogo ni en la base de lotes. Revísalo, déjalo vacío o créalo desde Configuración.');
   if(cant !== '' && !(cant > 0)) return falla('Si indicas cantidad, debe ser mayor que cero.');
   if(cant !== '' && UNIDADES.indexOf(uni) < 0) return falla('Elige una unidad.');
