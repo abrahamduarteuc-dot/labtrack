@@ -4667,6 +4667,21 @@ function onFabScan(txt){
   agregarEnvaseFab(extraerEnvase(txt));
 }
 
+/** Datos que un material debe tener para entrar a una fabricación (la trazabilidad no puede quedar con huecos). */
+function faltanDatosFab(mp){
+  const f = [];
+  if(!mp || !String(mp.codigo || '').trim()) f.push('el código');
+  if(!mp || !String(mp.lote || '').trim()) f.push('el lote');
+  if(!mp || !String(mp.vencimiento || mp.vence || '').trim()) f.push('la fecha de vencimiento');
+  return f;
+}
+function listaFalta(f){ return f.length > 1 ? f.slice(0, -1).join(', ') + ' y ' + f[f.length - 1] : f[0]; }
+function bloquearIncompletoFab(id, faltan){
+  pitido('mal');
+  msgFab('mal', '!', '<b>' + esc(id) + '</b> no se puede usar en esta fabricación: le falta <b>' + esc(listaFalta(faltan)) + '</b>.'
+    + '<br><span style="font-weight:500;">Complétalo en <b>Registro</b> (Editar → Reemplazar por otro material) o usa otro envase.</span>');
+}
+
 function itemDesdeCache(e){
   return {
     envase: e.id, codigo: e.mp.codigo, lote: e.mp.lote, vence: e.mp.vencimiento || '',
@@ -4690,7 +4705,7 @@ async function agregarEnvaseFab(id, reemplazaA){
   }
 
   let e = ST.envases.find(x => x.id === id);
-  if(!e || e.estado !== 'ocupado' || !e.mp){
+  if(!e || e.estado !== 'ocupado' || !e.mp || faltanDatosFab(e.mp).length){
     // La caché puede estar atrasada: se confirma con el servidor
     msgFab('inf', '…', 'Consultando <b>' + esc(id) + '</b>…');
     try{
@@ -4709,6 +4724,9 @@ async function agregarEnvaseFab(id, reemplazaA){
     }
     if(ST.fab.items.find(x => x.envase === id) && id !== reemplazaA){ resaltarFilaFab(id); return false; }
   }
+
+  const faltan = faltanDatosFab(e.mp);
+  if(faltan.length){ bloquearIncompletoFab(id, faltan); return false; }
 
   const it = itemDesdeCache(e);
   if(reemplazaA){
@@ -4824,6 +4842,8 @@ async function guardarFab(){
   if(!fecha) return err('Elige la fecha.');
   if(!prod) return err('Escribe el código del producto.');
   if(!lmat) return err('Escribe el Lmat o N° de ensayo.');
+  const inc = ST.fab.items.filter(x => faltanDatosFab(x).length);
+  if(inc.length) return err('Hay envases con datos incompletos en la lista (' + inc.map(x => x.envase).join(', ') + '). Quítalos o complétalos en Registro antes de generar el QR.');
   ST.fab.fecha = fecha; ST.fab.prod = prod; ST.fab.lmat = lmat;
   const b = $('fbOk'); b.disabled = true; b.textContent = 'Guardando…';
   try{
