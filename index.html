@@ -146,6 +146,7 @@ input,select,textarea{font-family:inherit;}
 .fld input.err{border-color:var(--mal);background:var(--mal-bg);}
 .fld textarea{resize:vertical;min-height:70px;}
 .hint{font-size:11.5px;color:var(--tinta3);margin-top:4px;}
+.hint:empty{display:none;}
 .errm{font-size:12.5px;color:var(--mal);margin-top:5px;font-weight:600;display:none;}
 .errm.on{display:block;}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
@@ -4008,36 +4009,35 @@ function pintarFormulario(envaseId, prefill, esReemplazo){
     + '<div class="card-d">Envase <b>' + esc(envaseId) + '</b>'
     + (esReemplazo ? ' · el material anterior quedará cerrado automáticamente' : '') + '</div>'
 
-    + '<div class="fld ac"><label for="fLote">Lote <span class="req">*</span><span class="tag-base" id="tgLote" hidden>de la base</span></label>'
-    + '<input type="text" id="fLote" placeholder="' + (nb ? 'Escribe el lote: se busca en la base' : 'Lote del proveedor') + '" autocomplete="off" autocapitalize="characters" maxlength="40">'
+    + '<div class="fld ac"><label for="fLote">Lote <span class="req">*</span></label>'
+    + '<input type="text" id="fLote" autocomplete="off" autocapitalize="characters" maxlength="40">'
     + '<div class="ac-list" id="fLoteAc"></div>'
-    + '<div class="hint" id="fLoteH">' + (nb ? 'Escribe 2 o más caracteres: aparecen los lotes cargados (' + nb + '). Si no está, escríbelo igual.' : 'La base de lotes aún no está cargada: escribe el lote a mano.') + '</div></div>'
+    + '</div>'
 
-    + '<div class="fld"><label for="fVen">Fecha de vencimiento <span class="req">*</span><span class="tag-base" id="tgVen" hidden>de la base</span></label>'
+    + '<div class="fld"><label for="fVen">Fecha de vencimiento <span class="req">*</span></label>'
     + '<input type="date" id="fVen"></div>'
     + '<div id="fAviso"></div>'
 
-    + '<div class="fld ac"><label for="fCod">Código de materia prima <span class="req">*</span><span class="tag-base" id="tgCod" hidden>de la base</span></label>'
-    + '<input type="text" id="fCod" placeholder="Se completa con el lote, o búscalo" autocomplete="off" autocapitalize="characters" maxlength="20">'
+    + '<div class="fld ac"><label for="fCod">Código de materia prima <span class="req">*</span></label>'
+    + '<input type="text" id="fCod" autocomplete="off" autocapitalize="characters" maxlength="20">'
     + '<div class="ac-list" id="fAc"></div>'
-    + '<div class="hint" id="fNom">Obligatorio. Se completa solo al elegir el lote de la lista, o búscalo.</div></div>'
+    + '<div class="hint" id="fNom"></div></div>'
 
     + '<div class="g2-3">'
     + '<div class="fld"><label for="fCant">Cantidad</label>'
-    + '<input type="number" id="fCant" placeholder="Opcional" min="0" step="0.001" inputmode="decimal"></div>'
+    + '<input type="number" id="fCant" min="0" step="0.001" inputmode="decimal"></div>'
     + '<div class="fld"><label for="fUni">Unidad</label>'
     + '<select id="fUni"><option value="kg">kg</option><option value="g">g</option><option value="L">L</option><option value="gal">gal</option></select></div>'
     + '</div>'
 
     + '<div class="fld"><label for="fIng">Fecha de ingreso</label>'
     + '<input type="date" id="fIng" value="' + (ST.hoy || hoyISO()) + '">'
-    + '<div class="hint">Viene con la fecha de hoy. Puedes cambiarla si hace falta.</div></div>'
+    + '</div>'
 
-    + '<details class="mas"><summary>Más datos (opcional)</summary>'
     + '<div class="g2">'
     + '<div class="fld"><label for="fProv">Proveedor</label><input type="text" id="fProv" autocomplete="off" maxlength="60"></div>'
     + '<div class="fld"><label for="fFab">Fabricante</label><input type="text" id="fFab" autocomplete="off" maxlength="60"></div>'
-    + '</div></details>'
+    + '</div>'
 
     + '<div class="banda" style="background:var(--azul-50);border-color:var(--azul-100);color:var(--tinta2);">Registra: <b>' + esc(u.nombre || '—') + '</b>' + (u.cargo ? ' · ' + esc(u.cargo) : '') + (u.area ? ' · ' + esc(u.area) : '') + '</div>'
 
@@ -4072,9 +4072,9 @@ function pintarFormulario(envaseId, prefill, esReemplazo){
 function pistaCodigo(){
   const c = $('fCod').value.trim().toUpperCase(), el = $('fNom'); if(!el) return;
   const cat = ST.mapaCat[c];
-  if(!c) el.innerHTML = 'Obligatorio. Se completa solo al elegir el lote de la lista, o búscalo.';
-  else if(cat) el.innerHTML = cat.v ? 'Código del catálogo' : '<span style="color:var(--mal);font-weight:700;">Código descontinuado, no usar</span>';
-  else if(ST.baseCod && ST.baseCod[c]) el.innerHTML = 'Código de la base de lotes (no está en tu catálogo).';
+  if(!c) el.innerHTML = '';
+  else if(cat) el.innerHTML = cat.v ? '' : '<span style="color:var(--mal);font-weight:700;">Código descontinuado, no usar</span>';
+  else if(ST.baseCod && ST.baseCod[c]) el.innerHTML = '';
   else el.innerHTML = '<span style="color:var(--mal);font-weight:700;">Este código no está en el catálogo ni en la base.</span>';
 }
 
