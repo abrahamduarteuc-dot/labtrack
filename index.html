@@ -490,6 +490,28 @@ tbody td{padding:7px 9px;font-size:12.5px;}
 .scan-ph.fab{padding:10px;}
 .fab-ctl{margin-bottom:6px;}
 .fab-n{margin-left:auto;font-size:12px;font-weight:800;color:#fff;background:var(--azul-600);border-radius:999px;padding:2px 10px;}
+
+.ftabs{display:flex;gap:7px;align-items:stretch;margin:4px 0 8px;}
+.ftab{flex:1 1 0;min-width:0;display:flex;align-items:stretch;background:var(--blanco);border:1px solid var(--linea2);border-radius:12px;box-shadow:var(--sh);overflow:hidden;transition:border-color .15s,background .15s;}
+.ftab.on{flex-grow:1.35;background:var(--azul-600);border-color:var(--azul-600);color:#fff;}
+.ft-main{flex:1;min-width:0;display:flex;align-items:center;gap:6px;border:0;background:transparent;color:inherit;font:inherit;font-size:13px;font-weight:700;padding:9px 2px 9px 11px;cursor:pointer;}
+.ft-n{flex:none;width:20px;height:20px;border-radius:50%;background:var(--azul-100);color:var(--azul-700);font-size:11.5px;font-weight:800;display:grid;place-items:center;}
+.ftab.on .ft-n{background:#fff;color:var(--azul-600);}
+.ft-t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left;}
+.ft-c{flex:none;font-size:11px;font-weight:800;background:var(--azul-50);color:var(--azul-700);border-radius:999px;padding:1px 7px;}
+.ftab.on .ft-c{background:rgba(255,255,255,.22);color:#fff;}
+.ft-x{flex:none;width:30px;border:0;background:transparent;color:inherit;opacity:.6;display:grid;place-items:center;cursor:pointer;}
+.ft-x:active{opacity:1;}
+.ft-add{flex:none;display:flex;align-items:center;gap:5px;border:0;border-radius:12px;padding:0 13px;background:linear-gradient(135deg,#1E9E5A,#13784A);color:#fff;font:inherit;font-size:12.5px;font-weight:800;cursor:pointer;box-shadow:var(--sh);}
+.fcab{display:flex;align-items:center;gap:8px;background:var(--azul-50);border:1px solid var(--azul-100);border-radius:12px;padding:6px 6px 6px 12px;margin-bottom:10px;}
+.fcab[hidden]{display:none;}
+.fc-d{flex:1;min-width:0;display:flex;flex-wrap:wrap;gap:2px 12px;font-size:12.5px;color:var(--tinta2);}
+.fc-d b{color:var(--tinta);font-size:13.5px;}
+.fc-e{flex:none;border:0;background:var(--blanco);color:var(--azul-600);width:30px;height:30px;border-radius:9px;display:grid;place-items:center;cursor:pointer;box-shadow:var(--sh);}
+.fvac{display:flex;flex-direction:column;align-items:center;gap:14px;padding:34px 10px 22px;color:var(--azul-300);}
+.fvac .btn{width:auto;padding:12px 22px;}
+#fabCuerpo[hidden],#fabVacio[hidden]{display:none;}
+.hint:empty,.fab-vacia:empty{display:none;}
 .fab-msg{min-height:0;margin:0 0 8px;}
 .fab-msg .m{display:flex;align-items:center;gap:9px;border-radius:11px;padding:8px 11px;font-size:12.5px;font-weight:600;border:1px solid;animation:entra .22s ease-out;}
 .fab-msg .m i{font-style:normal;font-size:16px;line-height:1;}
@@ -3169,7 +3191,18 @@ var __Html5QrcodeLibrary__;(()=>{var t={449:function(t,e,r){!function(t){"use st
 <section class="pg" id="pg-fab">
   <button class="volver" onclick="salirFab()">‹ Volver</button>
   <div class="titulo"><h2>Fabricar</h2><span class="fab-n" id="fabN">0</span></div>
+  <div class="ftabs" id="fabTabs"></div>
+  <div class="fcab" id="fabCab" hidden></div>
 
+  <div id="fabVacio" hidden>
+    <div class="fvac">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6L4.5 19a1.5 1.5 0 0 0 1.3 2.2h12.4a1.5 1.5 0 0 0 1.3-2.2L14 9V3"/><path d="M7.5 15h9"/></svg>
+      <button class="btn btn-ok" id="btnFabIniciar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Nueva fabricación</button>
+    </div>
+    <div class="fab-msg" id="fabUltV"></div>
+  </div>
+
+  <div id="fabCuerpo">
   <div class="scan-box fab" id="scanBox3"><div id="reader3"></div><div class="marco"><i></i></div><div class="flash" id="fabFlash"></div></div>
   <div class="scan-ph fab" id="scanPh3">
     <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>
@@ -3190,6 +3223,7 @@ var __Html5QrcodeLibrary__;(()=>{var t={449:function(t,e,r){!function(t){"use st
   <div class="row">
     <button class="btn btn-w" id="btnFabPrev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Vista previa</button>
     <button class="btn btn-ok" id="btnFabImp"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Imprimir registro</button>
+  </div>
   </div>
 </section>
 
@@ -3393,6 +3427,7 @@ const ST = {
   inventario: [],
   cargando: false,
   fab: { items: [], ultTxt: '', ultT: 0, ultimo: null },   // Fabricar
+  fabs: [], fabAct: 0,   // fabricaciones en paralelo (máx. 3)
   fechaApertura: '',
   tzModo: 'fecha',
   ultSync: 0,
@@ -4612,21 +4647,142 @@ function abrirVerEnvase(sinCamara){
   if(!sinCamara) ST.timerScan = setTimeout(() => iniciarScanner('reader2'), 200);
 }
 
+/* ── Fabricaciones en paralelo (máx. 3): cada una con su propia lista y sus datos ── */
+const FAB_MAX = 3;
+const _fabVacio = [];
+function fabAct(){ return (ST.fabs || [])[ST.fabAct] || null; }
+// ST.fab.items siempre apunta a la lista de la fabricación activa
+Object.defineProperty(ST.fab, 'items', { configurable:true, enumerable:true,
+  get(){ const t = fabAct(); return t ? t.items : _fabVacio; },
+  set(v){ const t = fabAct(); if(t) t.items = v; } });
+
 function fabGuardarLocal(){
-  try{ localStorage.setItem('lt_fab', JSON.stringify(ST.fab.items)); }catch(e){}
+  try{ localStorage.setItem('lt_fabs', JSON.stringify({ tabs: ST.fabs, act: ST.fabAct })); }catch(e){}
 }
 function fabLeerLocal(){
-  try{ ST.fab.items = JSON.parse(localStorage.getItem('lt_fab') || '[]') || []; }catch(e){ ST.fab.items = []; }
-  ST.fab.items = ST.fab.items.filter(x => x && x.envase && !x.buscando);
+  let d = null;
+  try{ d = JSON.parse(localStorage.getItem('lt_fabs') || 'null'); }catch(e){}
+  if(d && Array.isArray(d.tabs)){
+    ST.fabs = d.tabs.filter(t => t && t.n).slice(0, FAB_MAX).map(t => ({
+      n: t.n, fecha: t.fecha || '', prod: t.prod || '', lmat: t.lmat || '',
+      items: (t.items || []).filter(x => x && x.envase && !x.buscando) }));
+    ST.fabAct = Math.min(Math.max(+d.act || 0, 0), Math.max(ST.fabs.length - 1, 0));
+    return;
+  }
+  // Lista guardada por la versión anterior: pasa a ser la fabricación 1
+  let old = [];
+  try{ old = JSON.parse(localStorage.getItem('lt_fab') || '[]') || []; }catch(e){}
+  old = old.filter(x => x && x.envase && !x.buscando);
+  ST.fabs = old.length ? [{ n:1, fecha: ST.fechaApertura || hoyISO(), prod:'', lmat:'', items: old }] : [];
+  ST.fabAct = 0;
+}
+
+function fabPintarTabs(){
+  const el = $('fabTabs'); if(!el) return;
+  el.innerHTML = ST.fabs.map((t, i) =>
+    '<div class="ftab' + (i === ST.fabAct ? ' on' : '') + '">'
+    + '<button type="button" class="ft-main" onclick="fabIr(' + i + ')" aria-label="Fabricación ' + esc(t.prod || t.n) + '">'
+    + '<span class="ft-t">' + esc(t.prod || 'Sin datos') + '</span>'
+    + '<span class="ft-c">' + t.items.length + '</span></button>'
+    + '<button type="button" class="ft-x" aria-label="Cerrar fabricación ' + esc(t.prod || t.n) + '" onclick="fabCerrar(' + i + ')">'
+    + '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>'
+  ).join('')
+  + (ST.fabs.length && ST.fabs.length < FAB_MAX
+      ? '<button type="button" class="ft-add" onclick="fabNueva()" aria-label="Nueva fabricación"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Nueva</button>' : '');
+  const t = fabAct(), cab = $('fabCab');
+  if(cab){
+    cab.hidden = !t;
+    if(t) cab.innerHTML = '<div class="fc-d"><b>' + esc(t.prod || '—') + '</b><span>' + esc(t.lmat || '—') + '</span><span>' + (t.fecha ? fmtFecha(t.fecha) : '—') + '</span></div>'
+      + '<button type="button" class="fc-e" aria-label="Editar datos de la fabricación" onclick="formDatosFab(\'editar\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button>';
+  }
+}
+function ultimoFabHtml(){
+  const d = ST.fab.ultimo; if(!d) return '';
+  return '<div class="m inf"><i>✓</i><div>Último registro: <b>' + esc(d.lmat) + '</b> · prod. ' + esc(d.codigo_producto)
+    + ' <button class="lnk" style="font-size:12.5px;margin-left:4px;" onclick="mostrarQRFab(ST.fab.ultimo)">Ver QR</button></div></div>';
+}
+function fabPintarTodo(){
+  const hay = ST.fabs.length > 0;
+  $('fabCuerpo').hidden = !hay;
+  $('fabVacio').hidden = hay;
+  if(!hay) $('fabUltV').innerHTML = ultimoFabHtml();
+  pintarFabTabla();
+}
+function fabIr(i){
+  if(i === ST.fabAct || !ST.fabs[i]) return;
+  ST.fabAct = i; fabGuardarLocal();
+  ST.fab.ultTxt = ''; ST.fab.ultT = 0;
+  $('fabMsg').innerHTML = '';
+  fabPintarTodo(); pintarUltimoFab();
+}
+function fabNueva(){
+  if(ST.fabs.length >= FAB_MAX){ toast('Máximo ' + FAB_MAX + ' fabricaciones'); return; }
+  formDatosFab('nuevo');
+}
+function fabCerrar(i){
+  const t = ST.fabs[i]; if(!t) return;
+  const hacer = () => {
+    const j = ST.fabs.indexOf(t); if(j < 0) return;
+    const activa = fabAct();
+    ST.fabs.splice(j, 1);
+    ST.fabAct = activa && activa !== t ? Math.max(ST.fabs.indexOf(activa), 0) : Math.min(j, Math.max(ST.fabs.length - 1, 0));
+    fabGuardarLocal();
+    $('fabMsg').innerHTML = '';
+    if(!ST.fabs.length && ST.escaneando) detenerScanner();
+    fabPintarTodo(); pintarUltimoFab();
+  };
+  if(!t.items.length){ hacer(); return; }
+  alerta({ tipo:'warn', titulo:'¿Cerrar ' + (t.prod || 'la fabricación ' + t.n) + '?',
+    texto:'Se pierden sus ' + t.items.length + ' lecturas. No afecta los envases.',
+    botones:[{ txt:'Cancelar' }, { txt:'Cerrar', clase:'btn-d', fn:hacer }] });
+}
+
+/** Formulario pequeño: nueva fabricación o edición de sus datos. */
+function formDatosFab(modo, despues){
+  const t = modo === 'editar' ? fabAct() : null;
+  if(modo === 'editar' && !t) return;
+  abrirSheet('<h3>' + (modo === 'nuevo' ? 'Nueva fabricación' : 'Datos de la fabricación') + '</h3>'
+    + '<div class="fld"><label for="fdFecha">Fecha</label><input type="date" id="fdFecha" value="' + esc((t && t.fecha) || ST.fechaApertura || hoyISO()) + '"></div>'
+    + '<div class="fld"><label for="fdProd">Código del producto</label><input type="text" id="fdProd" autocomplete="off" autocapitalize="characters" maxlength="30" value="' + esc((t && t.prod) || '') + '"></div>'
+    + '<div class="fld"><label for="fdLmat">Lmat / ensayo N°</label><input type="text" id="fdLmat" autocomplete="off" autocapitalize="characters" maxlength="40" value="' + esc((t && t.lmat) || '') + '"></div>'
+    + '<div id="fdErr"></div>'
+    + '<div class="row"><button class="btn btn-w" id="fdNo">Cancelar</button>'
+    + '<button class="btn btn-ok" id="fdOk">' + (modo === 'nuevo' ? 'Iniciar' : 'Guardar') + '</button></div>');
+  const err = m => { $('fdErr').innerHTML = '<div class="venc mal" style="padding:8px 11px;margin-bottom:10px;"><div class="vi">✕</div><div><span>' + esc(m) + '</span></div></div>'; };
+  $('fdNo').onclick = () => { cerrarSheet(); if(modo === 'nuevo' && !ST.fabs.length) salirFab(); };
+  $('fdOk').onclick = () => {
+    const fecha = $('fdFecha').value, prod = $('fdProd').value.trim().toUpperCase(), lmat = $('fdLmat').value.trim().toUpperCase();
+    if(!fecha) return err('Elige la fecha.');
+    if(!prod) return err('Escribe el código del producto.');
+    if(!lmat) return err('Escribe el Lmat o N° de ensayo.');
+    if(modo === 'nuevo'){
+      if(ST.fabs.length >= FAB_MAX){ cerrarSheet(); toast('Máximo ' + FAB_MAX + ' fabricaciones'); return; }
+      let n = 1; while(ST.fabs.some(x => x.n === n)) n++;
+      ST.fabs.push({ n, fecha, prod, lmat, items: [] });
+      ST.fabAct = ST.fabs.length - 1;
+      ST.fab.ultTxt = ''; ST.fab.ultT = 0;
+      $('fabMsg').innerHTML = '';
+    }else{
+      Object.assign(t, { fecha, prod, lmat });
+    }
+    fabGuardarLocal(); cerrarSheet(); fabPintarTodo();
+    if(modo === 'nuevo'){
+      pintarUltimoFab();
+      if(!ST.escaneando) ST.timerScan = setTimeout(() => iniciarScanner('reader3'), 200);
+    }
+    if(despues) setTimeout(despues, 180);
+  };
+  setTimeout(() => { const f = $(modo === 'nuevo' ? 'fdProd' : 'fdLmat'); if(f) f.focus(); }, 200);
 }
 
 function entrarFab(){
   ST.fab.ultTxt = ''; ST.fab.ultT = 0;
   $('fabMsg').innerHTML = '';
-  pintarFabTabla();
+  fabPintarTodo();
   pintarUltimoFab();
   // Caché fresca para que cada lectura sea instantánea (sin esperar a internet)
   if(Date.now() - (ST.ultSync || 0) > 60000) sincronizar(true);
+  if(!ST.fabs.length){ formDatosFab('nuevo'); return; }
   ST.timerScan = setTimeout(() => iniciarScanner('reader3'), 200);
 }
 function salirFab(){
@@ -4696,6 +4852,7 @@ async function agregarEnvaseFab(id, reemplazaA){
     pitido('mal'); msgFab('mal', '✕', '<b>' + esc(id || 'Código vacío') + '</b> no es una etiqueta de envase.');
     return false;
   }
+  if(!fabAct()) return false;
   const ya = ST.fab.items.find(x => x.envase === id);
   if(ya && id !== reemplazaA){
     pitido('adv');
@@ -4772,9 +4929,9 @@ function tablaFab(items, conLapiz){
 function pintarFabTabla(){
   const n = ST.fab.items.length;
   $('fabN').textContent = n;
-  $('fabTabla').innerHTML = n ? tablaFab(ST.fab.items, true)
-    : '<div class="fab-vacia">Escanea los envases que vas a usar. Aparecen aquí al instante.</div>';
+  $('fabTabla').innerHTML = n ? tablaFab(ST.fab.items, true) : '<div class="fab-vacia"></div>';
   ST.fab.nuevo = null;
+  fabPintarTabs();
 }
 
 function editarFilaFab(id){
@@ -4820,53 +4977,47 @@ function vistaPreviaFab(){
     + '<button class="btn btn-ok" onclick="cerrarSheet();setTimeout(formFab,180)">Imprimir registro</button></div>');
 }
 
-/* ── Imprimir registro: datos + generar QR ── */
+/* ── Imprimir registro: genera el QR con los datos de la fabricación activa ── */
 function formFab(){
   if(!ST.fab.items.length){ toast('Escanea al menos un envase'); return; }
-  conIdentidad(() => {
-    abrirSheet('<h3>Imprimir registro</h3>'
-      + '<div class="sd">' + ST.fab.items.length + ' materia(s) prima(s). Completa los datos para generar el QR.</div>'
-      + '<div class="fld"><label for="fbFecha">Fecha</label><input type="date" id="fbFecha" value="' + esc(ST.fab.fecha || ST.fechaApertura) + '"></div>'
-      + '<div class="fld"><label for="fbProd">Código producto</label><input type="text" id="fbProd" placeholder="Ej: 12345" autocomplete="off" autocapitalize="characters" maxlength="30" value="' + esc(ST.fab.prod || '') + '"></div>'
-      + '<div class="fld"><label for="fbLmat">Lmat / ensayo N°</label><input type="text" id="fbLmat" placeholder="Ej: FC00012375 / E01" autocomplete="off" autocapitalize="characters" maxlength="40" value="' + esc(ST.fab.lmat || '') + '"></div>'
-      + '<div id="fbErr"></div>'
-      + '<div class="row"><button class="btn btn-w" onclick="cerrarSheet()">Cancelar</button>'
-      + '<button class="btn btn-ok" id="fbOk"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM21 14v3M18 21h3"/></svg>Generar QR</button></div>');
-    $('fbOk').onclick = guardarFab;
-  });
+  conIdentidad(() => guardarFab());
 }
 
 async function guardarFab(){
-  const fecha = $('fbFecha').value, prod = $('fbProd').value.trim(), lmat = $('fbLmat').value.trim().toUpperCase();
-  const err = m => { $('fbErr').innerHTML = '<div class="venc mal" style="padding:8px 11px;"><div class="vi">✕</div><div><span>' + esc(m) + '</span></div></div>'; };
-  if(!fecha) return err('Elige la fecha.');
-  if(!prod) return err('Escribe el código del producto.');
-  if(!lmat) return err('Escribe el Lmat o N° de ensayo.');
-  const inc = ST.fab.items.filter(x => faltanDatosFab(x).length);
-  if(inc.length) return err('Hay envases con datos incompletos en la lista (' + inc.map(x => x.envase).join(', ') + '). Quítalos o complétalos en Registro antes de generar el QR.');
-  ST.fab.fecha = fecha; ST.fab.prod = prod; ST.fab.lmat = lmat;
-  const b = $('fbOk'); b.disabled = true; b.textContent = 'Guardando…';
+  const t = fabAct(); if(!t || ST.fabGuardando) return;
+  if(!t.items.length){ toast('Escanea al menos un envase'); return; }
+  if(!t.fecha || !t.prod || !t.lmat){ formDatosFab('editar', guardarFab); return; }
+  const inc = t.items.filter(x => faltanDatosFab(x).length);
+  if(inc.length){ msgFab('mal', '✕', 'Hay envases con datos incompletos (' + esc(inc.map(x => x.envase).join(', ')) + '). Quítalos o complétalos en Registro.'); return; }
+  ST.fabGuardando = true;
+  const b = $('btnFabImp'); if(b) b.disabled = true;
   try{
-    const d = await apiPost({ accion:'guardarFabricacion', dispositivo_id: ST.dispositivo, fecha, codigo_producto: prod, lmat,
-      items: ST.fab.items.map(x => x.envase) });
+    const d = await apiPost({ accion:'guardarFabricacion', dispositivo_id: ST.dispositivo, fecha: t.fecha, codigo_producto: t.prod, lmat: t.lmat,
+      items: t.items.map(x => x.envase) });
     ST.fab.ultimo = d;
     try{ localStorage.setItem('lt_fab_ult', JSON.stringify(d)); }catch(e){}
-    ST.fab.items = []; ST.fab.prod = ''; ST.fab.lmat = ''; ST.fab.fecha = '';
-    fabGuardarLocal(); pintarFabTabla();
+    const activa = fabAct(), j = ST.fabs.indexOf(t);
+    if(j > -1) ST.fabs.splice(j, 1);
+    ST.fabAct = activa && activa !== t ? Math.max(ST.fabs.indexOf(activa), 0) : Math.min(Math.max(j, 0), Math.max(ST.fabs.length - 1, 0));
+    fabGuardarLocal();
     $('fabMsg').innerHTML = '';
+    if(!ST.fabs.length && ST.escaneando) detenerScanner();
+    fabPintarTodo();
     pintarUltimoFab();
     mostrarQRFab(d);
   }catch(e){
-    err(e.message);
-    b.disabled = false; b.textContent = 'Generar QR';
+    msgFab('mal', '✕', esc(e.message));
+    toast(e.message);
+  }finally{
+    ST.fabGuardando = false;
+    if(b) b.disabled = false;
   }
 }
 
 function pintarUltimoFab(){
   const d = ST.fab.ultimo;
   if(!d || ST.fab.items.length){ return; }
-  $('fabMsg').innerHTML = '<div class="m inf"><i>✓</i><div>Último registro: <b>' + esc(d.lmat) + '</b> · prod. ' + esc(d.codigo_producto)
-    + ' <button class="lnk" style="font-size:12.5px;margin-left:4px;" onclick="mostrarQRFab(ST.fab.ultimo)">Ver QR</button></div></div>';
+  $('fabMsg').innerHTML = ultimoFabHtml();
 }
 
 /** Imagen del QR con su identificación arriba (para distinguirlo de las etiquetas de envase). */
@@ -7187,6 +7338,7 @@ function disModo(){
 /** Datos inventados para ver las pantallas llenas. No se guardan en ninguna parte. */
 function disEjemplo(){
   if(!ST.usuario) ST.usuario = { nombre:'Usuario de ejemplo', cargo:'Químico', area:'Laboratorio' };
+  ST.fabs = [{ n:1, fecha: hoyISO(), prod:'B-4410', lmat:'FC00012500', items: [] }]; ST.fabAct = 0;
   ST.fab.items = [
     { envase:'ENV-012', codigo:'V5048', lote:'L-2610', vence:'2027-04-14', proveedor:'Prov. Sur', estado:'vigente' },
     { envase:'ENV-007', codigo:'A0072', lote:'L-2655', vence:'2026-09-01', proveedor:'Prov. Centro', estado:'vencido' },
@@ -7330,6 +7482,7 @@ function iniciarDiseno(){
   $('btnFabMan').onclick = () => { const v = $('fabMan').value.trim(); if(!v){ toast('Escribe un código'); return; } agregarEnvaseFab(extraerEnvase(v)); $('fabMan').value = ''; };
   $('fabMan').onkeydown = e => { if(e.key === 'Enter') $('btnFabMan').click(); };
   $('btnFabVaciar').onclick = vaciarListaFab;
+  $('btnFabIniciar').onclick = () => formDatosFab('nuevo');
   $('btnFabPrev').onclick = vistaPreviaFab;
   $('btnFabImp').onclick = formFab;
   $('btnMan1').onclick = () => { const v = $('manual1').value.trim(); if(v) procesarEnvase(extraerEnvase(v)); else toast('Escribe un código'); };
